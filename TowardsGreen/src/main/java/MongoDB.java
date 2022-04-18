@@ -1,8 +1,8 @@
 import java.util.Iterator;
-
 import org.bson.Document;
-
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
+import com.google.gson.Gson;
 
 public class MongoDB {
 
@@ -20,8 +20,22 @@ public class MongoDB {
 			this.mongoClient = mongoClient;
 			this.database = mongoClient.getDatabase("tg-db");
 			this.collection = this.database.getCollection("users");
+			
+			
+			//Event event = new Event("e1","aggelos");
+			Gson gson = new Gson();
+			//Document doc = Document.parse(gson.toJson(event));
+			//this.collection.insertOne(doc);
+			
+			
+			//System.out.println(gson.fromJson(gson.toJson(event), Event.class).getReactions().get("Reaction 2"));
+			//BasicDBObject bs = new BasicDBObject("test","This is a test");
 			Document doc = this.collection.find().first();
-			System.out.println(doc);
+			doc.remove("_id");
+			System.out.println(doc.toJson());
+			Event event = gson.fromJson(doc.toJson(), Event.class);
+			System.out.println(event.getCreator());
+			//System.out.println(doc.iterator().next());
 		}
 	}
 	
@@ -43,5 +57,12 @@ public class MongoDB {
 	public static void main(String[] args) {
 		MongoDB mongo = MongoDB.getMongoDBInstance();
 		//mongo.printAllRecords();
+		//BasicDBObject bs = new BasicDBObject("test","This is a test");
+		Event event = new Event("e1","aggelos");
+		Gson gson = new Gson();
+		System.out.println(gson.toJson(event));
+		System.out.println(gson.fromJson(gson.toJson(event), Event.class).getCreator());
+
+		
 	}
 }
