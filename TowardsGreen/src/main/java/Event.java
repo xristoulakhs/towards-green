@@ -73,7 +73,19 @@ public class Event {
 	public Event(String eventID, String creator) {
 		this.eventID = eventID;
 		this.creator = creator;
-		this.initializeReactions();
+		this.publishedDate = null;
+		this.meetingDate = null;
+		this.publishedTime = null;
+		this.meetingTime = null;
+		this.status = Status.OPEN;
+		this.title = "dokimi";
+		this.description = "This is a test!";
+		this.image = null;
+		this.meetingLocation = "Dokimi!!";
+		this.reactions = null;
+		this.requirements = null;
+		this.attendees = null;
+		this.badge = "b101";
 	}
 
 	public String getEventID() {

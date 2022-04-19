@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 public interface Dao<T> {
 	public ArrayList<T> getAll();
-	public T get(String id);
+	public ArrayList<T> getAll(String id);
+	public T getFirst();
+	public T getFirst(String id);
 	public void insert(T obj);
-	public void update(String id);
+	public void update(String id, T updatedObj);
 	public void delete(String id);
 }
