@@ -16,7 +16,7 @@ public class MongoDB<T> {
 	public MongoDB(Class<T> type) {
 		this.type = type;
 		if (this.type.equals(Event.class)) {
-			this.collectionName = "users";
+			this.collectionName = "events";
 		}
 		
 		// For testing reasons

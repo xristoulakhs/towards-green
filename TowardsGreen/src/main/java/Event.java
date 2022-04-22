@@ -73,10 +73,10 @@ public class Event {
 	public Event(String eventID, String creator) {
 		this.eventID = eventID;
 		this.creator = creator;
-		this.publishedDate = null;
-		this.meetingDate = null;
-		this.publishedTime = null;
-		this.meetingTime = null;
+		this.publishedDate = LocalDate.now();
+		this.meetingDate = LocalDate.now();
+		this.publishedTime = LocalTime.now();
+		this.meetingTime = LocalTime.now();
 		this.status = Status.OPEN;
 		this.title = "dokimi";
 		this.description = "This is a test!";

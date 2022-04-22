@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 
@@ -9,7 +10,6 @@ public class EventDao implements Dao<Event> {
 	
 	private EventDao() {
 		this.mongoDB = new MongoDB<Event>(Event.class);
-		//System.out.println("Created");
 	}
 	
 	public static EventDao getInstance() {
@@ -49,7 +49,7 @@ public class EventDao implements Dao<Event> {
 		return event;
 	}
 
-	@Override
+	//@Override
 	public void insert(Event event) {
 		this.mongoDB.insert(this.gson.toJson(event));
 	}
@@ -78,12 +78,4 @@ public class EventDao implements Dao<Event> {
 		}
 		return events;
 	}
-	
-	public static void main(String[] args) {
-		EventDao eventDao = EventDao.getInstance();
-		Event event = new Event("e101", "aggelos_dokimi");
-		eventDao.insert(event);
-		//System.out.println(eventDao.getFirst().getCreator());
-	}
-	
 }
