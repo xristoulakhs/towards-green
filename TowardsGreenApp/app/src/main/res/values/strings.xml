@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TowardsGreen</string>
+    <string name="enter_first_name">Enter first name</string>
+    <string name="enter_last_name">Enter last name</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 </resources>
