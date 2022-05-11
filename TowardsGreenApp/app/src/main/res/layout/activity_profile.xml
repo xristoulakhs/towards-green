@@ -1,112 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_profile"
     tools:context=".ProfileActivity"
-    android:background="@drawable/bg_profile"> <!-- background color-->
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/firstName"
-        android:layout_width="250dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="56dp"
-        android:hint="@string/enter_first_name"
-        tools:ignore="LabelFor,MissingConstraints"
-        android:importantForAutofill="no"
-        android:inputType="text" />
+        android:background="@color/barColor"
+        tools:ignore="MissingConstraints">
 
-    <EditText
-        android:id="@+id/lastName"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:inputType="text"
-        android:hint="@string/enter_last_name"
-        android:importantForAutofill="no"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstName"
-        tools:ignore="LabelFor" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:text="@string/TowardsGreen"
+            android:textAlignment="viewEnd"
+            android:textSize="25sp"/>
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:inputType="textEmailAddress"
-        android:importantForAutofill="no"
-        android:hint="@string/enter_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lastName" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="250dp"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="@string/enter_password"
-        android:inputType="textPassword"
-        android:importantForAutofill="no"
+        android:background="@color/green"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="71dp">
 
-    <EditText
-        android:layout_width="250dp"
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/profileStr"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.329"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="53dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="@string/confirm_password"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"/>
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:contentDescription="@string/profile_picture"
+            android:src="@drawable/ic_person"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_name"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/userId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_id"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/userRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/role"
+            android:textColor="@color/black"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qrcode"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:id="@+id/qrCodeImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/qrcode"
+            android:src="@drawable/qr"/>
+
+        <TextView
+            android:id="@+id/points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/points"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/badges"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="582dp">
+
+        <TextView
+            android:id="@+id/badges"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/badgeList"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:layout_weight="1"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="531dp">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/submit"
-            android:text="@string/submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:layout_marginEnd="60dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="520dp"
-            style="?android:attr/buttonBarButtonStyle" />
-
-        <Button
-            android:id="@+id/cancel"
-            android:text="@string/cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="520dp"
-            style="?android:attr/buttonBarButtonStyle" />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/teal_700"
+            tools:ignore="MissingConstraints" />
 
     </LinearLayout>
 
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

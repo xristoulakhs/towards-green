@@ -7,4 +7,18 @@
     <string name="confirm_password">Confirm password</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
+    <string name="title">Enter post title</string>
+    <string name="location">Location</string>
+    <string name="problem">Problem</string>
+    <string name="add_description">Add description</string>
+    <string name="profileStr">Προφίλ χρήστη</string>
+    <string name="badgeList">Κατάλογος βραβείων</string>
+    <string name="TowardsGreen">TowardsGreen</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="profile_name">profile name</string>
+    <string name="user_id">User id</string>
+    <string name="role">Role</string>
+    <string name="qrcode">QRcode</string>
+    <string name="points">Points</string>
+    <string name="badges">badges</string>
 </resources>

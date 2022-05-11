@@ -4,6 +4,118 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePostActivity">
+    tools:context=".CreatePostActivity"
+    android:background="@drawable/bg_create_post">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/barColor"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:text="@string/TowardsGreen"
+            android:textAlignment="viewEnd"
+            android:textSize="25sp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="104dp" />
+
+    <EditText
+        android:id="@+id/Location"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:hint="@string/location"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="188dp" />
+
+    <EditText
+        android:id="@+id/problem"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:hint="@string/problem"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/Location"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="188dp" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:importantForAutofill="no"
+        android:hint="@string/add_description"
+        android:inputType="text"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="279dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="557dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/submit"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="60dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/button"
+            android:text="@string/submit"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteY="520dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/button"
+            android:text="@string/cancel"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="520dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
