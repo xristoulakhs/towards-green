@@ -1,14 +1,16 @@
-package com.aueb.towardsgreen;
+package com.aueb.towardsgreen.post;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class CreateProfileActivity extends AppCompatActivity {
+import com.aueb.towardsgreen.R;
+
+public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_profile);
+        setContentView(R.layout.activity_post);
     }
 }

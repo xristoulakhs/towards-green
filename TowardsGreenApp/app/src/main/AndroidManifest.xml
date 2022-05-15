@@ -10,16 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TowardsGreen">
         <activity
-            android:name=".PostActivity"
+            android:name=".post.PostActivity"
             android:exported="false" />
         <activity
-            android:name=".CreatePostActivity"
+            android:name=".createPost.CreatePostActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".createProfile.CreateProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
+            android:name=".profile.ProfileActivity"
             android:exported="false" />
     </application>
 

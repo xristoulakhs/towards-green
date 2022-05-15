@@ -1,8 +1,10 @@
-package com.aueb.towardsgreen;
+package com.aueb.towardsgreen.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.aueb.towardsgreen.R;
 
 public class ProfileActivity extends AppCompatActivity {
 

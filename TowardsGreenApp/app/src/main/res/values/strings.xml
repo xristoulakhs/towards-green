@@ -21,4 +21,12 @@
     <string name="qrcode">QRcode</string>
     <string name="points">Points</string>
     <string name="badges">badges</string>
+
+    <!-- in progress, array with problems which will be displayed in create post-->
+    <string-array name="problem_array">
+        <item>Tree plant</item>
+        <item>Area clear</item>
+        <item>Maintenance</item>
+    </string-array>
+
 </resources>

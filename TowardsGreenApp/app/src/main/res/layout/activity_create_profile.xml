@@ -4,24 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateProfileActivity"
+    tools:context=".createProfile.CreateProfileActivity"
     android:background="@drawable/bg_create_profile"> <!-- background color-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/barColor"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:paddingTop="5dp"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/TowardsGreen"
             android:textAlignment="viewEnd"
-            android:textSize="25sp"/>
+            android:textSize="25sp" />
 
     </LinearLayout>
 
@@ -55,6 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <EditText
+        android:id="@+id/confirmPas"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
