@@ -8,12 +8,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.aueb.towardsgreen.R;
 
-public class CreatePostActivity extends AppCompatActivity implements CreatePostView {
+public class CreatePostActivity extends AppCompatActivity implements CreatePostView, AdapterView.OnItemSelectedListener {
 
     EditText title,description;
     Spinner location, problem;
@@ -28,19 +27,23 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostV
         description = findViewById(R.id.description);
 
         location = (Spinner) findViewById(R.id.Location);
+        location.setOnItemSelectedListener(this);
+
         problem = (Spinner) findViewById(R.id.problem);
+        problem.setOnItemSelectedListener(this);
 
         btnCancel = findViewById(R.id.cancel);
         btnSubmit = findViewById(R.id.submit);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.problem_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        problem.setAdapter(adapter);
+        ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(this,
+                R.array.nomoi, android.R.layout.simple_spinner_item);
+        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        location.setAdapter(locationAdapter);
 
+        ArrayAdapter<CharSequence> problemAdapter = ArrayAdapter.createFromResource(this,
+                R.array.problem_array, android.R.layout.simple_spinner_item);
+        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        problem.setAdapter(problemAdapter);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,5 +58,15 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostV
 
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

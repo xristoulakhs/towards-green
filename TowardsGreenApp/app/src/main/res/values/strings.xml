@@ -21,12 +21,69 @@
     <string name="qrcode">QRcode</string>
     <string name="points">Points</string>
     <string name="badges">badges</string>
+    <string name="create_a_post">Create a post</string>
+    <string name="create_your_profile">Create your profile</string>
 
     <!-- in progress, array with problems which will be displayed in create post-->
     <string-array name="problem_array">
-        <item>Tree plant</item>
-        <item>Area clear</item>
-        <item>Maintenance</item>
+        <item>ΔΕΝΔΡΟΦΥΤΕΥΣΗ</item>
+        <item>ΚΑΘΑΡΙΣΜΟΣ</item>
+        <item>ΣΥΝΤΗΡΗΣΗ</item>
+    </string-array>
+
+<!--    array with locations-->
+    <string-array name="nomoi">
+        <item>ΑΘΗΝΑ</item>
+         <item>ΕΥΒΟΙΑ</item>
+         <item>ΕΥΡΥΤΑΝΙΑ</item>
+         <item>ΦΩΚΙΔΑ</item>
+         <item>ΦΘΙΩΤΙΔΑ</item>
+         <item>ΒΟΙΩΤΙΑ</item>
+         <item>ΧΑΛΚΙΔΙΚΗ</item>
+         <item>ΗΜΑΘΙΑ</item>
+         <item>ΚΙΛΚΙΣ</item>
+         <item>ΠΕΛΛΑ</item>
+         <item>ΠΙΕΡΙΑ</item>
+         <item>ΣΕΡΡΕΣ</item>
+         <item>ΘΕΣΣΑΛΟΝΙΚΗ</item>
+         <item>ΧΑΝΙΑ</item>
+         <item>ΗΡΑΚΛΕΙΟ</item>
+         <item>ΛΑΣΙΘΙ</item>
+         <item>ΡΕΘΥΜΝΟ</item>
+         <item>ΔΡΑΜΑ</item>
+         <item>ΕΒΡΟΣ</item>
+         <item>ΚΑΒΑΛΑ</item>
+         <item>ΡΟΔΟΠΗ</item>
+         <item>ΞΑΝΘΗ</item>
+         <item>ΑΡΤΑ</item>
+         <item>ΙΩΑΝΝΙΝΑ</item>
+         <item>ΠΡΕΒΕΖΑ</item>
+         <item>ΘΕΣΠΡΩΤΙΑ</item>
+         <item>ΚΕΡΚΥΡΑ</item>
+         <item>ΚΕΦΑΛΛΟΝΙΑ</item>
+         <item>ΛΕΥΚΑΔΑ</item>
+         <item>ΖΑΚΥΝΘΟΣ</item>
+         <item>ΧΙΟΣ</item>
+         <item>ΛΕΣΒΟΣ</item>
+         <item>ΣΑΜΟΣ</item>
+         <item>ΑΡΚΑΔΙΑ</item>
+         <item>ΑΡΓΟΛΙΔΑ</item>
+         <item>ΚΟΡΙΝΘΟΣ</item>
+         <item>ΛΑΚΩΝΙΑ</item>
+         <item>ΜΕΣΣΗΝΙΑ</item>
+         <item>ΚΥΚΛΑΔΕΣ</item>
+         <item>ΔΩΔΕΚΑΝΗΣΑ</item>
+         <item>ΚΑΡΔΙΤΣΑ</item>
+         <item>ΛΑΡΙΣΑ</item>
+         <item>ΜΑΓΝΗΣΙΑ</item>
+         <item>ΤΡΙΚΑΛΑ</item>
+         <item>ΑΧΑΪΑ</item>
+         <item>ΑΙΤΩΛΟΑΚΑΡΝΑΝΙΑ</item>
+         <item>ΗΛΕΙΑ</item>
+        <item>ΦΛΩΡΙΝΑ</item>
+        <item>ΓΡΕΒΕΝΑ</item>
+        <item>ΚΑΣΤΟΡΙΑ</item>
+        <item>ΚΟΖΑΝΗ</item>
     </string-array>
 
 </resources>

@@ -20,61 +20,87 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:paddingTop="5dp"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/TowardsGreen"
             android:textAlignment="viewEnd"
-            android:textSize="25sp" />
+            android:textColor="#212121"
+            android:textSize="25sp"
+            tools:ignore="RtlSymmetry" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/create_a_post"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            tools:ignore="MissingConstraints" />
 
         <EditText
             android:id="@+id/title"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:hint="@string/title"
             android:importantForAutofill="no"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="104dp" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:ignore="MissingConstraints" />
 
-        <Spinner
-            android:id="@+id/Location"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:contentDescription="@string/location"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="188dp" />
 
-        <Spinner
-            android:id="@+id/problem"
-            android:layout_width="110dp"
+        <LinearLayout
+            android:id="@+id/spinners"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
-            android:contentDescription="@string/problem"
-            android:hint="@string/problem"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/Location"
+            android:orientation="horizontal"
+            android:layout_margin="20sp"
+            app:layout_constraintTop_toBottomOf="@+id/title"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="188dp" />
+            tools:layout_editor_absoluteX="16dp">
+
+            <Spinner
+                android:id="@+id/Location"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="65dp"
+                android:layout_marginEnd="30dp"
+                android:contentDescription="@string/location"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:minHeight="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="188dp"/>
+
+            <Spinner
+                android:id="@+id/problem"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="80dp"
+                android:contentDescription="@string/problem"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/Location"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="188dp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/description"
@@ -84,51 +110,48 @@
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
             android:textAlignment="center"
+            android:layout_marginTop="20sp"
+            android:background="@drawable/editext_border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="279dp" />
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/spinners"
+            tools:ignore="MissingConstraints" />
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="4dp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="557dp">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/submit"
-            style="?android:attr/buttonStyle"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/butons"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="60dp"
-            android:layout_weight="1.0"
-            android:background="@drawable/button"
-            android:text="@string/submit"
-            android:textColor="@color/black"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="520dp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/cancel"
-            style="?android:attr/buttonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:background="@drawable/button"
-            android:text="@string/cancel"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="520dp" />
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            tools:ignore="MissingConstraints">
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submit"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="60dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/button"
+                android:text="@string/submit"
+                android:textColor="@color/black" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancel"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:background="@drawable/button"
+                android:text="@string/cancel"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>
