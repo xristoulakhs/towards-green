@@ -1,12 +1,16 @@
 // Just for testing reasons
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+
 public class EventDaoTest {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// Insert
 		EventDao eventDao = EventDao.getInstance();
-//		Event event1 = new Event("e101", "aggelos_dokimi");
-//		eventDao.insert(event1);
+		Gson gson = new Gson();
+		Event event1 = new Event("e101", "aggelos_dokimi");
+		eventDao.insert(gson.toJson(event1));
 //		Event event2 = new Event("e102", "aggelos_dokimi");
 //		eventDao.insert(event2);
 //		Event event3 = new Event("e103", "aggelos_dokimi");
@@ -41,6 +45,6 @@ public class EventDaoTest {
 //		System.out.println(event.getCreator());
 		
 		// Delete
-		eventDao.delete("e105");
+		//eventDao.delete("e105");
 	}
 }

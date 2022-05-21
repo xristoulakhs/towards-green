@@ -217,8 +217,8 @@ public class MongoDB<T> {
 		//BasicDBObject update = BasicDBObject.parse(jsonf);
 		//mongo.update(query, update);
 		
-		Event event = new Event("e101", "aggelos_dokimi");
-		String record = gson.toJson(event);
-		mongo.insert(gson.toJson(event));
+		//Event event = new Event("e101", "aggelos_dokimi");
+		//String record = gson.toJson(event);
+		//mongo.insert(gson.toJson(event));
 	}
 }

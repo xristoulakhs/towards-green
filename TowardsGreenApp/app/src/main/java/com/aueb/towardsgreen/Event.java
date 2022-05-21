@@ -1,22 +1,27 @@
-import java.awt.image.BufferedImage;
+package com.aueb.towardsgreen;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
-
 public class Event implements Serializable {
 
 	public enum Status {
 		OPEN {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Ανοιχτό προς συμμετοχή";
+				return "Ξ‘Ξ½ΞΏΞΉΟ‡Ο„Ο Ο€ΟΞΏΟ‚ ΟƒΟ…ΞΌΞΌΞµΟ„ΞΏΟ‡Ξ®";
 			}
 
 			@Override
@@ -25,9 +30,10 @@ public class Event implements Serializable {
 			}
 		},
 		IN_PROGRESS {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Σε εξέλιξη";
+				return "Ξ£Ξµ ΞµΞΎΞ­Ξ»ΞΉΞΎΞ·";
 			}
 
 			@Override
@@ -36,9 +42,10 @@ public class Event implements Serializable {
 			}
 		},
 		CLOSED {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Ολοκληρώθηκε";
+				return "ΞΞ»ΞΏΞΊΞ»Ξ·ΟΟΞΈΞ·ΞΊΞµ";
 			}
 
 			@Override
@@ -90,7 +97,7 @@ public class Event implements Serializable {
 		this.badge = badge;
 	}
 
-
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public Event(String creator, String meetingDate, String meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, String badge) {
 		this.eventID = "e1";
@@ -110,7 +117,8 @@ public class Event implements Serializable {
 		this.badge = badge;
 	}
 
-	public Event(String eventID, String creator) throws IOException {
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public Event(String eventID, String creator) {
 		this.eventID = eventID;
 		this.creator = creator;
 		this.publishedDate = LocalDate.now().toString();
@@ -120,12 +128,7 @@ public class Event implements Serializable {
 		this.status = Status.OPEN;
 		this.title = "dokimi";
 		this.description = "This is a test!";
-		this.getClass().getResource("image/sample.png");
-		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\sample.png"));
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ImageIO.write(bImage, "png", bos );
-	    byte [] data = bos.toByteArray();
-		this.image = data;
+		this.image = null;
 		this.meetingLocation = "Dokimi!!";
 		this.reactions = null;
 		this.requirements = null;
@@ -215,6 +218,17 @@ public class Event implements Serializable {
 
 	public void setImage(byte[] image) {
 		this.image = image;
+	}
+
+	public void setImage(Bitmap image) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		this.image = stream.toByteArray();
+		image.recycle();
+	}
+
+	public Bitmap getImageBitmap() {
+		return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
 	}
 
 	public String getMeetingLocation() {
