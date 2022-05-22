@@ -12,10 +12,10 @@ import com.aueb.towardsgreen.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CreateEventEquipmentFragment#newInstance} factory method to
+ * Use the {@link CreateEventRequirementFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateEventEquipmentFragment extends Fragment {
+public class CreateEventRequirementFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class CreateEventEquipmentFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CreateEventEquipmentFragment() {
+    public CreateEventRequirementFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class CreateEventEquipmentFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateEventEquipmentFragment.
+     * @return A new instance of fragment CreateEventRequirementFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateEventEquipmentFragment newInstance(String param1, String param2) {
-        CreateEventEquipmentFragment fragment = new CreateEventEquipmentFragment();
+    public static CreateEventRequirementFragment newInstance(String param1, String param2) {
+        CreateEventRequirementFragment fragment = new CreateEventRequirementFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class CreateEventEquipmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_event_equipment, container, false);
+        return inflater.inflate(R.layout.fragment_create_event_requirement, container, false);
     }
 }
