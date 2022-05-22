@@ -179,7 +179,8 @@
                     <TextView
                         android:layout_width="160dp"
                         android:layout_height="wrap_content"
-                        android:text="Ημερομηνία" />
+                        android:text="Ημερομηνία"
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:id="@+id/event_meeting_date_txt"
@@ -208,7 +209,8 @@
                     <TextView
                         android:layout_width="160dp"
                         android:layout_height="wrap_content"
-                        android:text="Ώρα" />
+                        android:text="Ώρα"
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:id="@+id/event_meeting_time_txt"
@@ -231,7 +233,8 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_location"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:layout_width="160dp"
@@ -266,7 +269,8 @@
                     <TextView
                         android:layout_width="160dp"
                         android:layout_height="wrap_content"
-                        android:text="Βραβείο συμμετοχής" />
+                        android:text="Βραβείο"
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:id="@+id/event_badge_txt"
@@ -350,7 +354,7 @@
 
         <!-- Equipment details -->
         <LinearLayout
-            android:id="@+id/event_equipment_container"
+            android:id="@+id/event_requirement_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -366,7 +370,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/event_equipmentLayout"
+                android:id="@+id/event_requirementLayout"
                 android:background="@drawable/lower_shape_curve"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -6,11 +6,8 @@ import com.aueb.towardsgreen.Event;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.view.ContextMenu;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,28 +19,29 @@ import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EventFragment extends Fragment {
-    LinearLayout equipmentLayout;
+    private LinearLayout requirementLayout;
 
-    // Event TextViews
-    TextView publisherUsername;
-    TextView publishedTime;
-    TextView publishedDate;
-    TextView title;
-    TextView status;
-    TextView description;
-    TextView meetingDate;
-    TextView meetingTime;
-    TextView location;
-    TextView badge;
+    private TextView publishedTime;
+    private TextView publishedDate;
+    private TextView title;
+    private TextView status;
+    private TextView description;
+    private TextView meetingDate;
+    private TextView meetingTime;
+    private TextView location;
+    private TextView badge;
 
-    ImageView eventMenu;
-    ImageView eventImage;
+    private ImageView eventMenu;
+    private ImageView eventImage;
 
     // Event Reactions
-    TextView takePartReaction;
-    TextView maybeReaction;
-    TextView notInterestedReaction;
+    private TextView takePartReaction;
+    private TextView maybeReaction;
+    private TextView notInterestedReaction;
 
     private Event event;
 
@@ -67,9 +65,12 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        equipmentLayout = view.findViewById(R.id.event_equipmentLayout);
 
-        publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
+        // Equipment layout
+        requirementLayout = view.findViewById(R.id.event_requirementLayout);
+
+        // Event TextViews
+        TextView publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
         publishedTime = view.findViewById(R.id.event_published_time_txt);
         publishedDate = view.findViewById(R.id.event_published_date_txt);
         title = view.findViewById(R.id.event_title_txt);
@@ -94,11 +95,21 @@ public class EventFragment extends Fragment {
         location.setText(event.getMeetingLocation());
         badge.setText(event.getBadge());
 
-        Bundle args = new Bundle();
-        args.putString("eq", "Trees");
-        EventEquipmentFragment eventEquipmentFragment = new EventEquipmentFragment();
-        eventEquipmentFragment.setArguments(args);
-        getParentFragmentManager().beginTransaction().add(equipmentLayout.getId(), eventEquipmentFragment).commit();
+        FragmentTransaction transaction =getParentFragmentManager().beginTransaction();
+        EventRequirementFragment eventRequirementFragment;
+
+        if (!event.getRequirements().isEmpty()) {
+            requirementLayout.setVisibility(View.VISIBLE);
+            for (Map.Entry<String, Boolean> requirement : event.getRequirements().entrySet()) {
+                Bundle args = new Bundle();
+                args.putString("requirementName", requirement.getKey());
+                args.putString("requirementFulfillment", String.valueOf(requirement.getValue()));
+                eventRequirementFragment = new EventRequirementFragment();
+                eventRequirementFragment.setArguments(args);
+                transaction.add(requirementLayout.getId(), eventRequirementFragment);
+            }
+        }
+        transaction.commit();
 
         eventMenu = view.findViewById(R.id.ic_events_menu);
         takePartReaction = view.findViewById(R.id.event_reaction_takePart);

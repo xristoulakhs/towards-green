@@ -13,7 +13,7 @@
         android:layout_marginTop="5dp">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/requirement_fulfillment_iv"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="50dp"
