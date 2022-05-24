@@ -17,6 +17,8 @@ import java.util.ArrayList;
 public interface Dao {
 	public ArrayList<String> getAll();
 	public ArrayList<String> getAll(String id);
+	public ArrayList<String> getFirstN(int limit);
+	public ArrayList<String> getFirstN(int limit, int skip);
 	public String getFirst();
 	public String getFirst(String id);
 	public void insert(String obj);

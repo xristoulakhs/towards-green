@@ -102,21 +102,28 @@ public class EventDao implements Dao {
 
 	@Override
 	public ArrayList<String> getAll() {
-		ArrayList<String> records = this.mongoDB.getAll();
-		return records;
+		return this.mongoDB.getAll();
 	}
 
 	@Override
 	public ArrayList<String> getAll(String id) {
 		BasicDBObject query = new BasicDBObject("eventID", id);
-		ArrayList<String> records = this.mongoDB.getAll(query);
-		return records;
+		return this.mongoDB.getAll(query);
+	}
+	
+	@Override
+	public ArrayList<String> getFirstN(int limit) {
+		return this.mongoDB.getFirstN(limit);
+	}
+
+	@Override
+	public ArrayList<String> getFirstN(int limit, int skip) {
+		return this.mongoDB.getFirstN(limit, skip);
 	}
 	
 	@Override
 	public String getFirst() {
-		String record = this.mongoDB.getFirst();
-		return record;
+		return this.mongoDB.getFirst();
 	}
 	
 	@Override
