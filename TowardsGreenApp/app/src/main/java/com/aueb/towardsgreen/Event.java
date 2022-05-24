@@ -137,11 +137,11 @@ public class Event implements Serializable {
 	}
 
 	public String getEventID() {
-		return eventID;
+		return this.eventID;
 	}
 
 	public String getCreator() {
-		return creator;
+		return this.creator;
 	}
 
 	public void setCreator(String creator) {
@@ -149,7 +149,7 @@ public class Event implements Serializable {
 	}
 
 	public String getPublishedDate() {
-		return publishedDate;
+		return this.publishedDate;
 	}
 
 	public void setPublishedDate(LocalDate publishedDate) {
@@ -157,7 +157,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingDate() {
-		return meetingDate;
+		return this.meetingDate;
 	}
 
 	public void setMeetingDate(LocalDate meetingDate) {
@@ -165,7 +165,7 @@ public class Event implements Serializable {
 	}
 
 	public String getPublishedTime() {
-		return publishedTime;
+		return this.publishedTime;
 	}
 
 	public void setPublishedTime(LocalTime publishedTime) {
@@ -173,7 +173,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingTime() {
-		return meetingTime;
+		return this.meetingTime;
 	}
 
 	public void setMeetingTime(LocalTime meetingTime) {
@@ -181,15 +181,15 @@ public class Event implements Serializable {
 	}
 
 	public Status getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public String getStatusString() {
-		return status.toString();
+		return this.status.toString();
 	}
 
 	public String getStatusColor() {
-		return status.getColor();
+		return this.status.getColor();
 	}
 
 	public void setStatus(Status status) {
@@ -197,7 +197,7 @@ public class Event implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -205,7 +205,7 @@ public class Event implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -213,7 +213,7 @@ public class Event implements Serializable {
 	}
 
 	public byte[] getImage() {
-		return image;
+		return this.image;
 	}
 
 	public void setImage(byte[] image) {
@@ -232,7 +232,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingLocation() {
-		return meetingLocation;
+		return this.meetingLocation;
 	}
 
 	public void setMeetingLocation(String meetingLocation) {
@@ -240,7 +240,19 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Integer> getReactions() {
-		return reactions;
+		return this.reactions;
+	}
+
+	public int getTakePartNumberOfReactions() {
+		return this.getReactions().get("TakePart");
+	}
+
+	public int getMaybeNumberOfReactions() {
+		return this.getReactions().get("Maybe");
+	}
+
+	public int getNotInterestedNumberOfReactions() {
+		return this.getReactions().get("NotInterested");
 	}
 
 	public void setReactions(HashMap<String, Integer> reactions) {
@@ -248,7 +260,7 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getRequirements() {
-		return requirements;
+		return this.requirements;
 	}
 
 	public void setRequirements(HashMap<String, Boolean> requirements) {
@@ -256,7 +268,7 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getAttendees() {
-		return attendees;
+		return this.attendees;
 	}
 
 	public void setAttendees(HashMap<String, Boolean> attendees) {
@@ -264,7 +276,7 @@ public class Event implements Serializable {
 	}
 
 	public String getBadge() {
-		return badge;
+		return this.badge;
 	}
 
 	public void setBadge(String badge) {
@@ -273,9 +285,9 @@ public class Event implements Serializable {
 
 	public void initializeReactions() {
 		this.reactions = new HashMap<String, Integer>();
-		this.reactions.put("Reaction 1", 0);
-		this.reactions.put("Reaction 2", 0);
-		this.reactions.put("Reaction 3", 0);
+		this.reactions.put("TakePart", 0);
+		this.reactions.put("Maybe", 0);
+		this.reactions.put("NotInterested", 0);
 	}
 
 	public void increaseReaction(String reaction) {

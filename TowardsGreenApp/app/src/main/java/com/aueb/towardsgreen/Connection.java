@@ -41,15 +41,11 @@ public class Connection {
         }
     }
 
-    public ArrayList<String> requestGetData() {
-        try {
-            objectOS.writeObject(new Request("GET", null));
-            objectOS.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<String> requestGetData(Request request) {
         String json = null;
         try {
+            objectOS.writeObject(request);
+            objectOS.flush();
             json = (String) objectIS.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -59,7 +55,7 @@ public class Connection {
         return this.gson.fromJson(json, ArrayList.class);
     }
 
-    public void requestPostData(Request request, ArrayList<String> content) {
+    public void requestSendData(Request request, String content) {
 
     }
 }

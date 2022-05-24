@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@drawable/shape_curve"
         android:orientation="vertical">
 
@@ -99,6 +100,7 @@
                     android:background="#c7c4c4"
                     android:text="Κατάσταση"
                     android:textAlignment="center"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -114,7 +116,6 @@
 
             <ImageView
                 android:id="@+id/ic_events_menu"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
@@ -405,6 +406,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/event_reaction_takePart_number"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="#76D38B"
@@ -438,6 +440,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/event_reaction_maybe_number"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="#76D38B"
@@ -468,6 +471,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/event_reaction_notInterested_number"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="#76D38B"

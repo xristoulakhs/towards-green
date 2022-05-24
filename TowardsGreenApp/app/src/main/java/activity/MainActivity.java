@@ -6,11 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.aueb.towardsgreen.Connection;
+import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.google.android.material.navigation.NavigationView;
 
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        ConnectionAsyncTask myTask = new ConnectionAsyncTask();
+        myTask.execute();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.bringToFront();
@@ -79,5 +86,31 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ConnectionAsyncTask extends AsyncTask<String, String, Integer> {
+
+        ProgressDialog pd = new ProgressDialog(MainActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setMessage("Please wait...");
+            pd.setIndeterminate(false);
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            Connection.getInstance().connect();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer i) {
+            //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
+            pd.hide();
+        }
     }
 }

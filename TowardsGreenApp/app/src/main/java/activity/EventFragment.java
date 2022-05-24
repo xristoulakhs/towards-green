@@ -23,8 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EventFragment extends Fragment {
+    // Requirement layout (LinearLayout) initialization
     private LinearLayout requirementLayout;
 
+    // Event main fields (TextViews) initialization
     private TextView publishedTime;
     private TextView publishedDate;
     private TextView title;
@@ -35,10 +37,18 @@ public class EventFragment extends Fragment {
     private TextView location;
     private TextView badge;
 
+    // Event image(ImageView) initialization
     private ImageView eventMenu;
+
+    // Event menu button (ImageView) initialization
     private ImageView eventImage;
 
-    // Event Reactions
+    // Event number of Reactions (TextViews) initialization
+    private TextView takePartReactionNumber;
+    private TextView maybeReactionNumber;
+    private TextView notInterestedReactionNumber;
+
+    // Event Reactions buttons (TextViews-button use) initialization
     private TextView takePartReaction;
     private TextView maybeReaction;
     private TextView notInterestedReaction;
@@ -51,7 +61,6 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             event = (Event) getArguments().getSerializable("event");
-            //mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -66,10 +75,10 @@ public class EventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Equipment layout
+        // Requirement layout (LinearLayout) declaration
         requirementLayout = view.findViewById(R.id.event_requirementLayout);
 
-        // Event TextViews
+        // Event main fields (TextViews) declaration
         TextView publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
         publishedTime = view.findViewById(R.id.event_published_time_txt);
         publishedDate = view.findViewById(R.id.event_published_date_txt);
@@ -81,9 +90,24 @@ public class EventFragment extends Fragment {
         location = view.findViewById(R.id.event_location_txt);
         badge = view.findViewById(R.id.event_badge_txt);
 
-        eventImage = (ImageView) view.findViewById(R.id.event_image);
+        // Event image (ImageView) declaration
+        eventImage = view.findViewById(R.id.event_image);
         eventImage.setImageBitmap(event.getImageBitmap());
 
+        // Event menu button (ImageView) declaration
+        eventMenu = view.findViewById(R.id.ic_events_menu);
+
+        // Event number of Reactions (TextViews) declaration
+        takePartReactionNumber = view.findViewById(R.id.event_reaction_takePart_number);
+        maybeReactionNumber = view.findViewById(R.id.event_reaction_maybe_number);
+        notInterestedReactionNumber = view.findViewById(R.id.event_reaction_notInterested_number);
+
+        // Event Reactions buttons (TextViews) declaration
+        takePartReaction = view.findViewById(R.id.event_reaction_takePart);
+        maybeReaction = view.findViewById(R.id.event_reaction_maybe);
+        notInterestedReaction = view.findViewById(R.id.event_reaction_notInterested);
+
+        // Setting Event main fields
         publisherUsername.setText(event.getCreator());
         publishedTime.setText(event.getPublishedTime().toString());
         publishedDate.setText(event.getPublishedDate().toString());
@@ -94,8 +118,12 @@ public class EventFragment extends Fragment {
         meetingTime.setText(event.getMeetingTime().toString());
         location.setText(event.getMeetingLocation());
         badge.setText(event.getBadge());
+        takePartReactionNumber.setText(String.valueOf(event.getTakePartNumberOfReactions()));
+        maybeReactionNumber.setText(String.valueOf(event.getMaybeNumberOfReactions()));
+        notInterestedReactionNumber.setText(String.valueOf(event.getNotInterestedNumberOfReactions()));
 
-        FragmentTransaction transaction =getParentFragmentManager().beginTransaction();
+        // Setting Event requirements in the appropriate fragment
+        FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
         EventRequirementFragment eventRequirementFragment;
 
         if (!event.getRequirements().isEmpty()) {
@@ -111,12 +139,7 @@ public class EventFragment extends Fragment {
         }
         transaction.commit();
 
-        eventMenu = view.findViewById(R.id.ic_events_menu);
-        takePartReaction = view.findViewById(R.id.event_reaction_takePart);
-        maybeReaction = view.findViewById(R.id.event_reaction_maybe);
-        notInterestedReaction = view.findViewById(R.id.event_reaction_notInterested);
-
-        // Edit button (3 dots) on Click Listener
+        // Menu button (3 dots) on Click Listener
         eventMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +160,7 @@ public class EventFragment extends Fragment {
             }
         });
 
-        // Reactions on Click Listeners
+        // TakePart reaction on Click Listener
         takePartReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +169,7 @@ public class EventFragment extends Fragment {
             }
         });
 
+        // Maybe reaction on Click Listener
         maybeReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +177,7 @@ public class EventFragment extends Fragment {
             }
         });
 
+        // NotInterested reaction on Click Listener
         notInterestedReaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

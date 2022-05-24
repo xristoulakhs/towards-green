@@ -1,19 +1,26 @@
 package activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
@@ -24,10 +31,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 public class EventPageFragment extends Fragment {
+    private Connection connection;
+    //private ArrayList<Event> events;
+    private int numberOfEventsFetched = 0;
     private LinearLayout eventsLayout;
+    private ScrollView eventScrollView;
+    private SwipeRefreshLayout eventSwipeRefreshLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,14 +62,48 @@ public class EventPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //events = new ArrayList<>();
+        connection = Connection.getInstance();
 
-        eventsLayout = (LinearLayout) view.findViewById(R.id.eventsLayout);
-        MyTask myTask = new MyTask();
+
+        eventsLayout = view.findViewById(R.id.eventsLayout);
+        eventScrollView = view.findViewById(R.id.event_page_scrollView);
+        eventSwipeRefreshLayout = view.findViewById(R.id.event_page_refreshLayout);
+
+        eventSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getActivity(), "Refreshing...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        eventScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return false;
+            }
+        });
+
+        eventScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                View sView = eventScrollView.getChildAt(eventScrollView.getChildCount() - 1);
+                int scrollBottom = sView.getBottom() - (eventScrollView.getHeight() + eventScrollView.getScrollY());
+
+                if (scrollBottom == 0) {
+                    EventAsyncTask myTask = new EventAsyncTask();
+                    myTask.execute();
+                    Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        EventAsyncTask myTask = new EventAsyncTask();
         myTask.execute();
 
     }
 
-    private class MyTask extends AsyncTask<String, String, Event> {
+    private class EventAsyncTask extends AsyncTask<String, String, ArrayList<Event>> {
         Event event = null;
         ProgressDialog pd = new ProgressDialog(getActivity());
         @Override
@@ -69,34 +117,40 @@ public class EventPageFragment extends Fragment {
         }
 
         @Override
-        protected Event doInBackground(String... strings) {
-
-            try {
-                Socket socket = new Socket(InetAddress.getByName("10.0.2.2"), 8080);
-                ObjectInputStream objectIS = new ObjectInputStream(socket.getInputStream());
-                String json = (String) objectIS.readObject();
-                Gson gson = new Gson();
-                event = gson.fromJson(json, Event.class);
-                Log.i("System", json);
-                Log.i("System", gson.toJson(event));
-
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return event;
+        protected ArrayList<Event> doInBackground(String... strings) {
+            //Connection.getInstance().connect();
+            return convertJsonToEvents(connection.requestGetData(new Request("GET", String.valueOf(numberOfEventsFetched))));
         }
 
         @Override
-        protected void onPostExecute(Event e) {
-            super.onPostExecute(e);
-            EventFragment eventFragment = new EventFragment();
-            Bundle args = new Bundle();
-            args.putSerializable("event", event);
-            eventFragment.setArguments(args);
-            getParentFragmentManager().beginTransaction().add(eventsLayout.getId(), eventFragment).commit();
-            Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(ArrayList<Event> requestedEvents) {
+            super.onPostExecute(requestedEvents);
+            //events.addAll(requestedEvents);
+            numberOfEventsFetched += requestedEvents.size();
+            showEvents(requestedEvents);
             pd.hide();
         }
+    }
+
+    private void showEvents(ArrayList<Event> events) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        EventFragment eventFragment;
+        for (Event event : events) {
+            Bundle args = new Bundle();
+            args.putSerializable("event", event);
+            eventFragment = new EventFragment();
+            eventFragment.setArguments(args);
+            transaction.add(eventsLayout.getId(), eventFragment);
+        }
+        transaction.commit();
+    }
+
+    private ArrayList<Event> convertJsonToEvents(ArrayList<String> jsons) {
+        Gson gson = new Gson();
+        ArrayList<Event> events = new ArrayList<>();
+        for (String json : jsons) {
+            events.add(gson.fromJson(json, Event.class));
+        }
+        return events;
     }
 }
