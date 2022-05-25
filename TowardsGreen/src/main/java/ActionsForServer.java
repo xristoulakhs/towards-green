@@ -29,16 +29,31 @@ public class ActionsForServer extends Thread {
 		
 		while (true) {
 			try {
-				System.out.println(">Server: waiting for requests");
+				System.out.println(">Server: waiting for request...");
 				Request request = (Request) objectIS.readObject();
-				System.out.println("Server: got a new Request with type " + request.getRequestType());
+				System.out.println(">Server: got a new Request with type " + request.getRequestType());
 				
 				if (request.getRequestType().equals("GET")) {
-					ArrayList<String> events = eventDao.getAll();
+					ArrayList<String> events = eventDao.getFirstN(2, Integer.parseInt(request.getContent()));
 					String event = gson.toJson(events);
 					objectOS.writeObject(event);
 					objectOS.flush();
 					System.out.println(">Server: sending Request reply");
+				}
+				
+				if (request.getRequestType().equals("GET2")) {
+					ArrayList<String> events = eventDao.getFirstN(Integer.parseInt(request.getContent()));
+					String event = gson.toJson(events);
+					objectOS.writeObject(event);
+					objectOS.flush();
+					System.out.println(">Server: sending Request reply");
+				}
+				
+				if (request.getRequestType().equals("UP")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					System.out.println(">Server: updating event record" + json[0] + "...");
+					boolean result = eventDao.update(json[0], json[1]);
+					System.out.println(">Server: update was " + result);
 				}
 				
 			} catch (ClassNotFoundException e) {

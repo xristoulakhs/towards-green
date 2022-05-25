@@ -134,21 +134,21 @@ public class EventDao implements Dao {
 	}
 
 	//@Override
-	public void insert(String event) {
-		this.mongoDB.insert(event);
+	public boolean insert(String event) {
+		return this.mongoDB.insert(event);
 	}
 
 	@Override
-	public void update(String id, String updatedEvent) {
+	public boolean update(String id, String updatedEvent) {
 		BasicDBObject query = new BasicDBObject("eventID", id);
 		BasicDBObject updateRecord = BasicDBObject.parse(updatedEvent);
-		this.mongoDB.update(query, updateRecord);
+		return this.mongoDB.update(query, updateRecord);
 		
 	}
 
 	@Override
-	public void delete(String id) {
+	public boolean delete(String id) {
 		BasicDBObject query = new BasicDBObject("eventID", id);
-		this.mongoDB.delete(query);
+		return this.mongoDB.delete(query);
 	}
 }

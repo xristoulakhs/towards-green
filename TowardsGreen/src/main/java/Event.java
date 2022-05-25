@@ -62,7 +62,7 @@ public class Event implements Serializable {
 	private byte[] image;
 	private String meetingLocation;
 	// <Reactions, numberOfReactions>
-	private HashMap<String, Integer> reactions;
+	private HashMap<String, ArrayList<String>> reactions;
 	// <Requirement, fulfilled or not>
 	private HashMap<String, Boolean> requirements;
 	// <userID, presence>
@@ -71,7 +71,7 @@ public class Event implements Serializable {
 
 	public Event(String eventID, String creator, String publishedDate, String meetingDate,
 				 String publishedTime, String meetingTime, String title, String description,
-				 byte[] image, String meetingLocation, HashMap<String, Integer> reactions,
+				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
 				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees, String badge) {
 		this.eventID = eventID;
 		this.creator = creator;
@@ -118,19 +118,22 @@ public class Event implements Serializable {
 		this.publishedTime = LocalTime.now().toString();
 		this.meetingTime = LocalTime.now().toString();
 		this.status = Status.OPEN;
-		this.title = "dokimi";
-		this.description = "This is a test!";
-		this.getClass().getResource("image/sample.png");
-		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\sample.png"));
+		this.title = "Δενδροφύτευση";
+		this.description = "Ωραίο το δάσος; Ας το προσέξουμε λοιπόν.";
+		this.getClass().getResource("image/Forests.png");
+		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\Forests.png"));
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	    ImageIO.write(bImage, "png", bos );
 	    byte [] data = bos.toByteArray();
 		this.image = data;
-		this.meetingLocation = "Dokimi!!";
-		this.reactions = null;
-		this.requirements = null;
+		this.meetingLocation = "Εκει";
+		this.initializeReactions();
+		this.reactions.get("TakePart").add("u101");
+		this.requirements = new HashMap<String, Boolean>();
+		this.requirements.put("Trees", true);
+		this.requirements.put("Trees 3", false);
 		this.attendees = null;
-		this.badge = "b101";
+		this.badge = null;
 	}
 
 	public String getEventID() {
@@ -225,11 +228,11 @@ public class Event implements Serializable {
 		this.meetingLocation = meetingLocation;
 	}
 
-	public HashMap<String, Integer> getReactions() {
+	public HashMap<String, ArrayList<String>> getReactions() {
 		return reactions;
 	}
 
-	public void setReactions(HashMap<String, Integer> reactions) {
+	public void setReactions(HashMap<String, ArrayList<String>> reactions) {
 		this.reactions = reactions;
 	}
 
@@ -258,51 +261,9 @@ public class Event implements Serializable {
 	}
 
 	public void initializeReactions() {
-		this.reactions = new HashMap<String, Integer>();
-		this.reactions.put("Reaction 1", 0);
-		this.reactions.put("Reaction 2", 0);
-		this.reactions.put("Reaction 3", 0);
-	}
-
-	public void increaseReaction(String reaction) {
-		this.reactions.put(reaction, this.reactions.get(reaction) + 1);
-	}
-
-	public void decreaseReaction(String reaction) {
-		this.reactions.put(reaction, this.reactions.get(reaction) - 1);
-	}
-
-	public boolean addRequirement(String requirement, boolean req) {
-		return this.requirements.put(requirement, req);
-	}
-
-	public boolean removeRequirement(String requirement) {
-		return this.requirements.remove(requirement);
-	}
-
-	public void setRequirementFulfilled(String requirement) {
-		this.requirements.put(requirement, true);
-	}
-
-	public boolean addAttendee(String userID) {
-		return this.attendees.put(userID, false);
-	}
-
-	public boolean removeAttendee(String userID) {
-		return this.attendees.remove(userID);
-	}
-
-	public boolean isAttendeePresent(String userID) {
-		return this.attendees.get(userID);
-	}
-
-	public ArrayList<String> getAttendeesList() {
-		ArrayList<String> users = new ArrayList<String>();
-		for (String user:this.attendees.keySet()) {
-			if (this.attendees.get(user)) {
-				users.add(user);
-			}
-		}
-		return users;
+		this.reactions = new HashMap<String, ArrayList<String>>();
+		this.reactions.put("TakePart", new ArrayList<String>());
+		this.reactions.put("Maybe", new ArrayList<String>());
+		this.reactions.put("NotInterested", new ArrayList<String>());
 	}
 }

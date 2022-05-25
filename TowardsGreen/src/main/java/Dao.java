@@ -21,7 +21,7 @@ public interface Dao {
 	public ArrayList<String> getFirstN(int limit, int skip);
 	public String getFirst();
 	public String getFirst(String id);
-	public void insert(String obj);
-	public void update(String id, String updatedObj);
-	public void delete(String id);
+	public boolean insert(String obj);
+	public boolean update(String id, String updatedObj);
+	public boolean delete(String id);
 }

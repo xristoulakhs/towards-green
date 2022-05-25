@@ -9,7 +9,7 @@ public class EventDaoTest {
 		// Insert
 		EventDao eventDao = EventDao.getInstance();
 		Gson gson = new Gson();
-		Event event1 = new Event("e101", "aggelos_dokimi");
+		Event event1 = new Event("e101", "Γιώργος");
 		eventDao.insert(gson.toJson(event1));
 //		Event event2 = new Event("e102", "aggelos_dokimi");
 //		eventDao.insert(event2);
@@ -29,6 +29,7 @@ public class EventDaoTest {
 //		for (Event event:events) {
 //			System.out.println(event.getEventID());
 //		}
+		//System.out.println(eventDao.getFirstN(1,1).get(0));
 		
 //		// Get first
 //		Event event = eventDao.getFirst();
