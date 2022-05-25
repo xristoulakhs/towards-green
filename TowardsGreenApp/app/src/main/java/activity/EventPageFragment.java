@@ -10,6 +10,7 @@ import com.aueb.towardsgreen.Event;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -32,10 +33,12 @@ import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EventPageFragment extends Fragment {
     private Connection connection;
+    private boolean refreshing = false;
     //private ArrayList<Event> events;
     private int numberOfEventsFetched = 0;
     private LinearLayout eventsLayout;
@@ -70,10 +73,13 @@ public class EventPageFragment extends Fragment {
         eventScrollView = view.findViewById(R.id.event_page_scrollView);
         eventSwipeRefreshLayout = view.findViewById(R.id.event_page_refreshLayout);
 
+
         eventSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(getActivity(), "Refreshing...", Toast.LENGTH_SHORT).show();
+                refreshing = true;
+                RefreshEventAsyncTask myTask = new RefreshEventAsyncTask();
+                myTask.execute();
             }
         });
 
@@ -92,33 +98,36 @@ public class EventPageFragment extends Fragment {
                 int scrollBottom = sView.getBottom() - (eventScrollView.getHeight() + eventScrollView.getScrollY());
 
                 if (scrollBottom == 0) {
-                    EventAsyncTask myTask = new EventAsyncTask();
+                    EventAsyncTask myTask = new EventAsyncTask("Φόρτωση περισσοτέρων εκδηλώσεων. Παρακαλώ περιμένετε...");
                     myTask.execute();
                     Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        EventAsyncTask myTask = new EventAsyncTask();
+        EventAsyncTask myTask = new EventAsyncTask("Παρακαλώ περιμένετε...");
         myTask.execute();
 
     }
 
     private class EventAsyncTask extends AsyncTask<String, String, ArrayList<Event>> {
-        Event event = null;
-        ProgressDialog pd = new ProgressDialog(getActivity());
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        String message;
+
+        public EventAsyncTask(String message) {
+            this.message = message;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd.setMessage("Please wait...");
-            pd.setIndeterminate(false);
-            pd.setCancelable(false);
-            pd.show();
+            progressDialog.setMessage(message);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
         }
 
         @Override
         protected ArrayList<Event> doInBackground(String... strings) {
-            //Connection.getInstance().connect();
             return convertJsonToEvents(connection.requestGetData(new Request("GET", String.valueOf(numberOfEventsFetched))));
         }
 
@@ -128,11 +137,29 @@ public class EventPageFragment extends Fragment {
             //events.addAll(requestedEvents);
             numberOfEventsFetched += requestedEvents.size();
             showEvents(requestedEvents);
-            pd.hide();
+            progressDialog.hide();
+        }
+    }
+
+    private class RefreshEventAsyncTask extends AsyncTask<String, String, ArrayList<Event>> {
+
+        @Override
+        protected ArrayList<Event> doInBackground(String... strings) {
+            return convertJsonToEvents(connection.requestGetData(new Request("GET2", String.valueOf(numberOfEventsFetched))));
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Event> requestedEvents) {
+            super.onPostExecute(requestedEvents);
+            showEvents(requestedEvents);
+            refreshing = false;
+            Toast.makeText(getActivity(), String.valueOf(requestedEvents.size()), Toast.LENGTH_SHORT).show();
+            eventSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
     private void showEvents(ArrayList<Event> events) {
+        boolean flag = true;
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         EventFragment eventFragment;
         for (Event event : events) {
@@ -140,7 +167,15 @@ public class EventPageFragment extends Fragment {
             args.putSerializable("event", event);
             eventFragment = new EventFragment();
             eventFragment.setArguments(args);
-            transaction.add(eventsLayout.getId(), eventFragment);
+            if (flag && refreshing) {
+                //Toast.makeText(getActivity(), "hi", Toast.LENGTH_SHORT).show();
+                transaction.replace(eventsLayout.getId(), eventFragment);
+                transaction.addToBackStack(null);
+                flag = false;
+            }
+            else{
+                transaction.add(eventsLayout.getId(), eventFragment);
+            }
         }
         transaction.commit();
     }

@@ -68,8 +68,8 @@ public class Event implements Serializable {
 	// Image is optional. Image type needs to be changed in Android Studio, so that we can depict it in the device.
 	private byte[] image;
 	private String meetingLocation;
-	// <Reactions, numberOfReactions>
-	private HashMap<String, Integer> reactions;
+	// <Reactions, Users that reacted>
+	private HashMap<String, ArrayList<String>> reactions;
 	// <Requirement, fulfilled or not>
 	private HashMap<String, Boolean> requirements;
 	// <userID, presence>
@@ -78,7 +78,7 @@ public class Event implements Serializable {
 
 	public Event(String eventID, String creator, String publishedDate, String meetingDate,
 				 String publishedTime, String meetingTime, String title, String description,
-				 byte[] image, String meetingLocation, HashMap<String, Integer> reactions,
+				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
 				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees, String badge) {
 		this.eventID = eventID;
 		this.creator = creator;
@@ -134,6 +134,10 @@ public class Event implements Serializable {
 		this.requirements = null;
 		this.attendees = null;
 		this.badge = "b101";
+	}
+
+	public Event(HashMap<String, ArrayList<String>> reactions) {
+		this.reactions = reactions;
 	}
 
 	public String getEventID() {
@@ -239,23 +243,23 @@ public class Event implements Serializable {
 		this.meetingLocation = meetingLocation;
 	}
 
-	public HashMap<String, Integer> getReactions() {
+	public HashMap<String, ArrayList<String>> getReactions() {
 		return this.reactions;
 	}
 
 	public int getTakePartNumberOfReactions() {
-		return this.getReactions().get("TakePart");
+		return this.getReactions().get("TakePart").size();
 	}
 
 	public int getMaybeNumberOfReactions() {
-		return this.getReactions().get("Maybe");
+		return this.getReactions().get("Maybe").size();
 	}
 
 	public int getNotInterestedNumberOfReactions() {
-		return this.getReactions().get("NotInterested");
+		return this.getReactions().get("NotInterested").size();
 	}
 
-	public void setReactions(HashMap<String, Integer> reactions) {
+	public void setReactions(HashMap<String, ArrayList<String>> reactions) {
 		this.reactions = reactions;
 	}
 
@@ -284,18 +288,25 @@ public class Event implements Serializable {
 	}
 
 	public void initializeReactions() {
-		this.reactions = new HashMap<String, Integer>();
-		this.reactions.put("TakePart", 0);
-		this.reactions.put("Maybe", 0);
-		this.reactions.put("NotInterested", 0);
+		this.reactions = new HashMap<String, ArrayList<String>>();
+		this.reactions.put("TakePart", new ArrayList<>());
+		this.reactions.put("Maybe", new ArrayList<>());
+		this.reactions.put("NotInterested", new ArrayList<>());
 	}
 
-	public void increaseReaction(String reaction) {
-		this.reactions.put(reaction, this.reactions.get(reaction) + 1);
+	public boolean hasReacted(String reaction, String userID) {
+		if (this.getReactions().get(reaction).contains(userID)) {
+			return true;
+		}
+		return false;
 	}
 
-	public void decreaseReaction(String reaction) {
-		this.reactions.put(reaction, this.reactions.get(reaction) - 1);
+	public void addReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).add(userID);
+	}
+
+	public void removeReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).remove(userID);
 	}
 
 	public boolean addRequirement(String requirement, boolean req) {

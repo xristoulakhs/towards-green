@@ -55,7 +55,12 @@ public class Connection {
         return this.gson.fromJson(json, ArrayList.class);
     }
 
-    public void requestSendData(Request request, String content) {
-
+    public void requestSendData(Request request) {
+        try {
+            objectOS.writeObject(request);
+            objectOS.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,7 +1,11 @@
 package activity;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.Request;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,15 +52,20 @@ public class EventFragment extends Fragment {
     // Event menu button (ImageView) initialization
     private ImageView eventImage;
 
+    // Event Reactions names
+    private String[] reactionNames = {"TakePart", "Maybe", "NotInterested"};
+
     // Event number of Reactions (TextViews) initialization
-    private TextView takePartReactionNumber;
-    private TextView maybeReactionNumber;
-    private TextView notInterestedReactionNumber;
+    private TextView[] reactionsNumber;
 
     // Event Reactions buttons (TextViews-button use) initialization
-    private TextView takePartReaction;
-    private TextView maybeReaction;
-    private TextView notInterestedReaction;
+    private TextView[] reactions;
+
+    //Event Reactions Layouts initialization
+    private LinearLayout[] reactionsLayout;
+
+    // Event Reactions table (show where user has reacted)
+    private boolean[] userReactions;
 
     private Event event;
 
@@ -98,14 +112,19 @@ public class EventFragment extends Fragment {
         eventMenu = view.findViewById(R.id.ic_events_menu);
 
         // Event number of Reactions (TextViews) declaration
-        takePartReactionNumber = view.findViewById(R.id.event_reaction_takePart_number);
-        maybeReactionNumber = view.findViewById(R.id.event_reaction_maybe_number);
-        notInterestedReactionNumber = view.findViewById(R.id.event_reaction_notInterested_number);
+        reactionsNumber = new TextView[]{view.findViewById(R.id.event_reaction_takePart_number),
+                                         view.findViewById(R.id.event_reaction_maybe_number),
+                                         view.findViewById(R.id.event_reaction_notInterested_number)};
 
         // Event Reactions buttons (TextViews) declaration
-        takePartReaction = view.findViewById(R.id.event_reaction_takePart);
-        maybeReaction = view.findViewById(R.id.event_reaction_maybe);
-        notInterestedReaction = view.findViewById(R.id.event_reaction_notInterested);
+        reactions = new TextView[]{view.findViewById(R.id.event_reaction_takePart),
+                                   view.findViewById(R.id.event_reaction_maybe),
+                                   view.findViewById(R.id.event_reaction_notInterested)};
+
+        // Event Reactions Layouts declaration
+        reactionsLayout = new LinearLayout[]{view.findViewById(R.id.event_takePartLayout),
+                                             view.findViewById(R.id.event_maybeLayout),
+                                             view.findViewById(R.id.event_notInterestedLayout)};
 
         // Setting Event main fields
         publisherUsername.setText(event.getCreator());
@@ -118,9 +137,12 @@ public class EventFragment extends Fragment {
         meetingTime.setText(event.getMeetingTime().toString());
         location.setText(event.getMeetingLocation());
         badge.setText(event.getBadge());
-        takePartReactionNumber.setText(String.valueOf(event.getTakePartNumberOfReactions()));
-        maybeReactionNumber.setText(String.valueOf(event.getMaybeNumberOfReactions()));
-        notInterestedReactionNumber.setText(String.valueOf(event.getNotInterestedNumberOfReactions()));
+        showReactionNumbers();
+
+        // Event user's reactions
+        userReactions = new boolean[]{event.hasReacted("TakePart", "u101"),
+                event.hasReacted("Maybe", "u101"),
+                event.hasReacted("NotInterested", "u101")};
 
         // Setting Event requirements in the appropriate fragment
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
@@ -138,6 +160,8 @@ public class EventFragment extends Fragment {
             }
         }
         transaction.commit();
+
+        setInitialReactions();
 
         // Menu button (3 dots) on Click Listener
         eventMenu.setOnClickListener(new View.OnClickListener() {
@@ -161,28 +185,85 @@ public class EventFragment extends Fragment {
         });
 
         // TakePart reaction on Click Listener
-        takePartReaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "take part", Toast.LENGTH_SHORT).show();
-                takePartReaction.setBackgroundColor(Color.parseColor("#76D38B"));
-            }
-        });
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            reactions[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!hasClickedOtherReaction(finalI)) {
+                        if (userReactions[finalI]) {
+                            userReactions[finalI] = false;
+                            changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
+                            event.removeReaction(reactionNames[finalI], "u101");
+                        }
+                        else {
+                            userReactions[finalI] = true;
+                            changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
+                            event.addReaction(reactionNames[finalI], "u101");
+                        }
+                        showReactionNumbers();
+                        updateEvent();
+                    }
+                }
+            });
+        }
+    }
 
-        // Maybe reaction on Click Listener
-        maybeReaction.setOnClickListener(new View.OnClickListener() {
+    private void changeReactionColor(LinearLayout linearLayout, TextView textView, boolean back) {
+        int colorFrom = getResources().getColor(R.color.grey_200);
+        int colorTo = getResources().getColor(R.color.green_200);
+        if (back) {
+            colorFrom = getResources().getColor(R.color.green_200);
+            colorTo = getResources().getColor(R.color.grey_200);
+        }
+        ValueAnimator colorAnimatorLayout = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimatorLayout.setDuration(250);
+        colorAnimatorLayout.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Maybe", Toast.LENGTH_SHORT).show();
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                textView.setBackgroundColor(Color.parseColor("#D6D6D6"));
+                linearLayout.setBackgroundColor((int) colorAnimatorLayout.getAnimatedValue());
             }
         });
+        colorAnimatorLayout.start();
 
-        // NotInterested reaction on Click Listener
-        notInterestedReaction.setOnClickListener(new View.OnClickListener() {
+        ValueAnimator colorAnimatorText = ValueAnimator.ofObject(new ArgbEvaluator(), colorTo, colorFrom);
+        colorAnimatorText.setDuration(250);
+        colorAnimatorText.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Not interested", Toast.LENGTH_SHORT).show();
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                textView.setBackgroundColor((int) colorAnimatorText.getAnimatedValue());
             }
         });
+        colorAnimatorText.start();
+    }
+
+    private void setInitialReactions() {
+        for (int i = 0; i < 3; i++) {
+            if(userReactions[i]) {
+                changeReactionColor(reactionsLayout[i], reactionsNumber[i], false);
+            }
+        }
+    }
+
+    private void showReactionNumbers() {
+        reactionsNumber[0].setText(String.valueOf(event.getTakePartNumberOfReactions()));
+        reactionsNumber[1].setText(String.valueOf(event.getMaybeNumberOfReactions()));
+        reactionsNumber[2].setText(String.valueOf(event.getNotInterestedNumberOfReactions()));
+    }
+
+    private boolean hasClickedOtherReaction(int reaction) {
+        for (int i = 0; i < 3; i++) {
+            if (userReactions[i] && (i != reaction)) {
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    private void updateEvent() {
+        String updatedEvent = new Gson().toJson(new Event(event.getReactions()));
+        String json = new Gson().toJson(new String[]{event.getEventID(), updatedEvent});
+        Connection.getInstance().requestSendData(new Request("UP", json));
     }
 }
