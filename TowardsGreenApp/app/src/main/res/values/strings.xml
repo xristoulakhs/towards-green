@@ -23,6 +23,8 @@
     <string name="badges">badges</string>
     <string name="create_a_post">Create a post</string>
     <string name="create_your_profile">Create your profile</string>
+    <string name="post_title">Title</string>
+    <string name="postimage">postImage</string>
 
     <!-- in progress, array with problems which will be displayed in create post-->
     <string-array name="problem_array">

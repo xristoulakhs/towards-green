@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PostFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!-- Username container -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="130dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/shape_profile_container">
+
+                    <TextView
+                        android:id="@+id/post_username_background"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/ic_person_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_person"
+                        app:layout_constraintBottom_toBottomOf="@+id/event_username_background"
+                        app:layout_constraintEnd_toEndOf="@+id/event_username_background"
+                        app:layout_constraintStart_toStartOf="@+id/event_username_background"
+                        app:layout_constraintTop_toTopOf="@+id/event_username_background"
+                        tools:ignore="MissingConstraints"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/event_username_background"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/post_publisher_username_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="username"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toEndOf="@+id/event_username_background" />
+
+                        <TextView
+                            android:id="@+id/post_published_time_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="13:15"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/post_published_date_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12/4/2022"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Title container -->
+                <TextView
+                    android:id="@+id/post_title_txt"
+                    android:layout_width="150dp"
+                    android:gravity="center"
+                    android:background="#A5F0B6"
+                    android:layout_height="match_parent"
+                    android:text="@string/post_title"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/ic_events_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:background="@drawable/shape_dots_container"
+                    android:src="@drawable/ic_dots" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/post_description"
+                    android:background="@drawable/full_shape_curve"
+                    android:layout_margin="10dp"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description" />
+
+                <ImageView
+                    android:id="@+id/post_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/postimage"
+                    android:layout_marginBottom="10dp"
+                    tools:src="@tools:sample/avatars"
+                     />
+
+            </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#A5F0B6">
+
+            <LinearLayout
+                android:id="@+id/event_reactionsLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#A5F0B6"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:id="@+id/event_reaction_takePart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="5dp"
+                        android:text="Συμφωνώ" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/event_reaction_notInterested"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="5dp"
+                        android:text="Δεν συμφωνώ" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
