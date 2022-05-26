@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/edit"
-        android:title="edit"/>
+    <item android:id="@+id/event_menu_edit"
+        android:title="Επεξεργασία"/>
+    <item android:id="@+id/event_menu_delete"
+        android:title="Διαγραφή" />
+    <item android:id="@+id/event_menu_report"
+        android:title="Αναφορά" />
+    <item android:id="@+id/event_menu_qr_scanning"
+        android:title="Σκανάρισμα QR" />
+    <item android:id="@+id/event_menu_attendees"
+        android:title="Παρευρισκόμενοι" />
 </menu>

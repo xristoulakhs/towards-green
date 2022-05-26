@@ -2,6 +2,7 @@ package activity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -15,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EventFragment extends Fragment {
@@ -88,7 +92,7 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        View view1 = view;
         // Requirement layout (LinearLayout) declaration
         requirementLayout = view.findViewById(R.id.event_requirementLayout);
 
@@ -172,7 +176,16 @@ public class EventFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.edit:
+                            case R.id.event_menu_edit:
+                                String[] array = event.getAttendees().keySet().toArray(new String[0]);
+                                Dialog dialog = new Dialog(view1.getContext());
+                                dialog.setContentView(R.layout.dialog_event_attendees);
+                                ListView listView = dialog.findViewById(R.id.event_menu_dialog_attendees_list);
+                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(view1.getContext(),
+                                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                                        array);
+                                listView.setAdapter(arrayAdapter);
+                                dialog.show();
                                 Toast.makeText(getActivity(), "Edit", Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -195,14 +208,26 @@ public class EventFragment extends Fragment {
                             userReactions[finalI] = false;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
                             event.removeReaction(reactionNames[finalI], "u101");
+                            if (finalI == 0) {
+                                event.removeAttendee("u101");
+                            }
                         }
                         else {
                             userReactions[finalI] = true;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
                             event.addReaction(reactionNames[finalI], "u101");
+                            if (finalI == 0) {
+                                event.addAttendee("u101");
+                            }
                         }
                         showReactionNumbers();
-                        updateEvent();
+                        if (finalI != 0) {
+                            updateEventReaction(false);
+                        }
+                        else {
+                            updateEventReaction(true);
+                        }
+
                     }
                 }
             });
@@ -261,9 +286,16 @@ public class EventFragment extends Fragment {
         return  false;
     }
 
-    private void updateEvent() {
-        String updatedEvent = new Gson().toJson(new Event(event.getReactions()));
-        String json = new Gson().toJson(new String[]{event.getEventID(), updatedEvent});
+    private void updateEventReaction(boolean attendees) {
+        Gson gson = new Gson();
+        String updatedEvent;
+        if (attendees) {
+            updatedEvent = gson.toJson(new Event(event.getReactions(), event.getAttendees()));
+        }
+        else {
+            updatedEvent = gson.toJson(new Event(event.getReactions()));
+        }
+        String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
         Connection.getInstance().requestSendData(new Request("UP", json));
     }
 }

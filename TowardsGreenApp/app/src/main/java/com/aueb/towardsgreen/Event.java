@@ -140,6 +140,11 @@ public class Event implements Serializable {
 		this.reactions = reactions;
 	}
 
+	public Event(HashMap<String, ArrayList<String>> reactions, HashMap<String,Boolean> attendees) {
+		this.reactions = reactions;
+		this.attendees = attendees;
+	}
+
 	public String getEventID() {
 		return this.eventID;
 	}
@@ -321,12 +326,12 @@ public class Event implements Serializable {
 		this.requirements.put(requirement, true);
 	}
 
-	public boolean addAttendee(String userID) {
-		return this.attendees.put(userID, false);
+	public void addAttendee(String userID) {
+		this.attendees.put(userID, false);
 	}
 
-	public boolean removeAttendee(String userID) {
-		return this.attendees.remove(userID);
+	public void removeAttendee(String userID) {
+		this.attendees.remove(userID);
 	}
 
 	public boolean isAttendeePresent(String userID) {
