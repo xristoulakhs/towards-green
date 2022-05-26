@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_profile"
-    tools:context=".profile.ProfileActivity">
+    tools:context="ProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +55,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
+                android:id="@+id/profile_image"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:contentDescription="@string/profile_picture"
@@ -63,6 +64,7 @@
                 android:layout_marginBottom="15dp"/>
 
             <TextView
+                android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_name"
@@ -78,24 +80,50 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <TextView
-                android:id="@+id/userId"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/user_id"
-                android:textColor="@color/black"
-                android:layout_margin="5dp"/>
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_id"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:id="@+id/profile_userId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:layout_margin="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/role"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp" />
+
+                <TextView
+                    android:id="@+id/profile_userRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/userRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/role"
-                android:textColor="@color/black"
-                android:layout_margin="5dp" />
-
-            <TextView
-                android:id="@+id/qrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/qrcode"
@@ -103,26 +131,57 @@
                 android:layout_margin="5dp"/>
 
             <ImageView
-                android:id="@+id/qrCodeImage"
+                android:id="@+id/profile_qrCodeImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:contentDescription="@string/qrcode"
                 android:src="@drawable/qr"/>
 
-            <TextView
-                android:id="@+id/points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/points"
-                android:textColor="@color/black"
-                android:layout_margin="5dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/badges"
-                android:textColor="@color/black"
-                android:layout_margin="5dp"/>
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/points"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:id="@+id/profile_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/dark_blue"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number_of_badges"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:id="@+id/profile_number_of_badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/dark_blue"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -156,6 +215,7 @@
             android:orientation="vertical">
 
             <ListView
+                android:id="@+id/profile_badgeList"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/teal_700"

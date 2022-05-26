@@ -10,4 +10,6 @@
     <color name="gray">#aeaeae</color>
     <color name="green">#5bbd48</color>
     <color name="barColor">#367a2a</color>
+    <color name="dark_gray">#666666</color>
+    <color name="dark_blue">#000b66</color>
 </resources>

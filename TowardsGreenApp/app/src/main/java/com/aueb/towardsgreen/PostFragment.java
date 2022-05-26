@@ -19,6 +19,9 @@ public class PostFragment extends Fragment {
     private TextView publish_time;
     private TextView publisher;
 
+    private TextView agree;
+    private TextView disagree;
+
     private ImageView userImg;
     private ImageView postImg;
 
@@ -43,6 +46,24 @@ public class PostFragment extends Fragment {
         post_title = view.findViewById(R.id.post_title_txt);
         postImg = view.findViewById(R.id.post_image);
         userImg = view.findViewById(R.id.post_username_background);
+        agree = view.findViewById(R.id.post_reaction_agree);
+        disagree = view.findViewById(R.id.post_reaction_not_agree);
+
+        agree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //prosthetei 1 sta atoma pou symfwnoun sti basi
+            }
+        });
+
+        disagree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //prosthetei 1 sta atoma pou den sumfwnoun sti basi
+            }
+        });
     }
+
+
 
 }

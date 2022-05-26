@@ -16,15 +16,15 @@
     <string name="TowardsGreen">TowardsGreen</string>
     <string name="profile_picture">profile picture</string>
     <string name="profile_name">profile name</string>
-    <string name="user_id">User id</string>
-    <string name="role">Role</string>
+    <string name="role">Role:</string>
     <string name="qrcode">QRcode</string>
-    <string name="points">Points</string>
-    <string name="badges">badges</string>
     <string name="create_a_post">Create a post</string>
     <string name="create_your_profile">Create your profile</string>
     <string name="post_title">Title</string>
     <string name="postimage">postImage</string>
+    <string name="user_id">User id:</string>
+    <string name="points">Points:</string>
+    <string name="number_of_badges">Number of badges:</string>
 
     <!-- in progress, array with problems which will be displayed in create post-->
     <string-array name="problem_array">
