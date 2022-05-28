@@ -25,6 +25,7 @@
     <string name="user_id">User id:</string>
     <string name="points">Points:</string>
     <string name="number_of_badges">Number of badges:</string>
+    <string name="more">Περισσότερα</string>
 
     <!-- in progress, array with problems which will be displayed in create post-->
     <string-array name="problem_array">

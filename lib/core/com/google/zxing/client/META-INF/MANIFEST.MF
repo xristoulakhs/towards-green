@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: com.google.zxing.javase
+Build-Jdk-Spec: 1.8
+Created-By: Maven Archiver 3.4.0
+
