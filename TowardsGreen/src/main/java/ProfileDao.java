@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class ProfileDao implements Dao<Profile{
+public class ProfileDao implements Dao<Profile>{
     @Override
     public ArrayList<Profile> getAll() {
         return null;
