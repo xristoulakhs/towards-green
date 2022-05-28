@@ -1,4 +1,4 @@
-package com.aueb.towardsgreen;
+package com.aueb.towardsgreen.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.aueb.towardsgreen.R;
 
 public class PostFragment extends Fragment {
 

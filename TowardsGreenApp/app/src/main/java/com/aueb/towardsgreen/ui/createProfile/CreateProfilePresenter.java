@@ -1,4 +1,4 @@
-package com.aueb.towardsgreen.createProfile;
+package com.aueb.towardsgreen.ui.createProfile;
 
 public class CreateProfilePresenter {
 

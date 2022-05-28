@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_create_post"
     android:orientation="vertical"
-    tools:context=".createPost.CreatePostActivity">
+    tools:context=".ui.CreatePostFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -66,40 +66,26 @@
             android:id="@+id/spinners"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_margin="20sp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="16dp">
+            tools:ignore="MissingConstraints">
 
             <Spinner
-                android:id="@+id/Location"
-                android:layout_width="110dp"
+                android:id="@+id/post_location"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="65dp"
-                android:layout_marginEnd="30dp"
                 android:contentDescription="@string/location"
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:minHeight="48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="188dp"/>
-
-            <Spinner
-                android:id="@+id/problem"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="80dp"
-                android:contentDescription="@string/problem"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/Location"
-                tools:ignore="MissingConstraints"
                 tools:layout_editor_absoluteY="188dp" />
+
         </LinearLayout>
 
         <EditText
@@ -130,7 +116,7 @@
             tools:ignore="MissingConstraints">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/submit"
+                android:id="@+id/post_btn_submit"
                 style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -141,7 +127,7 @@
                 android:textColor="@color/black" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/cancel"
+                android:id="@+id/post_btn_cancel"
                 style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

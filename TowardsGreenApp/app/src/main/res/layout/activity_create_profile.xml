@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".createProfile.CreateProfileActivity"
+    tools:context=".ui.createProfile.CreateProfileActivity"
     android:background="@drawable/bg_create_profile"> <!-- background color-->
 
     <LinearLayout

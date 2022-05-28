@@ -1,4 +1,4 @@
-package com.aueb.towardsgreen.createProfile;
+package com.aueb.towardsgreen.ui.createProfile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.domain.Profile;
 
 public class CreateProfileActivity extends AppCompatActivity implements CreateProfileView{
 
@@ -34,14 +35,18 @@ public class CreateProfileActivity extends AppCompatActivity implements CreatePr
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Profile createdProfile = new Profile();
+                createdProfile.setFullName(firstName.getText().toString()+lastName.getText().toString());
+                createdProfile.generateUserId();
 
+                //TODO: save to dao and continue to main screen
             }
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO: return to login screen
             }
         });
     }

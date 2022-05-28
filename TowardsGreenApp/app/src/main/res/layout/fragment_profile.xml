@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_profile"
-    tools:context="ProfileFragment">
+    tools:context=".ui.ProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -132,8 +132,8 @@
 
             <ImageView
                 android:id="@+id/profile_qrCodeImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:contentDescription="@string/qrcode"
                 android:src="@drawable/qr"/>
 
