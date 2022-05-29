@@ -3,9 +3,11 @@ package com.aueb.towardsgreen.ui.createProfile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.domain.Profile;
@@ -36,10 +38,25 @@ public class CreateProfileActivity extends AppCompatActivity implements CreatePr
             @Override
             public void onClick(View view) {
                 Profile createdProfile = new Profile();
+                if(TextUtils.isEmpty(firstName.getText())){
+                    firstName.setError("Παρακαλώ εισάγετε ενα έγκυρο όνομα!");
+                }else if(TextUtils.isEmpty(lastName.getText())){
+                    lastName.setError("Παρακαλώ εισάγετε ενα έγκυρο επώνυμο!");
+                }else if(TextUtils.isEmpty(email.getText())){
+                    lastName.setError("Παρακαλώ εισάγετε ενα έγκυρο email!");
+                }else if(TextUtils.isEmpty(passwordInput.getText())){
+                    lastName.setError("Παρακαλώ εισάγετε εναν έγκυρο κωδικό!");
+                }else if(TextUtils.isEmpty(lastName.getText())){
+                    lastName.setError("Παρακαλώ εισάγετε εναν έγκυρο κωδικό!");
+                }else if(!passwordInput.getText().toString().equals(passwordConf.getText().toString())){
+                    Toast.makeText(getApplicationContext(),"Οι κωδικοί δεν ταιριάζουν",Toast.LENGTH_LONG).show();
+                }else{
                 createdProfile.setFullName(firstName.getText().toString()+lastName.getText().toString());
                 createdProfile.generateUserId();
 
                 //TODO: save to dao and continue to main screen
+
+                }
             }
         });
 

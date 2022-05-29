@@ -26,9 +26,10 @@
     <string name="points">Points:</string>
     <string name="number_of_badges">Number of badges:</string>
     <string name="more">Περισσότερα</string>
+    <string name="post_addMedia">+ Προσθεστε φωτογραφια</string>
 
 
-<!--    array with locations-->
+    <!--    array with locations-->
     <string-array name="nomoi">
         <item>ΑΘΗΝΑ</item>
          <item>ΕΥΒΟΙΑ</item>

@@ -1,19 +1,23 @@
 package com.aueb.towardsgreen.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.domain.Post;
 
 public class CreatePostFragment extends Fragment {
 
@@ -21,9 +25,11 @@ public class CreatePostFragment extends Fragment {
     EditText postDescription;
 
     Spinner location;
+    private String postLocation;
 
     Button btnSubmit;
     Button btnCancel;
+    Button btnAddMedia;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,5 +56,69 @@ public class CreatePostFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
                 R.array.nomoi, android.R.layout.simple_spinner_item);
 
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        location.setAdapter(adapter);
+
+        location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                setPostLocation(adapterView.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        btnAddMedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: epilogi fwtografias
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO; return at previous activity
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Post newpost = new Post();
+                if(TextUtils.isEmpty(postTitle.getText())){
+                    postTitle.setError("Παρακαλώ εισάγετε ενα έγκυρο όνομα!");
+                }else if(TextUtils.isEmpty(postDescription.getText())){
+                    postDescription.setError("Παρακαλώ εισάγετε ενα έγκυρο επώνυμο!");
+                }else if(postLocation.isEmpty()){
+                    Toast.makeText(getContext(),"Παρακαλώ επιλέξτε τοποθεσία", Toast.LENGTH_LONG).show();
+                }else{
+                    newpost.setTitle(postTitle.getText().toString());
+                    newpost.setLocation(postLocation);
+                    newpost.setDescription(postDescription.getText().toString());
+
+                    //TODO: na bazei to profile autou pou eftiakse to post
+                    //TODO: save to dao
+
+                }
+            }
+        });
+
+
+    }
+
+    //getters setters
+
+
+    public String getPostLocation() {
+        return postLocation;
+    }
+
+    public void setPostLocation(String postLocation) {
+        this.postLocation = postLocation;
     }
 }

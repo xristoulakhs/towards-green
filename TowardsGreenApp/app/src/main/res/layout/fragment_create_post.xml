@@ -88,31 +88,54 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:hint="@string/add_description"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            android:textAlignment="center"
-            android:layout_marginTop="20sp"
-            android:background="@drawable/editext_border"
+
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinners"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/spinners">
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:background="@drawable/editext_border"
+                android:hint="@string/add_description"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinners"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button"
+                android:text="@string/post_addMedia"
+                android:textAlignment="center"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/butons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_margin="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
             tools:ignore="MissingConstraints">
 
             <androidx.appcompat.widget.AppCompatButton

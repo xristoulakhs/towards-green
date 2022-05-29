@@ -9,18 +9,28 @@ public class Post {
     private int[] votes;
     private HashMap<Profile, String> comments;
     private String description;
+    private String location;
 
     public Post(){
         this.votes= new int[2];
         this.comments= new HashMap<>();
     }
 
-    public Post(Profile creator, String title, int[] votes,String desc, HashMap<Profile, String> comments) {
+    public Post(Profile creator, String title,String location, int[] votes,String desc, HashMap<Profile, String> comments) {
         this.creator = creator;
         this.title = title;
+        this.location=location;
         this.votes = votes;
         this.description=desc;
         this.comments = comments;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Profile getCreator() {
