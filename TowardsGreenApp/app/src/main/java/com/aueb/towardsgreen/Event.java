@@ -1,22 +1,27 @@
-import java.awt.image.BufferedImage;
+package com.aueb.towardsgreen;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
-
 public class Event implements Serializable {
 
 	public enum Status {
 		OPEN {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Ανοιχτό προς συμμετοχή";
+				return "Ξ‘Ξ½ΞΏΞΉΟ‡Ο„Ο Ο€ΟΞΏΟ‚ ΟƒΟ…ΞΌΞΌΞµΟ„ΞΏΟ‡Ξ®";
 			}
 
 			@Override
@@ -25,9 +30,10 @@ public class Event implements Serializable {
 			}
 		},
 		IN_PROGRESS {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Σε εξέλιξη";
+				return "Ξ£Ξµ ΞµΞΎΞ­Ξ»ΞΉΞΎΞ·";
 			}
 
 			@Override
@@ -36,9 +42,10 @@ public class Event implements Serializable {
 			}
 		},
 		CLOSED {
+			@NonNull
 			@Override
 			public String toString() {
-				return "Ολοκληρώθηκε";
+				return "ΞΞ»ΞΏΞΊΞ»Ξ·ΟΟΞΈΞ·ΞΊΞµ";
 			}
 
 			@Override
@@ -61,7 +68,7 @@ public class Event implements Serializable {
 	// Image is optional. Image type needs to be changed in Android Studio, so that we can depict it in the device.
 	private byte[] image;
 	private String meetingLocation;
-	// <Reactions, numberOfReactions>
+	// <Reactions, Users that reacted>
 	private HashMap<String, ArrayList<String>> reactions;
 	// <Requirement, fulfilled or not>
 	private HashMap<String, Boolean> requirements;
@@ -90,7 +97,7 @@ public class Event implements Serializable {
 		this.badge = badge;
 	}
 
-
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public Event(String creator, String meetingDate, String meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, String badge) {
 		this.eventID = "e1";
@@ -110,7 +117,8 @@ public class Event implements Serializable {
 		this.badge = badge;
 	}
 
-	public Event(String eventID, String creator) throws IOException {
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public Event(String eventID, String creator) {
 		this.eventID = eventID;
 		this.creator = creator;
 		this.publishedDate = LocalDate.now().toString();
@@ -118,30 +126,31 @@ public class Event implements Serializable {
 		this.publishedTime = LocalTime.now().toString();
 		this.meetingTime = LocalTime.now().toString();
 		this.status = Status.OPEN;
-		this.title = "Δενδροφύτευση";
-		this.description = "Ωραίο το δάσος; Ας το προσέξουμε λοιπόν.";
-		this.getClass().getResource("image/Forests.png");
-		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\Forests.png"));
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ImageIO.write(bImage, "png", bos );
-	    byte [] data = bos.toByteArray();
-		this.image = data;
-		this.meetingLocation = "Εκει";
-		this.initializeReactions();
-		this.reactions.get("TakePart").add("u101");
-		this.requirements = new HashMap<String, Boolean>();
-		this.requirements.put("Trees", true);
-		this.requirements.put("Trees 3", false);
+		this.title = "dokimi";
+		this.description = "This is a test!";
+		this.image = null;
+		this.meetingLocation = "Dokimi!!";
+		this.reactions = null;
+		this.requirements = null;
 		this.attendees = null;
-		this.badge = null;
+		this.badge = "b101";
+	}
+
+	public Event(HashMap<String, ArrayList<String>> reactions) {
+		this.reactions = reactions;
+	}
+
+	public Event(HashMap<String, ArrayList<String>> reactions, HashMap<String,Boolean> attendees) {
+		this.reactions = reactions;
+		this.attendees = attendees;
 	}
 
 	public String getEventID() {
-		return eventID;
+		return this.eventID;
 	}
 
 	public String getCreator() {
-		return creator;
+		return this.creator;
 	}
 
 	public void setCreator(String creator) {
@@ -149,7 +158,7 @@ public class Event implements Serializable {
 	}
 
 	public String getPublishedDate() {
-		return publishedDate;
+		return this.publishedDate;
 	}
 
 	public void setPublishedDate(LocalDate publishedDate) {
@@ -157,7 +166,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingDate() {
-		return meetingDate;
+		return this.meetingDate;
 	}
 
 	public void setMeetingDate(LocalDate meetingDate) {
@@ -165,7 +174,7 @@ public class Event implements Serializable {
 	}
 
 	public String getPublishedTime() {
-		return publishedTime;
+		return this.publishedTime;
 	}
 
 	public void setPublishedTime(LocalTime publishedTime) {
@@ -173,7 +182,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingTime() {
-		return meetingTime;
+		return this.meetingTime;
 	}
 
 	public void setMeetingTime(LocalTime meetingTime) {
@@ -181,15 +190,15 @@ public class Event implements Serializable {
 	}
 
 	public Status getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public String getStatusString() {
-		return status.toString();
+		return this.status.toString();
 	}
 
 	public String getStatusColor() {
-		return status.getColor();
+		return this.status.getColor();
 	}
 
 	public void setStatus(Status status) {
@@ -197,7 +206,7 @@ public class Event implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -205,7 +214,7 @@ public class Event implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -213,15 +222,26 @@ public class Event implements Serializable {
 	}
 
 	public byte[] getImage() {
-		return image;
+		return this.image;
 	}
 
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
+	public void setImage(Bitmap image) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		this.image = stream.toByteArray();
+		image.recycle();
+	}
+
+	public Bitmap getImageBitmap() {
+		return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
+	}
+
 	public String getMeetingLocation() {
-		return meetingLocation;
+		return this.meetingLocation;
 	}
 
 	public void setMeetingLocation(String meetingLocation) {
@@ -229,7 +249,19 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, ArrayList<String>> getReactions() {
-		return reactions;
+		return this.reactions;
+	}
+
+	public int getTakePartNumberOfReactions() {
+		return this.getReactions().get("TakePart").size();
+	}
+
+	public int getMaybeNumberOfReactions() {
+		return this.getReactions().get("Maybe").size();
+	}
+
+	public int getNotInterestedNumberOfReactions() {
+		return this.getReactions().get("NotInterested").size();
 	}
 
 	public void setReactions(HashMap<String, ArrayList<String>> reactions) {
@@ -237,7 +269,7 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getRequirements() {
-		return requirements;
+		return this.requirements;
 	}
 
 	public void setRequirements(HashMap<String, Boolean> requirements) {
@@ -245,7 +277,7 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getAttendees() {
-		return attendees;
+		return this.attendees;
 	}
 
 	public void setAttendees(HashMap<String, Boolean> attendees) {
@@ -253,7 +285,7 @@ public class Event implements Serializable {
 	}
 
 	public String getBadge() {
-		return badge;
+		return this.badge;
 	}
 
 	public void setBadge(String badge) {
@@ -262,8 +294,57 @@ public class Event implements Serializable {
 
 	public void initializeReactions() {
 		this.reactions = new HashMap<String, ArrayList<String>>();
-		this.reactions.put("TakePart", new ArrayList<String>());
-		this.reactions.put("Maybe", new ArrayList<String>());
-		this.reactions.put("NotInterested", new ArrayList<String>());
+		this.reactions.put("TakePart", new ArrayList<>());
+		this.reactions.put("Maybe", new ArrayList<>());
+		this.reactions.put("NotInterested", new ArrayList<>());
+	}
+
+	public boolean hasReacted(String reaction, String userID) {
+		if (this.getReactions().get(reaction).contains(userID)) {
+			return true;
+		}
+		return false;
+	}
+
+	public void addReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).add(userID);
+	}
+
+	public void removeReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).remove(userID);
+	}
+
+	public boolean addRequirement(String requirement, boolean req) {
+		return this.requirements.put(requirement, req);
+	}
+
+	public boolean removeRequirement(String requirement) {
+		return this.requirements.remove(requirement);
+	}
+
+	public void setRequirementFulfilled(String requirement) {
+		this.requirements.put(requirement, true);
+	}
+
+	public void addAttendee(String userID) {
+		this.attendees.put(userID, false);
+	}
+
+	public void removeAttendee(String userID) {
+		this.attendees.remove(userID);
+	}
+
+	public boolean isAttendeePresent(String userID) {
+		return this.attendees.get(userID);
+	}
+
+	public ArrayList<String> getAttendeesList() {
+		ArrayList<String> users = new ArrayList<String>();
+		for (String user:this.attendees.keySet()) {
+			if (this.attendees.get(user)) {
+				users.add(user);
+			}
+		}
+		return users;
 	}
 }
