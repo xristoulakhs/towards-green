@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -38,13 +39,15 @@ import java.util.List;
 
 public class EventPageFragment extends Fragment {
     private Connection connection;
+
     private boolean refreshing = false;
-    //private ArrayList<Event> events;
     private int numberOfEventsFetched = 0;
+
     private LinearLayout eventsLayout;
     private ScrollView eventScrollView;
     private SwipeRefreshLayout eventSwipeRefreshLayout;
 
+    private FloatingActionButton floatingCreateEventBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,15 @@ public class EventPageFragment extends Fragment {
         eventsLayout = view.findViewById(R.id.eventsLayout);
         eventScrollView = view.findViewById(R.id.event_page_scrollView);
         eventSwipeRefreshLayout = view.findViewById(R.id.event_page_refreshLayout);
+
+        floatingCreateEventBtn = view.findViewById(R.id.event_create_floating_btn);
+
+        floatingCreateEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager().beginTransaction().replace(R.id.container_content, new CreateEditEventFragment()).commit();
+            }
+        });
 
 
         eventSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

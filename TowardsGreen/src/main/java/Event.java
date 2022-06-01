@@ -121,18 +121,18 @@ public class Event implements Serializable {
 		this.title = "Δενδροφύτευση";
 		this.description = "Ωραίο το δάσος; Ας το προσέξουμε λοιπόν.";
 		this.getClass().getResource("image/Forests.png");
-		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\Forests.png"));
+		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\sample.png"));
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	    ImageIO.write(bImage, "png", bos );
 	    byte [] data = bos.toByteArray();
 		this.image = data;
 		this.meetingLocation = "Εκει";
 		this.initializeReactions();
-		this.reactions.get("TakePart").add("u101");
+		this.reactions.get("Maybe").add("u101");
 		this.requirements = new HashMap<String, Boolean>();
 		this.requirements.put("Trees", true);
 		this.requirements.put("Trees 3", false);
-		this.attendees = null;
+		this.attendees = new HashMap<String, Boolean>();
 		this.badge = null;
 	}
 

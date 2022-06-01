@@ -136,6 +136,13 @@ public class Event implements Serializable {
 		this.badge = "b101";
 	}
 
+	public Event() {
+		this.status = Status.OPEN;
+		this.initializeReactions();
+		this.requirements = new HashMap<>();
+		this.attendees = new HashMap<>();
+	}
+
 	public Event(HashMap<String, ArrayList<String>> reactions) {
 		this.reactions = reactions;
 	}
