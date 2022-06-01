@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/posts_page"
+            android:title="Δημοσιεύσεις" />
+        <item
+            android:id="@+id/events_page"
+            android:title="Εκδηλώσεις" />
+        <item
+            android:id="@+id/profile_page"
+            android:title="Προφίλ" />
+        <item
+            android:id="@+id/leaderboard_page"
+            android:title="Πίνακας κατάταξης" />
+    </group>
+
+    <item tools:ignore="MenuTitle">
+        <menu>
+            <item
+                android:id="@+id/sign_out"
+                android:icon="@drawable/ic_exit"
+                android:title="Αποσύνδεση" />
+        </menu>
+    </item>
+</menu>
