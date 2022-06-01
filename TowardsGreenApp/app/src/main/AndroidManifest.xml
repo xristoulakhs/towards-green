@@ -17,7 +17,7 @@
             android:exported="false">
         </activity>
         <activity
-            android:name=".ui.createProfile.CreateProfileActivity"
+            android:name="activity.createProfile.CreateProfileActivity"
             android:exported="false">
         </activity>
         <activity

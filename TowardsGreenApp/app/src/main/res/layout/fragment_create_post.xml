@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_create_post"
     android:orientation="vertical"
-    tools:context=".ui.CreatePostFragment">
+    tools:context="activity.CreatePostFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout3"

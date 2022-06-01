@@ -1,4 +1,4 @@
-package com.aueb.towardsgreen.ui;
+package activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
