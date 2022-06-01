@@ -11,27 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TowardsGreen">
-        <activity
-<<<<<<< HEAD
-            android:name=".post.PostActivity"
-            android:exported="false" />
-        <activity
-            android:name=".createPost.CreatePostActivity"
-            android:exported="false">
-        </activity>
+
         <activity
             android:name="activity.createProfile.CreateProfileActivity"
             android:exported="false">
         </activity>
-        <activity
-            android:name=".profile.ProfileActivity"
-            android:exported="false" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
 
-=======
+        <activity
             android:name="activity.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -39,7 +25,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
->>>>>>> 8b69a5f048b510de5c9fcfcfab5b59910acf320e
         </activity>
     </application>
 

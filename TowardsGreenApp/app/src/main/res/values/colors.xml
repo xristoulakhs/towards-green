@@ -9,15 +9,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<<<<<<< HEAD
     <color name="gray">#aeaeae</color>
     <color name="green">#5bbd48</color>
     <color name="barColor">#367a2a</color>
     <color name="dark_gray">#666666</color>
     <color name="dark_blue">#000b66</color>
-=======
     <color name="main_green">#62BF77</color>
     <color name="main_green_upper_bar">#4FA162</color>
     <color name="grey">#565656</color>
->>>>>>> 8b69a5f048b510de5c9fcfcfab5b59910acf320e
 </resources>
