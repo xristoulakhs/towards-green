@@ -28,16 +28,14 @@ import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EventFragment extends Fragment {
     // Requirement layout (LinearLayout) initialization
-    private LinearLayout requirementLayout;
+    private LinearLayout requirementContainerLayout;
+
+    // Requirements List layout (LinearLayout) initialization
+    private LinearLayout requirementListLayout;
 
     // Event main fields (TextViews) initialization
     private TextView publishedTime;
@@ -93,8 +91,12 @@ public class EventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         View view1 = view;
+
         // Requirement layout (LinearLayout) declaration
-        requirementLayout = view.findViewById(R.id.event_requirementLayout);
+        requirementContainerLayout = view.findViewById(R.id.event_requirement_container);
+
+        // Requirements List layout (LinearLayout) declaration
+        requirementListLayout = view.findViewById(R.id.event_requirementLayout);
 
         // Event main fields (TextViews) declaration
         TextView publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
@@ -110,7 +112,13 @@ public class EventFragment extends Fragment {
 
         // Event image (ImageView) declaration
         eventImage = view.findViewById(R.id.event_image);
-        eventImage.setImageBitmap(event.getImageBitmap());
+
+        if (event.getImage() == null) {
+            eventImage.setVisibility(View.GONE);
+        }
+        else {
+            eventImage.setImageBitmap(event.getImageBitmap());
+        }
 
         // Event menu button (ImageView) declaration
         eventMenu = view.findViewById(R.id.ic_events_menu);
@@ -131,16 +139,23 @@ public class EventFragment extends Fragment {
                                              view.findViewById(R.id.event_notInterestedLayout)};
 
         // Setting Event main fields
-        publisherUsername.setText(event.getCreator());
-        publishedTime.setText(event.getPublishedTime().toString());
-        publishedDate.setText(event.getPublishedDate().toString());
+//        publisherUsername.setText(event.getCreator());
+        publishedTime.setText(event.getPublishedTimeString());
+        publishedDate.setText(event.getPublishedDateString());
         title.setText(event.getTitle());
         status.setText(event.getStatusString());
         description.setText(event.getDescription());
-        meetingDate.setText(event.getMeetingDate().toString());
-        meetingTime.setText(event.getMeetingTime().toString());
+        meetingDate.setText(event.getMeetingDateString());
+        meetingTime.setText(event.getMeetingTimeString());
         location.setText(event.getMeetingLocation());
-        badge.setText(event.getBadge());
+
+        if (event.getBadge() == null) {
+            LinearLayout badgeLayout = view.findViewById(R.id.event_badgeLayout);
+            badgeLayout.setVisibility(View.GONE);
+        }
+        else {
+            badge.setText(event.getBadge());
+        }
         showReactionNumbers();
 
         // Event user's reactions
@@ -153,14 +168,14 @@ public class EventFragment extends Fragment {
         EventRequirementFragment eventRequirementFragment;
 
         if (!event.getRequirements().isEmpty()) {
-            requirementLayout.setVisibility(View.VISIBLE);
+            requirementContainerLayout.setVisibility(View.VISIBLE);
             for (Map.Entry<String, Boolean> requirement : event.getRequirements().entrySet()) {
                 Bundle args = new Bundle();
                 args.putString("requirementName", requirement.getKey());
                 args.putString("requirementFulfillment", String.valueOf(requirement.getValue()));
                 eventRequirementFragment = new EventRequirementFragment();
                 eventRequirementFragment.setArguments(args);
-                transaction.add(requirementLayout.getId(), eventRequirementFragment);
+                transaction.add(requirementListLayout.getId(), eventRequirementFragment);
             }
         }
         transaction.commit();
@@ -296,6 +311,6 @@ public class EventFragment extends Fragment {
             updatedEvent = gson.toJson(new Event(event.getReactions()));
         }
         String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
-        Connection.getInstance().requestSendData(new Request("UP", json));
+        Connection.getInstance().requestSendDataWithoutResponse(new Request("UP", json));
     }
 }

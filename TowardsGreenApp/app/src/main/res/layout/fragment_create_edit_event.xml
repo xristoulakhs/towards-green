@@ -185,6 +185,7 @@
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
+                        android:visibility="gone"
                         android:id="@+id/event_create_edit_delete_image_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="47dp"

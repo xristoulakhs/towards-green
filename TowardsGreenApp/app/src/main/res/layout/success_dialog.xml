@@ -9,11 +9,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp" >
+        android:layout_height="100dp"
+        android:background="#12DA92">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/ic_success"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,9 +34,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
             android:layout_gravity="center"
-            android:text="Τέλεια!" />
+            android:text="Τέλεια!"
+            android:textColor="#12DA92"
+            android:textSize="40dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"

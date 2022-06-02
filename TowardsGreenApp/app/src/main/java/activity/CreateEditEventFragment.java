@@ -2,6 +2,7 @@ package activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +11,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -33,14 +36,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -70,9 +77,10 @@ public class CreateEditEventFragment extends Fragment {
     private EditText title;
     private EditText description;
 
-    private Bitmap img;
+    private Bitmap eventImageResource;
     private ImageView image;
     private Button chooseImageBtn;
+    private ImageButton deleteImageBtn;
 
     private TextView dateDay;
     private TextView dateMonth;
@@ -100,6 +108,10 @@ public class CreateEditEventFragment extends Fragment {
     // If the user wants to create an event, "Create event" will be shown.
     // Correspondingly, "Save changes" will be shown in edit event.
     private Button createSaveBtn;
+
+    // Event variables
+    String eventTitle, eventDescription, eventMeetingLocation, eventBadge;
+    int[] eventMeetingDate, eventMeetingTime;
 
     /**
      * If an event object has been passed through bundle in this fragment,
@@ -146,6 +158,7 @@ public class CreateEditEventFragment extends Fragment {
 
         image = view.findViewById(R.id.event_create_edit_image);
         chooseImageBtn = view.findViewById(R.id.event_create_edit_choose_image_btn);
+        deleteImageBtn = view.findViewById(R.id.event_create_edit_delete_image_btn);
 
         dateDay = view.findViewById(R.id.event_create_edit_date_day_txt);
         dateMonth = view.findViewById(R.id.event_create_edit_date_month_txt);
@@ -171,6 +184,8 @@ public class CreateEditEventFragment extends Fragment {
 
         createSaveBtn = view.findViewById(R.id.event_create_edit_save_create_btn);
 
+        // TODO: Add Edit mode implementation
+        // TODO: Add create an event from post (need post implementation first)
         if (createEditMode) {
             enableCreateMode();
         }
@@ -184,6 +199,15 @@ public class CreateEditEventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showImageOptionsDialog();
+            }
+        });
+
+        deleteImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteImageBtn.setVisibility(View.GONE);
+                image.setImageResource(0);
+                eventImageResource = null;
             }
         });
 
@@ -211,26 +235,34 @@ public class CreateEditEventFragment extends Fragment {
         chooseBadgeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Fragment> fragments = fragmentManager.getFragments();
-                CreateEventRequirementFragment createEventRequirementFragment = (CreateEventRequirementFragment) fragments.get(0);
-                Toast.makeText(getActivity(), createEventRequirementFragment.getRequirementName(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
         insertRequirementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
                 String requirementNameTxt = requirementName.getText().toString();
-                Bundle args = new Bundle();
-                args.putString("requirementName", requirementNameTxt);
-                args.putBoolean("requirementFulfillment", requirementFulfillmentSwitch.isChecked());
-                CreateEventRequirementFragment createEventRequirementFragment = new CreateEventRequirementFragment();
-                createEventRequirementFragment.setArguments(args);
-                transaction.add(requirementListLayout.getId(), createEventRequirementFragment);
-                transaction.commit();
+                if (checkInputValidity(requirementNameTxt)) {
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    Bundle args = new Bundle();
+                    args.putString("requirementName", requirementNameTxt);
+                    args.putBoolean("requirementFulfillment", requirementFulfillmentSwitch.isChecked());
+                    CreateEventRequirementFragment createEventRequirementFragment = new CreateEventRequirementFragment();
+                    createEventRequirementFragment.setArguments(args);
+                    transaction.add(requirementListLayout.getId(), createEventRequirementFragment);
+                    transaction.commit();
+                }
+            }
+        });
 
+        createSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkEventFieldsValidity()) {
+                    CreateEditEventTask createEditEventTask = new CreateEditEventTask();
+                    createEditEventTask.execute();
+                }
             }
         });
     }
@@ -311,19 +343,21 @@ public class CreateEditEventFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_GALLERY) {
-            img = null;
+            eventImageResource = null;
             Uri imageUri = data.getData();
             try {
                 InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
-                img = BitmapFactory.decodeStream(inputStream);
+                eventImageResource = BitmapFactory.decodeStream(inputStream);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            image.setImageBitmap(img);
+            deleteImageBtn.setVisibility(View.VISIBLE);
+            image.setImageBitmap(eventImageResource);
         }
         else if (requestCode == TAKE_PICTURE) {
-            Bitmap img = (Bitmap) data.getExtras().get("data");
-            image.setImageBitmap(img);
+            deleteImageBtn.setVisibility(View.VISIBLE);
+            eventImageResource = (Bitmap) data.getExtras().get("data");
+            image.setImageBitmap(eventImageResource);
         }
     }
 
@@ -361,10 +395,97 @@ public class CreateEditEventFragment extends Fragment {
         timePickerDialog.show();
     }
 
-    public void getEditTextsContent() {
-        event.setTitle(title.getText().toString());
-        event.setDescription(description.getText().toString());
+    private boolean checkEventFieldsValidity() {
+        eventTitle = title.getText().toString();
+        eventDescription = description.getText().toString();
+        eventMeetingLocation = location.getText().toString();
 
+        if (checkInputValidity(eventTitle) &&
+                checkInputValidity(eventDescription) &&
+                checkInputValidity(eventMeetingLocation) &&
+                checkDateAndTimeValidity()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkInputValidity(String input) {
+        if (input.equals("")) {
+            Toast.makeText(getActivity(), "Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkDateAndTimeValidity() {
+        calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = Integer.parseInt(dateYear.getText().toString());
+        int month = Integer.parseInt(dateMonth.getText().toString());
+        int day = Integer.parseInt(dateDay.getText().toString());
+
+        eventMeetingDate = new int[]{year, month, day};
+
+        int currentHour = calendar.get(Calendar.HOUR);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        int hour = Integer.parseInt(timeHour.getText().toString());
+        int minute = Integer.parseInt(timeMinute.getText().toString());
+
+        eventMeetingTime = new int[]{hour, minute};
+
+        if (year >= currentYear && month >= currentMonth && day >= currentDay) {
+            if (day == currentDay && hour < currentHour && minute < currentMinute) {
+                Toast.makeText(getActivity(), "Παρακαλώ εισάγετε μία έγκυρη ώρα.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
+        Toast.makeText(getActivity(), "Παρακαλώ εισάγετε μία έγκυρη ημερομηνία.", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private void setEventFields() {
+        event.setTitle(eventTitle);
+        event.setDescription(eventDescription);
+        if (eventImageResource != null) {
+            event.setImage(eventImageResource);
+        }
+        event.setMeetingDate(eventMeetingDate);
+        event.setMeetingTime(eventMeetingTime);
+        event.setMeetingLocation(eventMeetingLocation);
+        // TODO: add badge implementation
+        event.setRequirements(getRequirementsFromFragments());
+    }
+
+    private void setPublicationDateAndTime() {
+        calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int hour = calendar.get(Calendar.HOUR);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        event.setPublishedDate(year, month, day);
+        event.setPublishedTime(hour, minute);
+    }
+
+    private HashMap<String, Boolean> getRequirementsFromFragments() {
+        HashMap<String, Boolean> requirements = new HashMap<>();
+        FragmentManager fragmentManager = getChildFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        CreateEventRequirementFragment createEventRequirementFragment;
+        for (Fragment fragment : fragments) {
+            createEventRequirementFragment = (CreateEventRequirementFragment) fragment;
+            requirements.put(createEventRequirementFragment.getRequirementName(),
+                             createEventRequirementFragment.getRequirementFulfillment());
+        }
+        return requirements;
     }
 
     /**
@@ -378,21 +499,49 @@ public class CreateEditEventFragment extends Fragment {
      * custom alert Dialogs to inform user for the result of one's action.
      */
     private class CreateEditEventTask extends AsyncTask<String, String, Boolean> {
-
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
+            progressDialog.setMessage("Παρακαλώ περιμένετε...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected Boolean doInBackground(String... strings) {
-            return true;
+            setEventFields();
+            setPublicationDateAndTime();
+            Gson gson = new Gson();
+            String json = gson.toJson(event);
+            Request request = new Request("INEV", json);
+            return Connection.getInstance().requestSendData(request);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
+            progressDialog.dismiss();
+            if (result) {
+                showAlertDialog(R.layout.success_dialog);
+            }
+            else {
+                showAlertDialog(R.layout.failure_dialog);
+            }
         }
+    }
+
+    private void showAlertDialog(int layout) {
+        AlertDialog alertDialog;
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
+        View layoutView = getLayoutInflater().inflate(layout, null);
+        builderDialog.setView(layoutView);
+
+        alertDialog = builderDialog.create();
+        alertDialog.show();
     }
 }

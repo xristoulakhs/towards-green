@@ -72,6 +72,13 @@ public class CreateEventRequirementFragment extends Fragment {
         name.setText(requirementName);
         fulfillmentSwitch.setChecked(requirementFulfillment);
 
+        fulfillmentSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requirementFulfillment = fulfillmentSwitch.isChecked();
+            }
+        });
+
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -9,12 +9,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp" >
+        android:layout_height="100dp"
+        android:background="#E55C5C">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_success"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_failure"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +36,9 @@
             android:layout_height="wrap_content"
             android:textSize="40dp"
             android:layout_gravity="center"
-            android:text="Ουψ!" />
+            android:text="Ουψ!"
+            android:textColor="#E55C5C"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
