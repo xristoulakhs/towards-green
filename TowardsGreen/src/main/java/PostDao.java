@@ -1,39 +1,74 @@
 import java.util.ArrayList;
 
-public class PostDao implements Dao<Post>{
+public class PostDao implements Dao{
 
-    @Override
-    public ArrayList<Post> getAll() {
-        return null;
+    private static PostDao postDao = null;
+    private MongoDB<Post> mongoDB;
+
+    private PostDao(){
+        this.mongoDB= new MongoDB<Post>(Post.class);
+    }
+
+    public static PostDao getInstance(){
+        if(postDao == null){
+            postDao = new PostDao();
+        }
+        return postDao;
     }
 
     @Override
-    public ArrayList<Post> getAll(String id) {
-        return null;
+    public ArrayList<String> getAll() {
+        return this.mongoDB.getAll();
     }
 
     @Override
-    public Post getFirst() {
-        return null;
+    public ArrayList<String> getAll(String id) {
+        BasicDBObject query = new BasicDBObject("postID", id);
+        return this.mongoDB.getAll(query);
     }
 
     @Override
-    public Post getFirst(String id) {
-        return null;
+    public ArrayList<String> getFirstN(int limit) {
+        return this.mongoDB.getFirstN(limit);
     }
 
     @Override
-    public void insert(Post obj) {
+    public ArrayList<String> getFirstN(int limit, int skip) {
+        return this.mongoDB.getFirstN(limit, skip);
+    }
+
+    @Override
+    public String getFirst() {
+        return this.mongoDB.getFirst();
+    }
+
+    @Override
+    public String getFirst(String id) {
+        BasicDBObject query = new BasicDBObject("postID", id);
+        String record = this.mongoDB.getFirst(query);
+        return record;
+    }
+
+    @Override
+    public boolean insert(String obj) {
+        return false;
+    }
+    //TODO: fix
+//    public boolean insert(Profile profile) {
+//        return this.mongoDB.insert(profile);
+//    }
+
+    @Override
+    public boolean update(String id, String updatedPost) {
+        BasicDBObject query = new BasicDBObject("postID", id);
+        BasicDBObject updateRecord = BasicDBObject.parse(updatedPost);
+        return this.mongoDB.update(query, updateRecord);
 
     }
 
     @Override
-    public void update(String id, Post updatedObj) {
-
-    }
-
-    @Override
-    public void delete(String id) {
-
+    public boolean delete(String id) {
+        BasicDBObject query = new BasicDBObject("postID", id);
+        return this.mongoDB.delete(query);
     }
 }
