@@ -88,7 +88,7 @@ public class Profile {
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass
         // for the BarcodeFormat requested and encodes the barcode with the supplied contents.
         BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, width, height);
-//        MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
+
         MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+"example.png"));
     }
 
