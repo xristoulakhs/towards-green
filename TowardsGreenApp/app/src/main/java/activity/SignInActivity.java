@@ -20,9 +20,12 @@ import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.User;
 import com.aueb.towardsgreen.UserDao;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
+
+import activity.createProfile.CreateProfileActivity;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText email;
@@ -44,10 +47,8 @@ public class SignInActivity extends AppCompatActivity {
         User rememberedUser = userDao.retrieveUser();
 
         if (!rememberedUser.getEmail().equals("null")) {
-
-            if (authenticateUser(rememberedUser)) {
-                intentMainActivity();
-            }
+            AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
+            authenticationAsyncTask.execute();
         }
 
         email = findViewById(R.id.sign_in_email_edtxt);
@@ -61,28 +62,17 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 User user = new User(email.getText().toString(),
                                      password.getText().toString());
-                boolean result = authenticateUser(user);
-                if (result) {
 
-                    if (rememberMe.isChecked()) {
-                        try {
-                            userDao.saveUser(user);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(user);
+                authenticationAsyncTask.execute();
+            }
+        });
 
-                    Toast.makeText(SignInActivity.this, "Σωστά", Toast.LENGTH_SHORT).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            intentMainActivity();
-                        }
-                    }, 5000);
-                }
-                else {
-                    Toast.makeText(SignInActivity.this, "Λαθος", Toast.LENGTH_SHORT).show();
-                }
+        createAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignInActivity.this, CreateProfileActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -130,6 +120,65 @@ public class SignInActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer i) {
             //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
+            pd.hide();
+            pd.dismiss();
+        }
+    }
+
+    private class AuthenticationAsyncTask extends AsyncTask<String, String, Boolean> {
+        private User user;
+
+        public AuthenticationAsyncTask(User user) {
+            this.user = user;
+        }
+
+        ProgressDialog pd = new ProgressDialog(SignInActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setMessage("Παρακαλώ περιμένετε για αυθεντικοποίηση...");
+            pd.setIndeterminate(false);
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return authenticateUser(user);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
+
+            if (result) {
+
+                Toast.makeText(SignInActivity.this, "True", Toast.LENGTH_SHORT).show();
+                if (rememberMe.isChecked()) {
+                    try {
+                        UserDao.getInstance(SignInActivity.this).saveUser(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Request request = new Request("GETPR", email.getText().toString());
+                String json = Connection.getInstance().requestGetData(request).get(0);
+                Profile profile = new Gson().fromJson(json, Profile.class);
+
+                Connection.getInstance().setProfile(profile);
+
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        intentMainActivity();
+                    }
+                }, 5000);
+            }
+            else {
+                Toast.makeText(SignInActivity.this, "Wrong", Toast.LENGTH_SHORT).show();
+            }
             pd.hide();
             pd.dismiss();
         }

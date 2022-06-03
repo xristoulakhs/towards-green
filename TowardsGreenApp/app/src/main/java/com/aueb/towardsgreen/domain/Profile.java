@@ -1,10 +1,12 @@
 package com.aueb.towardsgreen.domain;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.aueb.towardsgreen.R;
@@ -14,54 +16,82 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Profile {
-
-    private final String QRPATH = "domain/qrCodes";
-    private final String CHRASET = "UTF-8";
-
-    private String fullName;
-    private int userID;
+    private String firstName;
+    private String lastName;
+    private String userID;
     private ArrayList<Badge> badges;
     private int points;
     private ROLE role;
-    private Bitmap imgBitmap;
+    private String password;
+    private String email;
+    private byte[] image;
+    //private Bitmap imgBitmap;
 
     enum ROLE{
-        USER,
-        SUPERVISOR
+        USER {
+            @NonNull
+            @Override
+            public String toString() {
+                return "Χρήστης";
+            }
+        },
+        SUPERVISOR {
+            @NonNull
+            @Override
+            public String toString() {
+                return "Επόπτης";
+            }
+        }
     }
 
-    public Profile(){
+    public Profile() {
         this.badges= new ArrayList<>();
         this.points = 0;
         this.role=ROLE.USER;
+        this.userID = UUID.randomUUID().toString();
     }
 
-    public Profile(String fullName, int userID, ArrayList<Badge> badges, int points, ROLE role) {
-        this.fullName = fullName;
+    public Profile(String firstName, String lastName, String userID, ArrayList<Badge> badges, int points,
+                   ROLE role, String password, String email, byte[] image) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.userID = userID;
         this.badges = badges;
         this.points = points;
         this.role = role;
+        this.password = password;
+        this.email = email;
+        this.image = image;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public int getUserID() {
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -89,12 +119,58 @@ public class Profile {
         this.role = role;
     }
 
-    public Bitmap getImgBitmap() {
-        return imgBitmap;
+    public String getPassword() {
+        return password;
     }
 
-    public void setImgBitmap(Bitmap imgBitmap) {
-        this.imgBitmap = imgBitmap;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+//    public Bitmap getImgBitmap() {
+//        return imgBitmap;
+//    }
+
+    public byte[] getImage() {
+        return this.image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public void setImage(Bitmap image) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        this.image = stream.toByteArray();
+        image.recycle();
+    }
+
+    public Bitmap getImageBitmap() {
+        return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
+    }
+
+//    public void setImgBitmap(Bitmap imgBitmap) {
+//        this.imgBitmap = imgBitmap;
+//    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void generateQR() {
+        try {
+            generateQRcode(this.userID, "UTF-8", 200, 200);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //static function that creates QR Code
@@ -115,14 +191,15 @@ public class Profile {
         }
 //        ImageView qr_image = (ImageView) findViewById(R.id.qrimage);
 //        qr_image.setImageBitmap(bmp);
-        setImgBitmap(bmp);
+//        setImgBitmap(bmp);
+        setImage(bmp);
         //MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+userFullName+".png"));
     }
 
-    public void generateUserId() {
-        int userid =(int) ((Math.random() * (99999 - 10000)) + 10000); //max 99999  min 10000
-        setUserID(userid);
-    }
+//    public void generateUserId() {
+//        int userid =(int) ((Math.random() * (99999 - 10000)) + 10000); //max 99999  min 10000
+//        setUserID(userid);
+//    }
 //    public static void main(String args[]) throws WriterException, IOException, NotFoundException
 //    {
 //        //data that we want to store in the QR code
