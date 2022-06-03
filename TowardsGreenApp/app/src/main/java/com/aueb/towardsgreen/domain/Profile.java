@@ -34,7 +34,7 @@ public class Profile {
     private byte[] image;
     //private Bitmap imgBitmap;
 
-    enum ROLE{
+    public enum ROLE{
         USER {
             @NonNull
             @Override

@@ -46,16 +46,18 @@ public class SignInActivity extends AppCompatActivity {
         UserDao userDao = UserDao.getInstance(this);
         User rememberedUser = userDao.retrieveUser();
 
-        if (!rememberedUser.getEmail().equals("null")) {
-            AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
-            authenticationAsyncTask.execute();
-        }
-
         email = findViewById(R.id.sign_in_email_edtxt);
         password = findViewById(R.id.sign_in_password_edtxt);
         rememberMe = findViewById(R.id.sign_in_remember_me_checkbox);
         logInBtn = findViewById(R.id.sign_in_log_in_btn);
         createAccountBtn = findViewById(R.id.sign_in_create_account_btn);
+
+        if (!rememberedUser.getEmail().equals("null")) {
+            email.setText(rememberedUser.getEmail());
+            password.setText(rememberedUser.getPassword());
+            AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
+            authenticationAsyncTask.execute();
+        }
 
         logInBtn.setOnClickListener(new View.OnClickListener() {
             @Override

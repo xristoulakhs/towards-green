@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.domain.Profile;
 
 public class ProfileFragment extends Fragment {
     private ImageView profileImg;
@@ -39,6 +41,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Profile profile = Connection.getInstance().getProfile();
 
         profileImg = view.findViewById(R.id.profile_image);
         qrImg = view.findViewById(R.id.profile_qrCodeImage);
@@ -48,5 +51,10 @@ public class ProfileFragment extends Fragment {
         badgeNum = view.findViewById(R.id.profile_number_of_badges);
         badgeLayout = view.findViewById(R.id.profile_badgeLayout);
 
+        qrImg.setImageBitmap(profile.getImageBitmap());
+        userId.setText(profile.getUserID());
+        role.setText(profile.getRole().toString());
+        points.setText(String.valueOf(profile.getPoints()));
+        badgeNum.setText(String.valueOf(profile.getBadges().size()));
     }
 }
