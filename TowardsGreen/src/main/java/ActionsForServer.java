@@ -55,6 +55,37 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: updating event record" + json[0] + "...");
 					boolean result = eventDao.update(json[0], json[1]);
 					System.out.println(">Server: update was " + result);
+//					Request responseRequest = new Request("UPEVRESP", gson.toJson(result));
+//					objectOS.writeObject(responseRequest);
+//					objectOS.flush();
+				}
+				
+				if (request.getRequestType().equals("INEV")) {
+					String json = request.getContent();
+					boolean result = eventDao.insert(json);
+					Request responseRequest = new Request("INEVRESP", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
+				if (request.getRequestType().equals("USERCON")) {
+					String json = request.getContent();
+					User user = gson.fromJson(json, User.class);
+					String emailFromDB = "Aggelos";
+					String passwordFromDB = "aggelos123";
+					String email = user.getEmail();
+					String password = user.getPassword();
+					// Authentication happens here. How? Email and password checked with database
+					// If they match send true, otherwise false.
+					// Attention: We will use the email to Authenticate!
+					boolean result = false;
+					if (emailFromDB.equals(email) && passwordFromDB.equals(password)) {
+						result = true;
+					}
+					
+					Request responseRequest = new Request("USERCONRESP", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
 				}
 				
 			} catch (ClassNotFoundException e) {
