@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey_200"
+            android:background="@drawable/upper_shape_curve"
             android:text="Λίστα συμμετεχόντων"
             android:padding="5dp"
             android:textAlignment="center"
@@ -23,7 +23,8 @@
         <ListView
             android:id="@+id/event_menu_dialog_attendees_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/lower_shape_curve"/>
 
     </LinearLayout>
 

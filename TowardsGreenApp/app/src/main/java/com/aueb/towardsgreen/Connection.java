@@ -55,7 +55,20 @@ public class Connection {
         return this.gson.fromJson(json, ArrayList.class);
     }
 
-    public void requestSendData(Request request) {
+    public boolean requestSendData(Request request) {
+        boolean result = false;
+        try {
+            objectOS.writeObject(request);
+            objectOS.flush();
+            Request responseRequest = (Request) objectIS.readObject();
+            result = gson.fromJson(responseRequest.getContent(), boolean.class);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void requestSendDataWithoutResponse(Request request) {
         try {
             objectOS.writeObject(request);
             objectOS.flush();
