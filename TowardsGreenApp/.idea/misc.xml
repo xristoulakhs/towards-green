@@ -3,33 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-<<<<<<< HEAD
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable-v24/full_shape_curve.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable-v24/ic_dots.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable-v24/ic_person_background.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable-v24/shape_dots_container.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable-v24/shape_profile_container.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/bg_create_post.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/bg_create_profile.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/bg_profile.xml" value="0.1" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/btn_submit_cancel.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/button.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/dropdown_blue1.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/editext_border.xml" value="0.212" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/ic_person.xml" value="0.2415" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/drawable/spinner.xml" value="0.2585" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_create_post.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_create_profile.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_post.xml" value="0.24547101449275363" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_profile.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_post.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_display_badge.xml" value="0.5144843568945539" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_post.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_post_page.xml" value="0.253125" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_profile.xml" value="0.264" />
-        <entry key="..\:/Users/anton/Desktop/anaptuksi_efarmogwn/towards-green/TowardsGreenApp/app/src/main/res/layout/location_list.xml" value="0.24547101449275363" />
-=======
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/event_shape_curve.xml" value="0.2595" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/full_shape_curve.xml" value="0.2595" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/full_shape_curve_inner.xml" value="0.2595" />
@@ -54,12 +27,14 @@
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.196" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/upper_shape_curve.xml" value="0.2595" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/upper_shape_curve_grey.xml" value="0.2475" />
+        <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_create_profile.xml" value="0.21354166666666666" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_event.xml" value="0.2223731884057971" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_main2.xml" value="0.24230072463768115" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/activity_sign_in.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/app_bar_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/app_bar_main2.xml" value="0.24230072463768115" />
+        <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/badge_dialog.xml" value="0.2" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/container_event.xml" value="0.1" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/content_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/content_main2.xml" value="0.18802083333333333" />
@@ -69,12 +44,15 @@
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_event.xml" value="0.264" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_event_equipment.xml" value="0.264" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_event_requirement.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_display_badge.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_edit_event.xml" value="0.2" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_event.xml" value="0.2075" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_event_equipment.xml" value="0.338768115942029" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_event_page.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_event_reactions.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_event_requirement.xml" value="0.2223731884057971" />
+        <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_post_page.xml" value="0.21354166666666666" />
+        <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_profile.xml" value="0.21354166666666666" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/nav_header.xml" value="0.26766304347826086" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/nav_header_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/layout/nav_header_main2.xml" value="0.36666666666666664" />
@@ -84,7 +62,6 @@
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/menu/event_menu.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/menu/main_activity2.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/menu/sidebar_menu.xml" value="0.4" />
->>>>>>> 8b69a5f048b510de5c9fcfcfab5b59910acf320e
       </map>
     </option>
   </component>

@@ -67,48 +67,4 @@ public class CreateProfileActivity extends AppCompatActivity implements CreatePr
             }
         });
     }
-
-    //=====GETTERS SETTERS================
-    public EditText getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(EditText firstName) {
-        this.firstName = firstName;
-    }
-
-    public EditText getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(EditText lastName) {
-        this.lastName = lastName;
-    }
-
-    public EditText getEmail() {
-        return email;
-    }
-
-    public void setEmail(EditText email) {
-        this.email = email;
-    }
-
-    public EditText getPasswordInput() {
-        return passwordInput;
-    }
-
-    public void setPasswordInput(EditText passwordInput) {
-        this.passwordInput = passwordInput;
-    }
-
-    public EditText getPasswordConf() {
-        return passwordConf;
-    }
-
-    public void setPasswordConf(EditText passwordConf) {
-        this.passwordConf = passwordConf;
-    }
-    //====================================
-
-
 }
