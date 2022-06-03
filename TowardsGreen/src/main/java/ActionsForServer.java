@@ -60,10 +60,18 @@ public class ActionsForServer extends Thread {
 //					objectOS.flush();
 				}
 				
+				if (request.getRequestType().equals("UPEV")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					boolean result = eventDao.update( json[0], json[1]);
+					Request responseRequest = new Request("", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
 				if (request.getRequestType().equals("INEV")) {
 					String json = request.getContent();
 					boolean result = eventDao.insert(json);
-					Request responseRequest = new Request("INEVRESP", gson.toJson(result));
+					Request responseRequest = new Request("", gson.toJson(result));
 					objectOS.writeObject(responseRequest);
 					objectOS.flush();
 				}
