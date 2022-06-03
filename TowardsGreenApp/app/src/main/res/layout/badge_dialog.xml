@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:id="@+id/layout_badge">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="730dp"
+            android:background="#A6FFA2">
+
+            <TextView
+                android:id="@+id/staticBadgeCharacteristics"
+                android:layout_width="410dp"
+                android:layout_height="52dp"
+                android:layout_below="@id/badgeTitle"
+                android:layout_marginBottom="248dp"
+                android:background="#B6B6B6"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Χαρακτηριστικά"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/badgeTitle"
+                android:layout_width="410dp"
+                android:layout_height="52dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Badge Title"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="34sp" />
+
+            <TextView
+                android:id="@+id/BadgeDate"
+                android:layout_width="410dp"
+                android:layout_height="52dp"
+                android:layout_above="@id/BadgePoints"
+
+
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Ημερομηνία : date"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/BadgePoints"
+                android:layout_width="410dp"
+                android:layout_height="52dp"
+                android:layout_below="@id/staticBadgeCharacteristics"
+
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Πόντοι : points"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/backBtnBackground"
+                android:layout_width="410dp"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:background="#FFFFFF" />
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/BadgePoints"
+
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="278dp"
+                android:backgroundTint="#BAB9B9"
+                android:fontFamily="monospace"
+                android:text="Πίσω"
+                android:textColor="@color/black"
+                android:typeface="normal" />
+        </RelativeLayout>
+    </LinearLayout>

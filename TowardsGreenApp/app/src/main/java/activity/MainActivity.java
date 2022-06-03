@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivity(intent);
                         break;
                     case R.id.profile_page:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new ProfileFragment()).commit();
                         break;
                     case R.id.leaderboard_page:
                         break;
