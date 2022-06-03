@@ -23,6 +23,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.TowardsGreen.SwitchTheme">
+        <item name="colorControlActivated">#6C6C6C</item>
+    </style>
+
     <style name="Theme.TowardsGreen.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TowardsGreen.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

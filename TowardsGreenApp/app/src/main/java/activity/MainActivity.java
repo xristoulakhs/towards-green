@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -16,7 +17,10 @@ import android.widget.Toast;
 import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.UserDao;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ConnectionAsyncTask myTask = new ConnectionAsyncTask();
-        myTask.execute();
+        //ConnectionAsyncTask myTask = new ConnectionAsyncTask();
+        //myTask.execute();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.bringToFront();
@@ -60,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.leaderboard_page:
                         break;
                     case R.id.sign_out:
+                        try {
+                            UserDao.getInstance(MainActivity.this).deleteUser();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                 }
                 drawer.closeDrawer(GravityCompat.START);

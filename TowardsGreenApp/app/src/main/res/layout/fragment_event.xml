@@ -253,6 +253,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/event_badgeLayout"
                     android:padding="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -355,6 +356,7 @@
 
         <!-- Equipment details -->
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/event_requirement_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

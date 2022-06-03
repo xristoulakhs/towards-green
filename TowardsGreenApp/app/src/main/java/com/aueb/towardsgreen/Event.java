@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Event implements Serializable {
 
@@ -60,8 +61,24 @@ public class Event implements Serializable {
 	private String eventID;
 	// Creator gets user's ID (userID).
 	private String creator;
-	private String publishedDate, meetingDate;
-	private String publishedTime, meetingTime;
+	/*
+	Due to problems during the parsing process (LocalTime and LocalDate
+	objects couldn't be resolved and returned an empty object), we will
+	use this simple int array technique.
+	Date is represented as follows: [YEAR, MONTH, DAY]
+	Time is represented as follows: [HOUR, MINUTE]
+	 */
+	private int[] publishedDate, meetingDate;
+	private int[] publishedTime, meetingTime;
+
+	private final int YEAR = 0;
+	private final int MONTH = 1;
+	private final int DAY = 2;
+
+	private final int HOUR = 0;
+	private final int MINUTE = 1;
+
+
 	private Status status;
 	private String title;
 	private String description;
@@ -76,8 +93,8 @@ public class Event implements Serializable {
 	private HashMap<String, Boolean> attendees;
 	private String badge;
 
-	public Event(String eventID, String creator, String publishedDate, String meetingDate,
-				 String publishedTime, String meetingTime, String title, String description,
+	public Event(String eventID, String creator, int[] publishedDate, int[] meetingDate,
+				 int[] publishedTime, int[] meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
 				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees, String badge) {
 		this.eventID = eventID;
@@ -97,43 +114,12 @@ public class Event implements Serializable {
 		this.badge = badge;
 	}
 
-	@RequiresApi(api = Build.VERSION_CODES.O)
-	public Event(String creator, String meetingDate, String meetingTime, String title, String description,
-				 byte[] image, String meetingLocation, String badge) {
-		this.eventID = "e1";
-		this.creator = creator;
-		this.publishedDate = LocalDate.now().toString();
-		this.meetingDate = meetingDate;
-		this.publishedTime = LocalTime.now().toString();
-		this.meetingTime = meetingTime;
+	public Event() {
+		this.eventID = UUID.randomUUID().toString();
 		this.status = Status.OPEN;
-		this.title = title;
-		this.description = description;
-		this.image = image;
-		this.meetingLocation = meetingLocation;
 		this.initializeReactions();
-		this.requirements = new HashMap<String, Boolean>();
-		this.attendees = new HashMap<String, Boolean>();
-		this.badge = badge;
-	}
-
-	@RequiresApi(api = Build.VERSION_CODES.O)
-	public Event(String eventID, String creator) {
-		this.eventID = eventID;
-		this.creator = creator;
-		this.publishedDate = LocalDate.now().toString();
-		this.meetingDate = LocalDate.now().toString();
-		this.publishedTime = LocalTime.now().toString();
-		this.meetingTime = LocalTime.now().toString();
-		this.status = Status.OPEN;
-		this.title = "dokimi";
-		this.description = "This is a test!";
-		this.image = null;
-		this.meetingLocation = "Dokimi!!";
-		this.reactions = null;
-		this.requirements = null;
-		this.attendees = null;
-		this.badge = "b101";
+		this.requirements = new HashMap<>();
+		this.attendees = new HashMap<>();
 	}
 
 	public Event(HashMap<String, ArrayList<String>> reactions) {
@@ -157,36 +143,70 @@ public class Event implements Serializable {
 		this.creator = creator;
 	}
 
-	public String getPublishedDate() {
+	public int[] getPublishedDate() {
 		return this.publishedDate;
 	}
 
-	public void setPublishedDate(LocalDate publishedDate) {
-		this.publishedDate = publishedDate.toString();
+	public String getPublishedDateString() {
+		return this.publishedDate[DAY] + "/" + this.publishedDate[MONTH] +
+				"/" + this.publishedDate[YEAR];
 	}
 
-	public String getMeetingDate() {
+	public void setPublishedDate(int year, int month, int day) {
+		this.publishedDate = new int[]{year, month, day};
+	}
+
+	public void setPublishedDate(int[] publishedDate) {
+		this.publishedDate = publishedDate;
+	}
+
+	public int[] getMeetingDate() {
 		return this.meetingDate;
 	}
 
-	public void setMeetingDate(LocalDate meetingDate) {
-		this.meetingDate = meetingDate.toString();
+	public String getMeetingDateString() {
+		return this.meetingDate[DAY] + "/" + this.meetingDate[MONTH] +
+				"/" + this.meetingDate[YEAR];
 	}
 
-	public String getPublishedTime() {
+	public void setMeetingDate(int year, int month, int day) {
+		this.meetingDate = new int[]{year, month, day};
+	}
+
+	public void setMeetingDate(int[] meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public int[] getPublishedTime() {
 		return this.publishedTime;
 	}
 
-	public void setPublishedTime(LocalTime publishedTime) {
-		this.publishedTime = publishedTime.toString();
+	public String getPublishedTimeString() {
+		return this.publishedTime[HOUR] + ":" + this.publishedTime[MINUTE];
 	}
 
-	public String getMeetingTime() {
+	public void setPublishedTime(int hour, int minute) {
+		this.publishedTime = new int[]{hour, minute};
+	}
+
+	public void setPublishedTime(int[] publishedTime) {
+		this.publishedTime = publishedTime;
+	}
+
+	public int[] getMeetingTime() {
 		return this.meetingTime;
 	}
 
-	public void setMeetingTime(LocalTime meetingTime) {
-		this.meetingTime = meetingTime.toString();
+	public String getMeetingTimeString() {
+		return this.meetingTime[HOUR] + ":" + this.meetingTime[MINUTE];
+	}
+
+	public void setMeetingTime(int hour, int minute) {
+		this.meetingTime = new int[]{hour, minute};
+	}
+
+	public void setMeetingTime(int[] meetingTime) {
+		this.meetingTime = meetingTime;
 	}
 
 	public Status getStatus() {
