@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class ProfileDao implements Dao{
 
     private static ProfileDao profileDao = null;
-    private MongoDB<Profile> mongoDB;
+    private MongoDB mongoDB;
 
     private ProfileDao(){
-        this.mongoDB= new MongoDB<Profile>(Profile.class);
+        this.mongoDB= new MongoDB("Profile");
     }
 
     public static ProfileDao getInstance(){
@@ -50,15 +50,17 @@ public class ProfileDao implements Dao{
         String record = this.mongoDB.getFirst(query);
         return record;
     }
+    
+    public String getFirstWithEmail(String id) {
+        BasicDBObject query = new BasicDBObject("email", id);
+        String record = this.mongoDB.getFirst(query);
+        return record;
+    }
 
     @Override
-    public boolean insert(String obj) {
-        return false;
+    public boolean insert(String profile) {
+        return this.mongoDB.insert(profile);
     }
-    //TODO: fix
-//    public boolean insert(Profile profile) {
-//        return this.mongoDB.insert(profile);
-//    }
 
     @Override
     public boolean update(String id, String updatedProfile) {

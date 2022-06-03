@@ -8,18 +8,21 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
-public class MongoDB<T> {
+public class MongoDB {
 
 	private String uri = "mongodb+srv://Apipilikas:p3180157agg15@cluster.r0jin.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 	private MongoDatabase database;
 	private MongoCollection<Document> collection;
-	private Class<T> type;
+	private String type;
 	private String collectionName;
 	
-	public MongoDB(Class<T> type) {
+	public MongoDB(String type) {
 		this.type = type;
-		if (this.type.equals(Event.class)) {
+		if (this.type.equals("Event")) {
 			this.collectionName = "events";
+		}
+		else if (this.type.equals("Profile")) {
+			this.collectionName = "profiles";
 		}
 	}
 	
@@ -30,12 +33,10 @@ public class MongoDB<T> {
 	*/
 	public boolean insert(String record) {
 		try (MongoClient mongoClient = MongoClients.create(this.uri)) {
-			System.out.println(record);
 			this.database = mongoClient.getDatabase("tg-db");
 			this.collection = this.database.getCollection(this.collectionName);
 			
 			Document doc = Document.parse(record);
-			System.out.println("Parsed!");
 			InsertOneResult insertResult = this.collection.insertOne(doc);
 			return insertResult.wasAcknowledged();
 		}
@@ -159,8 +160,10 @@ public class MongoDB<T> {
 			this.collection = this.database.getCollection(this.collectionName);
 			
 			Document document = this.collection.find().first();
-			document.remove("_id");
-			record = document.toJson();
+			if (document != null) {
+				document.remove("_id");
+				record = document.toJson();
+			}
 		}
 		return record;
 	}
@@ -176,9 +179,11 @@ public class MongoDB<T> {
 			this.database = mongoClient.getDatabase("tg-db");
 			this.collection = this.database.getCollection(this.collectionName);
 			
-			Document document = this.collection.find(query).first();	
-			document.remove("_id");
-			record = document.toJson();
+			Document document = this.collection.find(query).first();
+			if (document != null) {
+				document.remove("_id");
+				record = document.toJson();
+			}
 		}
 		return record;
 	}

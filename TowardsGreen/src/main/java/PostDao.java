@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class PostDao implements Dao{
 
     private static PostDao postDao = null;
-    private MongoDB<Post> mongoDB;
+    private MongoDB mongoDB;
 
     private PostDao(){
-        this.mongoDB= new MongoDB<Post>(Post.class);
+        this.mongoDB= new MongoDB("Post");
     }
 
     public static PostDao getInstance(){

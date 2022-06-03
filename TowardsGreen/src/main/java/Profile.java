@@ -1,60 +1,77 @@
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 public class Profile {
-
-    private String fullName;
-    private int userID;
+    private String firstName;
+    private String lastName;
+    private String userID;
     private ArrayList<Badge> badges;
     private int points;
     private ROLE role;
+    private String password;
+    private String email;
+    private byte[] image;
+    //private Bitmap imgBitmap;
 
     enum ROLE{
-        USER,
-        SUPERVISOR
+        USER {
+            @Override
+            public String toString() {
+                return "Χρήστης";
+            }
+        },
+        SUPERVISOR {
+            @Override
+            public String toString() {
+                return "Επόπτης";
+            }
+        }
     }
 
-    public Profile(){
+    public Profile() {
         this.badges= new ArrayList<>();
         this.points = 0;
         this.role=ROLE.USER;
+        this.userID = UUID.randomUUID().toString();
     }
 
-    public Profile(String fullName, int userID, ArrayList<Badge> badges, int points, ROLE role) {
-        this.fullName = fullName;
+    public Profile(String firstName, String lastName, String userID, ArrayList<Badge> badges, int points,
+                   ROLE role, String password, String email, byte[] image) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.userID = userID;
         this.badges = badges;
         this.points = points;
         this.role = role;
+        this.password = password;
+        this.email = email;
+        this.image = image;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public int getUserID() {
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -82,40 +99,33 @@ public class Profile {
         this.role = role;
     }
 
-    //static function that creates QR Code
-    public static void generateQRcode(String data, String path, String charset, int height, int width) throws WriterException, IOException {
-        //the BitMatrix class represents the 2D matrix of bits
-        //MultiFormatWriter is a factory class that finds the appropriate Writer subclass
-        // for the BarcodeFormat requested and encodes the barcode with the supplied contents.
-        BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, width, height);
-
-        MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+"example.png"));
+    public String getPassword() {
+        return password;
     }
 
-    public void generateUserId() {
-        int userid =(int) ((Math.random() * (99999 - 10000)) + 10000); //max 99999  min 10000
-        setUserID(userid);
-    }
-    public static void main(String args[]) throws WriterException, IOException, NotFoundException
-    {
-        //data that we want to store in the QR code
-        Profile user= new Profile("antonis", 69, null,0, ROLE.USER);
-        String str= user.getFullName()+"\n"+user.getUserID()+"\n"+user.getRole();
-        //path where we want to get QR Code
-        String path = "src/main/qrCodes/";
-        //Encoding charset to be used
-        String charset = "UTF-8";
-        Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
-
-        //generates QR code with Low level(L) error correction capability
-        hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-        //invoking the user-defined method that creates the QR code
-        generateQRcode(str, path, charset, 200, 200);//increase or decrease height and width accodingly
-        //prints if the QR code is generated
-        System.out.println("QR Code created successfully.");
-
+    public void setPassword(String password) {
+        this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+//    public Bitmap getImgBitmap() {
+//        return imgBitmap;
+//    }
+
+    public byte[] getImage() {
+        return this.image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 }
 
 
