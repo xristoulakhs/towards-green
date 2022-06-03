@@ -1,9 +1,13 @@
 package com.aueb.towardsgreen.domain;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
+import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 
+import com.aueb.towardsgreen.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -24,6 +28,7 @@ public class Profile {
     private ArrayList<Badge> badges;
     private int points;
     private ROLE role;
+    private Bitmap imgBitmap;
 
     enum ROLE{
         USER,
@@ -84,14 +89,34 @@ public class Profile {
         this.role = role;
     }
 
+    public Bitmap getImgBitmap() {
+        return imgBitmap;
+    }
+
+    public void setImgBitmap(Bitmap imgBitmap) {
+        this.imgBitmap = imgBitmap;
+    }
+
     //static function that creates QR Code
     @RequiresApi(api = Build.VERSION_CODES.O) //gia to Paths.get
-    public static void generateQRcode(String data, String path, String charset, int height, int width, String userFullName) throws WriterException, IOException {
+    public void generateQRcode(String data, String charset, int height, int width) throws WriterException, IOException {
         //the BitMatrix class represents the 2D matrix of bits
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass
         // for the BarcodeFormat requested and encodes the barcode with the supplied contents.
         BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, width, height);
-        MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+userFullName+".png"));
+
+        int height1 = matrix.getHeight();
+        int width1 = matrix.getWidth();
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        for (int x = 0; x < width; x++){
+            for (int y = 0; y < height; y++){
+                bmp.setPixel(x, y, matrix.get(x,y) ? Color.BLACK : Color.WHITE);
+            }
+        }
+//        ImageView qr_image = (ImageView) findViewById(R.id.qrimage);
+//        qr_image.setImageBitmap(bmp);
+        setImgBitmap(bmp);
+        //MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+userFullName+".png"));
     }
 
     public void generateUserId() {
