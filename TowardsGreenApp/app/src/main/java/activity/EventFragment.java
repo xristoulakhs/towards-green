@@ -144,6 +144,7 @@ public class EventFragment extends Fragment {
         publishedDate.setText(event.getPublishedDateString());
         title.setText(event.getTitle());
         status.setText(event.getStatusString());
+        status.setBackgroundColor(Color.parseColor(event.getStatusColor()));
         description.setText(event.getDescription());
         meetingDate.setText(event.getMeetingDateString());
         meetingTime.setText(event.getMeetingTimeString());
@@ -182,6 +183,8 @@ public class EventFragment extends Fragment {
 
         setInitialReactions();
 
+        // TODO: Make sure that only supervisor has access on edit, delete and scan
+
         // Menu button (3 dots) on Click Listener
         eventMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +195,14 @@ public class EventFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.event_menu_edit:
+                                CreateEditEventFragment createEditEventFragment = new CreateEditEventFragment();
+                                Bundle args = new Bundle();
+                                args.putString("mode", "edit");
+                                args.putSerializable("event", event);
+                                createEditEventFragment.setArguments(args);
+                                getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
+                                break;
+                            case R.id.event_menu_attendees:
                                 String[] array = event.getAttendees().keySet().toArray(new String[0]);
                                 Dialog dialog = new Dialog(view1.getContext());
                                 dialog.setContentView(R.layout.dialog_event_attendees);
@@ -201,7 +212,6 @@ public class EventFragment extends Fragment {
                                         array);
                                 listView.setAdapter(arrayAdapter);
                                 dialog.show();
-                                Toast.makeText(getActivity(), "Edit", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return false;
@@ -213,40 +223,47 @@ public class EventFragment extends Fragment {
         });
 
         // TakePart reaction on Click Listener
-        for (int i = 0; i < 3; i++) {
-            int finalI = i;
-            reactions[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!hasClickedOtherReaction(finalI)) {
-                        if (userReactions[finalI]) {
-                            userReactions[finalI] = false;
-                            changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
-                            event.removeReaction(reactionNames[finalI], "u101");
-                            if (finalI == 0) {
-                                event.removeAttendee("u101");
+        if (Event.Status.OPEN == event.getStatus()) {
+            for (int i = 0; i < 3; i++) {
+                int finalI = i;
+                reactions[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!hasClickedOtherReaction(finalI)) {
+                            if (userReactions[finalI]) {
+                                userReactions[finalI] = false;
+                                changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
+                                event.removeReaction(reactionNames[finalI], "u101");
+                                if (finalI == 0) {
+                                    event.removeAttendee("u101");
+                                }
                             }
-                        }
-                        else {
-                            userReactions[finalI] = true;
-                            changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
-                            event.addReaction(reactionNames[finalI], "u101");
-                            if (finalI == 0) {
-                                event.addAttendee("u101");
+                            else {
+                                userReactions[finalI] = true;
+                                changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
+                                event.addReaction(reactionNames[finalI], "u101");
+                                if (finalI == 0) {
+                                    event.addAttendee("u101");
+                                }
                             }
-                        }
-                        showReactionNumbers();
-                        if (finalI != 0) {
-                            updateEventReaction(false);
-                        }
-                        else {
-                            updateEventReaction(true);
-                        }
+                            showReactionNumbers();
+                            if (finalI != 0) {
+                                updateEventReaction(false);
+                            }
+                            else {
+                                updateEventReaction(true);
+                            }
 
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+        else {
+            view.findViewById(R.id.event_reactionsLayout).setAlpha(0.5f);
+
+        }
+
     }
 
     private void changeReactionColor(LinearLayout linearLayout, TextView textView, boolean back) {
