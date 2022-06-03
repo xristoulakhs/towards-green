@@ -16,7 +16,7 @@ public class Event implements Serializable {
 		OPEN {
 			@Override
 			public String toString() {
-				return "Ανοιχτό προς συμμετοχή";
+				return "οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½";
 			}
 
 			@Override
@@ -27,7 +27,7 @@ public class Event implements Serializable {
 		IN_PROGRESS {
 			@Override
 			public String toString() {
-				return "Σε εξέλιξη";
+				return "οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½";
 			}
 
 			@Override
@@ -38,7 +38,7 @@ public class Event implements Serializable {
 		CLOSED {
 			@Override
 			public String toString() {
-				return "Ολοκληρώθηκε";
+				return "οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½";
 			}
 
 			@Override
@@ -118,15 +118,15 @@ public class Event implements Serializable {
 		this.publishedTime = LocalTime.now().toString();
 		this.meetingTime = LocalTime.now().toString();
 		this.status = Status.OPEN;
-		this.title = "Δενδροφύτευση";
-		this.description = "Ωραίο το δάσος; Ας το προσέξουμε λοιπόν.";
+		this.title = "οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½";
+		this.description = "οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½; οΏ½οΏ½ οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½.";
 		this.getClass().getResource("image/Forests.png");
 		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\Forests.png"));
 	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	    ImageIO.write(bImage, "png", bos );
 	    byte [] data = bos.toByteArray();
 		this.image = data;
-		this.meetingLocation = "Εκει";
+		this.meetingLocation = "οΏ½οΏ½οΏ½οΏ½";
 		this.initializeReactions();
 		this.reactions.get("TakePart").add("u101");
 		this.requirements = new HashMap<String, Boolean>();

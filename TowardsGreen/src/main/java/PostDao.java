@@ -1,3 +1,5 @@
+import com.mongodb.BasicDBObject;
+
 import java.util.ArrayList;
 
 public class PostDao implements Dao{

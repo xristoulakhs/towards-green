@@ -9,7 +9,7 @@ public class EventDaoTest {
 		// Insert
 		EventDao eventDao = EventDao.getInstance();
 		Gson gson = new Gson();
-		Event event1 = new Event("e101", "Γιώργος");
+		Event event1 = new Event("e101", "οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½");
 		eventDao.insert(gson.toJson(event1));
 //		Event event2 = new Event("e102", "aggelos_dokimi");
 //		eventDao.insert(event2);

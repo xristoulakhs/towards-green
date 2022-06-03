@@ -43,7 +43,7 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method deletes a record in the collection.
-	 * @param queryTuple (variable, value) of the record we want to be deleted
+	 * @param query (variable, value) of the record we want to be deleted
 	 * @return acknowledgment, the result of deleting a record: success or failure
 	 */
 	public boolean delete(BasicDBObject query) {
@@ -80,7 +80,7 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method gets all the records of the chosen collection, given a specific query.
-	 * @param queryTuple (variable, value) of the record/records we want to be returned
+	 * @param query (variable, value) of the record/records we want to be returned
 	 * @return records String ArrayList (each String is actually JSON format of the record)
 	 */
 	public ArrayList<String> getAll(BasicDBObject query) {
@@ -103,7 +103,7 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method gets all the first n records of the chosen collection.
-	 * @param limitNumber of the first record/records we want to be returned
+	 * @param limit of the first record/records we want to be returned
 	 * @return records String ArrayList (each String is actually JSON format of the record)
 	 */
 	public ArrayList<String> getFirstN(int limit) {
@@ -126,8 +126,8 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method gets all the first n records of the chosen collection.
-	 * @param limitNumber of the first record/records we want to be returned
-	 * @param skipNumber of the record/records we want to be skipped
+	 * @param limit of the first record/records we want to be returned
+	 * @param skip of the record/records we want to be skipped
 	 * @return records String ArrayList (each String is actually JSON format of the record)
 	 */
 	public ArrayList<String> getFirstN(int limit, int skip) {
@@ -167,7 +167,7 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method gets only the first record of the collection, given a specific query.
-	 * @param queryTuple (variable, value) of the record/records we want to be returned
+	 * @param query (variable, value) of the record/records we want to be returned
 	 * @return record JSON format of an object
 	 */
 	public String getFirst(BasicDBObject query) {
@@ -185,8 +185,8 @@ public class MongoDB<T> {
 	
 	/**
 	 * This method updates a record, given a specific query and changes we want to be made.
-	 * @param queryTuple (variable, value) of the record we want to be changed
-	 * @param updateRecordTuples (variable, value) of the new variables that will replace the old ones
+	 * @param query (variable, value) of the record we want to be changed
+	 * @param updateRecord (variable, value) of the new variables that will replace the old ones
 	 * @return acknowledgment, the result of updating a record: success or failure
 	 */
 	public boolean update(BasicDBObject query, BasicDBObject updateRecord) {

@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.*;
 import com.google.gson.Gson;
 
 public class ActionsForServer extends Thread {
