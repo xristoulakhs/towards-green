@@ -147,7 +147,7 @@ public class SignInActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Πληκτρολογήστε παρακάτω το νέο όνομα:")
+        builder.setTitle("Πληκτρολογήστε την local address:")
                 .setView(editText)
                 .setPositiveButton("Εντάξει", dialogClickListener)
                 .setNegativeButton("Ακύρωση", dialogClickListener);

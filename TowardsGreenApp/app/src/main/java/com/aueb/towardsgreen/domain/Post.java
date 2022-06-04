@@ -43,6 +43,14 @@ public class Post implements Serializable {
         this.comments = comments;
     }
 
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
+
     public String getLocation() {
         return location;
     }

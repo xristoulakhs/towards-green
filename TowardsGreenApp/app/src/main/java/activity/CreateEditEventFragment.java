@@ -41,6 +41,7 @@ import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
@@ -546,6 +547,9 @@ public class CreateEditEventFragment extends Fragment {
     }
 
     private void setEventFields() {
+        Profile profile = Connection.getInstance().getProfile();
+        event.setCreatorID(profile.getUserID());
+        event.setCreator(profile.getFirstName());
         event.setTitle(eventTitle);
         event.setDescription(eventDescription);
         if (eventImageResource != null) {

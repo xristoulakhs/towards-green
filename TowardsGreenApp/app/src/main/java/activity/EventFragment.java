@@ -2,9 +2,13 @@ package activity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.aueb.towardsgreen.Connection;
@@ -13,7 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +38,7 @@ import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class EventFragment extends Fragment {
@@ -42,6 +51,7 @@ public class EventFragment extends Fragment {
     private LinearLayout requirementListLayout;
 
     // Event main fields (TextViews) initialization
+    private TextView publisherUsername;
     private TextView publishedTime;
     private TextView publishedDate;
     private TextView title;
@@ -54,6 +64,9 @@ public class EventFragment extends Fragment {
 
     // Event image(ImageView) initialization
     private ImageView eventMenu;
+    private MenuItem editItem;
+    private MenuItem deleteItem;
+    private MenuItem scanItem;
 
     // Event menu button (ImageView) initialization
     private ImageView eventImage;
@@ -77,7 +90,6 @@ public class EventFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             event = (Event) getArguments().getSerializable("event");
@@ -103,7 +115,7 @@ public class EventFragment extends Fragment {
         requirementListLayout = view.findViewById(R.id.event_requirementLayout);
 
         // Event main fields (TextViews) declaration
-        TextView publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
+        publisherUsername = view.findViewById(R.id.event_publisher_username_txt);
         publishedTime = view.findViewById(R.id.event_published_time_txt);
         publishedDate = view.findViewById(R.id.event_published_date_txt);
         title = view.findViewById(R.id.event_title_txt);
@@ -143,7 +155,7 @@ public class EventFragment extends Fragment {
                                              view.findViewById(R.id.event_notInterestedLayout)};
 
         // Setting Event main fields
-//        publisherUsername.setText(event.getCreator());
+        publisherUsername.setText(event.getCreator());
         publishedTime.setText(event.getPublishedTimeString());
         publishedDate.setText(event.getPublishedDateString());
         title.setText(event.getTitle());
@@ -201,6 +213,9 @@ public class EventFragment extends Fragment {
                             case R.id.event_menu_edit:
                                 editEvent();
                                 break;
+                            case R.id.event_menu_delete:
+                                deleteEvent();
+                                break;
                             case R.id.event_menu_attendees:
                                 showAttendeesDialog();
                                 break;
@@ -208,12 +223,18 @@ public class EventFragment extends Fragment {
                                 Intent intent = new Intent(getActivity(), ScanQRCodeEventActivity.class);
                                 intent.putExtra("event", event);
                                 startActivity(intent);
+                                break;
                         }
                         return false;
                     }
                 });
                 popupMenu.inflate(R.menu.event_menu);
                 popupMenu.show();
+                Menu menu = popupMenu.getMenu();
+                editItem = menu.findItem(R.id.event_menu_edit);
+                deleteItem = menu.findItem(R.id.event_menu_delete);
+                scanItem = menu.findItem(R.id.event_menu_qr_scanning);
+                setUserMenu();
             }
         });
 
@@ -258,7 +279,20 @@ public class EventFragment extends Fragment {
             view.findViewById(R.id.event_reactionsLayout).setAlpha(0.5f);
 
         }
+    }
 
+    // Enable menu choices that user has permission based on role and creatorID
+    // For example: user must be supervisor to create an event, let alone
+    // delete or edit one. Additionally, user should own the event to
+    // delete or edit it.
+    private void setUserMenu() {
+        if (profile.getRole() == Profile.ROLE.SUPERVISOR) {
+            scanItem.setVisible(true);
+            if (event.getCreatorID().equals(profile.getUserID())) {
+                deleteItem.setVisible(true);
+                editItem.setVisible(true);
+            }
+        }
     }
 
     private void changeReactionColor(LinearLayout linearLayout, TextView textView, boolean back) {
@@ -322,6 +356,65 @@ public class EventFragment extends Fragment {
         getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
     }
 
+    private void deleteEvent() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        DeleteEventAsyncTask deleteEventAsyncTask = new DeleteEventAsyncTask();
+                        deleteEventAsyncTask.execute();
+                        break;
+                    case  DialogInterface.BUTTON_NEGATIVE:
+
+                        break;
+                }
+            }
+        };
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Eίσαι σίγουρος ότι θες να διαγράψεις την εκδήλωση;")
+                .setPositiveButton(R.string.yes_label, dialogClickListener)
+                .setNegativeButton(R.string.no_label, dialogClickListener).show();
+    }
+
+    private void showAlertDialog(boolean result) {
+        String successMessage = "Η εκδήλωση διαγράφθηκε επιτυχώς!";
+        String failureMessage = "Κάποιο σφάλμα προέκυψε.";
+
+        AlertDialog alertDialog;
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
+        View layoutView = null;
+
+        if (result) {
+            layoutView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+            TextView successMsg = layoutView.findViewById(R.id.success_dialog_txt);
+            successMsg.setText(successMessage);
+        } else {
+            layoutView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+            TextView failureMsg = layoutView.findViewById(R.id.failure_dialog_txt);
+            failureMsg.setText(failureMessage);
+        }
+
+        builderDialog.setView(layoutView);
+
+        alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+                if (result) {
+                    getParentFragmentManager().beginTransaction().remove(EventFragment.this).commit();
+                }
+            }
+        }, 3000);
+    }
+
     private void showAttendeesDialog() {
         String[] array = event.getAttendeesNames().values().toArray(new String[0]);
         Dialog dialog = new Dialog(getContext());
@@ -345,5 +438,31 @@ public class EventFragment extends Fragment {
         }
         String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
         Connection.getInstance().requestSendDataWithoutResponse(new Request("UP", json));
+    }
+
+    private class DeleteEventAsyncTask extends AsyncTask<String, String, Boolean> {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setMessage("Παρακαλώ περιμένετε...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return Connection.getInstance().requestSendData(new Request("DELEV", event.getEventID()));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+            showAlertDialog(result);
+        }
     }
 }
