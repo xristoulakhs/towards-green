@@ -20,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aueb.towardsgreen.Connection;
-import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Post;
 import com.google.gson.Gson;

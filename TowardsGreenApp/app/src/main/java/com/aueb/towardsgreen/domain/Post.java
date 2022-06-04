@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 public class Post {
 
-    private Profile creator;
+    private String creator;
+    private String creatorId;
     private String title;
     private int[] votes;
     private HashMap<Profile, String> comments;
@@ -16,7 +17,7 @@ public class Post {
         this.comments= new HashMap<>();
     }
 
-    public Post(Profile creator, String title,String location, int[] votes,String desc, HashMap<Profile, String> comments) {
+    public Post(String creator, String title,String location, int[] votes,String desc, HashMap<Profile, String> comments) {
         this.creator = creator;
         this.title = title;
         this.location=location;
@@ -33,11 +34,11 @@ public class Post {
         this.location = location;
     }
 
-    public Profile getCreator() {
+    public String getCreator() {
         return creator;
     }
 
-    public void setCreator(Profile creator) {
+    public void setCreator(String creator) {
         this.creator = creator;
     }
 
@@ -71,6 +72,14 @@ public class Post {
 
     public void setComments(HashMap<Profile, String> comments) {
         this.comments = comments;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     public void addComment(Profile profile, String comment){
