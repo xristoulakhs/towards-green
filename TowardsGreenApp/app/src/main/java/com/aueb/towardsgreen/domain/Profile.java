@@ -4,21 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.aueb.towardsgreen.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -135,10 +131,6 @@ public class Profile {
         this.email = email;
     }
 
-//    public Bitmap getImgBitmap() {
-//        return imgBitmap;
-//    }
-
     public byte[] getImage() {
         return this.image;
     }
@@ -158,17 +150,15 @@ public class Profile {
         return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
     }
 
-//    public void setImgBitmap(Bitmap imgBitmap) {
-//        this.imgBitmap = imgBitmap;
-//    }
+    public String getFullName(){
+        return this.getFirstName()+" "+this.getLastName();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void generateQR() {
         try {
             generateQRcode(this.userID, "UTF-8", 200, 200);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -189,17 +179,9 @@ public class Profile {
                 bmp.setPixel(x, y, matrix.get(x,y) ? Color.BLACK : Color.WHITE);
             }
         }
-//        ImageView qr_image = (ImageView) findViewById(R.id.qrimage);
-//        qr_image.setImageBitmap(bmp);
-//        setImgBitmap(bmp);
         setImage(bmp);
-        //MatrixToImageWriter.writeToPath(matrix,"png", Paths.get(path+userFullName+".png"));
     }
 
-//    public void generateUserId() {
-//        int userid =(int) ((Math.random() * (99999 - 10000)) + 10000); //max 99999  min 10000
-//        setUserID(userid);
-//    }
 //    public static void main(String args[]) throws WriterException, IOException, NotFoundException
 //    {
 //        //data that we want to store in the QR code
