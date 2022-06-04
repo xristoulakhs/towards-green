@@ -26,6 +26,7 @@ public class ActionsForServer extends Thread {
 	
 	public void run() {
 		EventDao eventDao = EventDao.getInstance();
+		ProfileDao profileDao = ProfileDao.getInstance();
 		
 		while (true) {
 			try {
@@ -79,19 +80,42 @@ public class ActionsForServer extends Thread {
 				if (request.getRequestType().equals("USERCON")) {
 					String json = request.getContent();
 					User user = gson.fromJson(json, User.class);
-					String emailFromDB = "Aggelos";
-					String passwordFromDB = "aggelos123";
 					String email = user.getEmail();
 					String password = user.getPassword();
+					String profileJson = profileDao.getFirstWithEmail(email);
 					// Authentication happens here. How? Email and password checked with database
 					// If they match send true, otherwise false.
 					// Attention: We will use the email to Authenticate!
 					boolean result = false;
-					if (emailFromDB.equals(email) && passwordFromDB.equals(password)) {
-						result = true;
+					if (profileJson != null) {
+						Profile profile = gson.fromJson(profileJson, Profile.class);
+						String emailFromDB = profile.getEmail();
+						String passwordFromDB = profile.getPassword();
+						if (emailFromDB.equals(email) && passwordFromDB.equals(password)) {
+							result = true;
+						}
 					}
 					
 					Request responseRequest = new Request("USERCONRESP", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
+				if (request.getRequestType().equals("GETPR")) {
+					String email = request.getContent();
+					String json = profileDao.getFirstWithEmail(email);
+					ArrayList<String> response = new ArrayList<String>();
+					response.add(json);
+					objectOS.writeObject(gson.toJson(response));
+					objectOS.flush();
+					
+				}
+				
+				if (request.getRequestType().equals("INPR")) {
+					String json = request.getContent();
+					boolean result = profileDao.insert(json);
+					System.out.println(">Server: insert was " + result);
+					Request responseRequest = new Request("", gson.toJson(result));
 					objectOS.writeObject(responseRequest);
 					objectOS.flush();
 				}

@@ -74,12 +74,13 @@ public class ScanQRCodeEventActivity extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
-                        String userNameString = result.getText();
-                        userName.setText(userNameString);
+                        String userID = result.getText();
+                        userName.setText(userID);
 
-                        if (event.getAttendees().containsKey(userNameString)) {
-                            showSuccessLayout(userNameString);
-                            event.setAttendeePresent(userNameString);
+                        if (event.getAttendees().containsKey(userID)) {
+                            String userNameProfile = event.getAttendeesNames().get(userID);
+                            showSuccessLayout(userID);
+                            event.setAttendeePresent(userNameProfile);
                         }
                         else {
                             showFailureLayout();

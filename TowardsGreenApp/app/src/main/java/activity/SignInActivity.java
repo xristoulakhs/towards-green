@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aueb.towardsgreen.Connection;
@@ -89,14 +90,41 @@ public class SignInActivity extends AppCompatActivity {
         return Connection.getInstance().requestSendData(request);
     }
 
-    private void showAlertDialog(int layout) {
+    private void showAlertDialog(boolean result) {
+        String successMessage = "Η αυθεντικοποίηση έγινε επιτυχώς.";
+        String failureMessage = "Το email ή ο κωδικός είναι λάθος. Ξαναπροσπαθήστε!";
+
         AlertDialog alertDialog;
-        AlertDialog.Builder builderDialog = new AlertDialog.Builder(SignInActivity.this);
-        View layoutView = getLayoutInflater().inflate(layout, null);
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(this);
+        View layoutView = null;
+
+        if (result) {
+            layoutView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+            TextView successMsg = layoutView.findViewById(R.id.success_dialog_txt);
+            successMsg.setText(successMessage);
+        }
+        else {
+            layoutView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+            TextView failureMsg = layoutView.findViewById(R.id.failure_dialog_txt);
+            failureMsg.setText(failureMessage);
+        }
+
         builderDialog.setView(layoutView);
 
         alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+                if (result) {
+                    intentMainActivity();
+                }
+            }
+        }, 3000);
     }
 
     private  void showInputAddressDialog() {
@@ -198,7 +226,6 @@ public class SignInActivity extends AppCompatActivity {
             //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
 
             if (result) {
-
                 Toast.makeText(SignInActivity.this, "True", Toast.LENGTH_SHORT).show();
                 if (rememberMe.isChecked()) {
                     try {
@@ -212,20 +239,10 @@ public class SignInActivity extends AppCompatActivity {
                 Profile profile = new Gson().fromJson(json, Profile.class);
 
                 Connection.getInstance().setProfile(profile);
-
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        intentMainActivity();
-                    }
-                }, 5000);
-            }
-            else {
-                Toast.makeText(SignInActivity.this, "Wrong", Toast.LENGTH_SHORT).show();
             }
             pd.hide();
             pd.dismiss();
+            showAlertDialog(result);
         }
     }
 }
