@@ -1,5 +1,6 @@
 package com.aueb.towardsgreen;
 
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Connection {
     private ObjectOutputStream objectOS;
     private String address;
     private int port;
+    private Profile profile;
 
     private Connection() {
         this.gson  = new Gson();
@@ -39,6 +41,18 @@ public class Connection {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Profile getProfile() {
+        return this.profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public ArrayList<String> requestGetData(Request request) {

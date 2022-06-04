@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used either for editing or creating a event.
@@ -69,8 +71,10 @@ public class CreateEditEventFragment extends Fragment {
      * or in Edit Mode. True stands for Create mode and False for Edit mode.
      */
     private boolean createEditMode = true;
+    private boolean createFromPostMode = false;
     private TextView createEditBar;
 
+    private TextView status;
     private LinearLayout statusLayout;
     private Button changeStatusBtn;
 
@@ -109,6 +113,8 @@ public class CreateEditEventFragment extends Fragment {
     // Correspondingly, "Save changes" will be shown in edit event.
     private Button createSaveBtn;
 
+    private boolean hasDateChanged, hasTimeChanged = false;
+
     // Event variables
     String eventTitle, eventDescription, eventMeetingLocation, eventBadge;
     int[] eventMeetingDate, eventMeetingTime;
@@ -123,8 +129,14 @@ public class CreateEditEventFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            createEditMode = false;
-            event = (Event) getArguments().getSerializable("event");
+            String mode = getArguments().getString("mode");
+            if (mode.equals("edit")) {
+                createEditMode = false;
+                event = (Event) getArguments().getSerializable("event");
+            }
+            else if (mode.equals("createFromPost")) {
+                createFromPostMode = true;
+            }
         }
     }
 
@@ -150,6 +162,7 @@ public class CreateEditEventFragment extends Fragment {
 
         createEditBar = view.findViewById(R.id.event_create_edit_mode_txt);
 
+        status = view.findViewById(R.id.event_create_edit_status_txt);
         statusLayout = view.findViewById(R.id.event_create_edit_statusLayout);
         changeStatusBtn = view.findViewById(R.id.event_create_edit_change_status_btn);
 
@@ -192,6 +205,13 @@ public class CreateEditEventFragment extends Fragment {
         else {
             enableEditMode();
         }
+
+        changeStatusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChangeStatusDialog();
+            }
+        });
 
         FragmentManager fragmentManager = getChildFragmentManager();
 
@@ -288,6 +308,17 @@ public class CreateEditEventFragment extends Fragment {
         title.setText(event.getTitle());
         description.setText(event.getDescription());
 
+        dateYear.setText(String.valueOf(event.getMeetingDate()[0]));
+        dateMonth.setText(String.valueOf(event.getMeetingDate()[1]));
+        dateDay.setText(String.valueOf(event.getMeetingDate()[2]));
+
+        timeHour.setText(String.valueOf(event.getMeetingTime()[0]));
+        timeMinute.setText(String.valueOf(event.getMeetingTime()[1]));
+
+        if (event.getImage() != null) {
+            image.setImageBitmap(event.getImageBitmap());
+        }
+
         location.setText(event.getMeetingLocation());
 
         if (event.getBadge() == null) {
@@ -296,6 +327,52 @@ public class CreateEditEventFragment extends Fragment {
         else {
             badge.setText(event.getBadge());
         }
+
+        setRequirementFragments();
+    }
+
+    // TODO: to be implemented , waiting for Post
+    private void enableCreateFromPostMode() {
+
+    }
+
+    private void showChangeStatusDialog() {
+        String[] choices = {"Ανοιχτό προς συμμετοχή",
+                "Σε εξέλιξη",
+                "Ολοκληρώθηκε"};
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int choice) {
+                switch (choice) {
+                    case 0:
+                        setEventStatus(Event.Status.OPEN);
+                        break;
+
+                    case 1:
+                        setEventStatus(Event.Status.IN_PROGRESS);
+                        break;
+
+                    case 2:
+                        setEventStatus(Event.Status.CLOSED);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialogInterface.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Επίλεξε μία κατάσταση:").setItems(choices, dialogClickListener)
+                .setNegativeButton("Ακύρωση", dialogClickListener).show();
+    }
+
+    private void setEventStatus(Event.Status eventStatus) {
+        event.setStatus(eventStatus);
+        status.setText(eventStatus.toString());
+        statusLayout.setBackgroundColor(Color.parseColor(eventStatus.getColor()));
     }
 
     private void showImageOptionsDialog() {
@@ -375,6 +452,7 @@ public class CreateEditEventFragment extends Fragment {
                 dateYear.setText(String.valueOf(year));
                 dateMonth.setText(String.valueOf(month + 1));
                 dateDay.setText(String.valueOf(day));
+                hasDateChanged = true;
             }
         }, calendarDateYear, calendarDateMonth, calendarDateDay);
         datePickerDialog.show();
@@ -390,6 +468,7 @@ public class CreateEditEventFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 timeHour.setText(String.valueOf(hour));
                 timeMinute.setText(String.valueOf(minute));
+                hasTimeChanged = true;
             }
         }, calendarTimeHour, calendarTimeMinute, true);
         timePickerDialog.show();
@@ -421,6 +500,10 @@ public class CreateEditEventFragment extends Fragment {
     private boolean checkDateAndTimeValidity() {
         calendar = Calendar.getInstance();
 
+        if (!createEditMode && !hasDateChanged && !hasTimeChanged) {
+            return true;
+        }
+
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -446,6 +529,20 @@ public class CreateEditEventFragment extends Fragment {
         }
         Toast.makeText(getActivity(), "Παρακαλώ εισάγετε μία έγκυρη ημερομηνία.", Toast.LENGTH_SHORT).show();
         return false;
+    }
+
+    private void setRequirementFragments() {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        for (Map.Entry<String, Boolean> requirement : event.getRequirements().entrySet()) {
+            Bundle args = new Bundle();
+            args.putString("requirementName", requirement.getKey());
+            args.putBoolean("requirementFulfillment", requirement.getValue());
+            CreateEventRequirementFragment createEventRequirementFragment = new CreateEventRequirementFragment();
+            createEventRequirementFragment.setArguments(args);
+            transaction.add(requirementListLayout.getId(), createEventRequirementFragment);
+        }
+        transaction.commit();
     }
 
     private void setEventFields() {
@@ -518,7 +615,15 @@ public class CreateEditEventFragment extends Fragment {
             setPublicationDateAndTime();
             Gson gson = new Gson();
             String json = gson.toJson(event);
-            Request request = new Request("INEV", json);
+            Request request = null;
+            if (createEditMode) {
+                request = new Request("INEV", json);
+            }
+            else {
+                json = gson.toJson(new String[]{event.getEventID(), json});
+                request = new Request("UPEV", json);
+            }
+
             return Connection.getInstance().requestSendData(request);
         }
 
@@ -542,6 +647,16 @@ public class CreateEditEventFragment extends Fragment {
         builderDialog.setView(layoutView);
 
         alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+                getParentFragmentManager().beginTransaction().replace(R.id.container_content, new EventPageFragment()).commit();
+            }
+        }, 5000);
     }
 }

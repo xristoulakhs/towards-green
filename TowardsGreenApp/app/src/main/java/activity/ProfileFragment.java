@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -12,10 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.R;
+import com.aueb.towardsgreen.domain.Profile;
 
 public class ProfileFragment extends Fragment {
-
     private ImageView profileImg;
     private ImageView qrImg;
 
@@ -24,7 +26,7 @@ public class ProfileFragment extends Fragment {
     private TextView points;
     private TextView badgeNum;
 
-    private ListView badgeList;
+    private LinearLayout badgeLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Profile profile = Connection.getInstance().getProfile();
 
         profileImg = view.findViewById(R.id.profile_image);
         qrImg = view.findViewById(R.id.profile_qrCodeImage);
@@ -46,62 +49,12 @@ public class ProfileFragment extends Fragment {
         role = view.findViewById(R.id.profile_userRole);
         points = view.findViewById(R.id.profile_points);
         badgeNum = view.findViewById(R.id.profile_number_of_badges);
+        badgeLayout = view.findViewById(R.id.profile_badgeLayout);
 
-    }
-
-    public ImageView getProfileImg() {
-        return profileImg;
-    }
-
-    public void setProfileImg(ImageView profileImg) {
-        this.profileImg = profileImg;
-    }
-
-    public ImageView getQrImg() {
-        return qrImg;
-    }
-
-    public void setQrImg(ImageView qrImg) {
-        this.qrImg = qrImg;
-    }
-
-    public TextView getUserId() {
-        return userId;
-    }
-
-    public void setUserId(TextView userId) {
-        this.userId = userId;
-    }
-
-    public TextView getRole() {
-        return role;
-    }
-
-    public void setRole(TextView role) {
-        this.role = role;
-    }
-
-    public TextView getPoints() {
-        return points;
-    }
-
-    public void setPoints(TextView points) {
-        this.points = points;
-    }
-
-    public TextView getBadgeNum() {
-        return badgeNum;
-    }
-
-    public void setBadgeNum(TextView badgeNum) {
-        this.badgeNum = badgeNum;
-    }
-
-    public ListView getBadgeList() {
-        return badgeList;
-    }
-
-    public void setBadgeList(ListView badgeList) {
-        this.badgeList = badgeList;
+        qrImg.setImageBitmap(profile.getImageBitmap());
+        userId.setText(profile.getUserID());
+        role.setText(profile.getRole().toString());
+        points.setText(String.valueOf(profile.getPoints()));
+        badgeNum.setText(String.valueOf(profile.getBadges().size()));
     }
 }

@@ -38,6 +38,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation group: 'com.google.zxing', name: 'core', version: '3.3.1'
     implementation group: 'com.google.zxing', name: 'javase', version: '3.3.0'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
     implementation 'androidx.navigation:navigation-fragment:2.4.2'
     implementation 'androidx.navigation:navigation-ui:2.4.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'

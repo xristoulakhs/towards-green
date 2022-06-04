@@ -91,12 +91,14 @@ public class Event implements Serializable {
 	private HashMap<String, Boolean> requirements;
 	// <userID, presence>
 	private HashMap<String, Boolean> attendees;
+	private HashMap<String, String> attendeesNames;
 	private String badge;
 
 	public Event(String eventID, String creator, int[] publishedDate, int[] meetingDate,
 				 int[] publishedTime, int[] meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
-				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees, String badge) {
+				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees,
+				 HashMap<String, String> attendeesNames, String badge) {
 		this.eventID = eventID;
 		this.creator = creator;
 		this.publishedDate = publishedDate;
@@ -111,6 +113,7 @@ public class Event implements Serializable {
 		this.reactions = reactions;
 		this.requirements = requirements;
 		this.attendees = attendees;
+		this.attendeesNames = attendeesNames;
 		this.badge = badge;
 	}
 
@@ -120,15 +123,18 @@ public class Event implements Serializable {
 		this.initializeReactions();
 		this.requirements = new HashMap<>();
 		this.attendees = new HashMap<>();
+		this.attendeesNames = new HashMap<>();
 	}
 
-	public Event(HashMap<String, ArrayList<String>> reactions) {
-		this.reactions = reactions;
+	public Event(HashMap<String, Boolean> attendees) {
+		this.attendees = attendees;
 	}
 
-	public Event(HashMap<String, ArrayList<String>> reactions, HashMap<String,Boolean> attendees) {
+	public Event(HashMap<String, ArrayList<String>> reactions, HashMap<String,Boolean> attendees,
+				 HashMap<String, String> attendeesNames) {
 		this.reactions = reactions;
 		this.attendees = attendees;
+		this.attendeesNames = attendeesNames;
 	}
 
 	public String getEventID() {
@@ -304,6 +310,14 @@ public class Event implements Serializable {
 		this.attendees = attendees;
 	}
 
+	public HashMap<String, String> getAttendeesNames() {
+		return this.attendeesNames;
+	}
+
+	public void setAttendeesNames(HashMap<String, String> attendeesNames) {
+		this.attendeesNames = attendeesNames;
+	}
+
 	public String getBadge() {
 		return this.badge;
 	}
@@ -346,12 +360,19 @@ public class Event implements Serializable {
 		this.requirements.put(requirement, true);
 	}
 
-	public void addAttendee(String userID) {
+	public void addAttendee(String userID, String userName) {
 		this.attendees.put(userID, false);
+		this.attendeesNames.put(userID, userName);
 	}
 
 	public void removeAttendee(String userID) {
 		this.attendees.remove(userID);
+		this.attendeesNames.remove(userID);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.N)
+	public void setAttendeePresent(String userID) {
+		this.attendees.replace(userID, true);
 	}
 
 	public boolean isAttendeePresent(String userID) {

@@ -51,9 +51,9 @@ public class PostFragmentPage extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         connection = Connection.getInstance();
-        postsLayout = view.findViewById(R.id.postLayout);
-        postScrollView =  view.findViewById(R.id.post_page_scrollView);
-        postSwipeRefreshLayout = view.findViewById(R.id.post_page_refreshLayout);
+        //postsLayout = view.findViewById(R.id.postLayout);
+        //postScrollView =  view.findViewById(R.id.post_page_scrollView);
+        //postSwipeRefreshLayout = view.findViewById(R.id.post_page_refreshLayout);
 
         postSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -97,7 +97,7 @@ public class PostFragmentPage extends Fragment {
         PostFragment postFragment;
         for(Post post: posts){
             Bundle bundle = new Bundle();
-            bundle.putSerializable("post", post);
+            //bundle.putSerializable("post", post);
             postFragment = new PostFragment();
             postFragment.setArguments(bundle);
             if (flag && refreshing) {
