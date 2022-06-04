@@ -16,11 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.domain.Post;
 
 public class CreatePostFragment extends Fragment {
 
+
+    private Connection connection;
     EditText postTitle;
     EditText postDescription;
 
@@ -52,6 +55,7 @@ public class CreatePostFragment extends Fragment {
         location = view.findViewById(R.id.post_location);
         btnSubmit = view.findViewById(R.id.post_btn_submit);
         btnCancel = view.findViewById(R.id.post_btn_cancel);
+        connection = Connection.getInstance();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
                 R.array.nomoi, android.R.layout.simple_spinner_item);
@@ -81,7 +85,8 @@ public class CreatePostFragment extends Fragment {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO; return at previous activity
+                postDescription.getText().clear();
+                postTitle.getText().clear();
             }
         });
 
@@ -100,14 +105,13 @@ public class CreatePostFragment extends Fragment {
                     newpost.setTitle(postTitle.getText().toString());
                     newpost.setLocation(postLocation);
                     newpost.setDescription(postDescription.getText().toString());
-
-                    //TODO: na bazei to profile autou pou eftiakse to post
+                    newpost.setCreator(connection.getProfile().getFullName());
+                    newpost.setCreatorId(connection.getProfile().getUserID());
                     //TODO: save to dao
 
                 }
             }
         });
-
 
     }
 
