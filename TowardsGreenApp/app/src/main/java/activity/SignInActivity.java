@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class SignInActivity extends AppCompatActivity {
     private CheckBox rememberMe;
     private Button logInBtn;
     private Button createAccountBtn;
+    private User rememberedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,9 @@ public class SignInActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(threadPolicy);
         setContentView(R.layout.activity_sign_in);
 
-        ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask();
-        connectionAsyncTask.execute();
+        showInputAddressDialog();
         UserDao userDao = UserDao.getInstance(this);
-        User rememberedUser = userDao.retrieveUser();
+        rememberedUser = userDao.retrieveUser();
 
         email = findViewById(R.id.sign_in_email_edtxt);
         password = findViewById(R.id.sign_in_password_edtxt);
@@ -55,8 +56,6 @@ public class SignInActivity extends AppCompatActivity {
         if (!rememberedUser.getEmail().equals("null")) {
             email.setText(rememberedUser.getEmail());
             password.setText(rememberedUser.getPassword());
-            AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
-            authenticationAsyncTask.execute();
         }
 
         logInBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +99,46 @@ public class SignInActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private  void showInputAddressDialog() {
+        EditText editText = new EditText(this);
+        editText.setText("10.0.2.2");
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask();
+                        connectionAsyncTask.execute();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Πληκτρολογήστε παρακάτω το νέο όνομα:")
+                .setView(editText)
+                .setPositiveButton("Εντάξει", dialogClickListener)
+                .setNegativeButton("Ακύρωση", dialogClickListener);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String address = editText.getText().toString();
+                Connection.getInstance().setAddress(address);
+                alertDialog.dismiss();
+                ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask();
+                connectionAsyncTask.execute();
+            }
+        });
+    }
+
     private class ConnectionAsyncTask extends AsyncTask<String, String, Integer> {
 
         ProgressDialog pd = new ProgressDialog(SignInActivity.this);
@@ -121,6 +160,10 @@ public class SignInActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer i) {
+            if (!rememberedUser.getEmail().equals("null")) {
+                AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
+                authenticationAsyncTask.execute();
+            }
             //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
             pd.hide();
             pd.dismiss();

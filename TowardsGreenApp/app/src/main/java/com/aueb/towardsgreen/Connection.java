@@ -51,6 +51,10 @@ public class Connection {
         this.profile = profile;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public ArrayList<String> requestGetData(Request request) {
         String json = null;
         try {

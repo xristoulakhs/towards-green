@@ -89,6 +89,7 @@
                 android:textStyle="bold"/>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical">

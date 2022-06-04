@@ -3,6 +3,7 @@ package activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -26,11 +27,14 @@ import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import java.util.Map;
 
 public class EventFragment extends Fragment {
+    Profile profile = Connection.getInstance().getProfile();
+
     // Requirement layout (LinearLayout) initialization
     private LinearLayout requirementContainerLayout;
 
@@ -160,9 +164,9 @@ public class EventFragment extends Fragment {
         showReactionNumbers();
 
         // Event user's reactions
-        userReactions = new boolean[]{event.hasReacted("TakePart", "u101"),
-                event.hasReacted("Maybe", "u101"),
-                event.hasReacted("NotInterested", "u101")};
+        userReactions = new boolean[]{event.hasReacted("TakePart", profile.getUserID()),
+                event.hasReacted("Maybe", profile.getUserID()),
+                event.hasReacted("NotInterested", profile.getUserID())};
 
         // Setting Event requirements in the appropriate fragment
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
@@ -195,24 +199,15 @@ public class EventFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.event_menu_edit:
-                                CreateEditEventFragment createEditEventFragment = new CreateEditEventFragment();
-                                Bundle args = new Bundle();
-                                args.putString("mode", "edit");
-                                args.putSerializable("event", event);
-                                createEditEventFragment.setArguments(args);
-                                getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
+                                editEvent();
                                 break;
                             case R.id.event_menu_attendees:
-                                String[] array = event.getAttendees().keySet().toArray(new String[0]);
-                                Dialog dialog = new Dialog(view1.getContext());
-                                dialog.setContentView(R.layout.dialog_event_attendees);
-                                ListView listView = dialog.findViewById(R.id.event_menu_dialog_attendees_list);
-                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(view1.getContext(),
-                                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-                                        array);
-                                listView.setAdapter(arrayAdapter);
-                                dialog.show();
+                                showAttendeesDialog();
                                 break;
+                            case R.id.event_menu_qr_scanning:
+                                Intent intent = new Intent(getActivity(), ScanQRCodeEventActivity.class);
+                                intent.putExtra("event", event);
+                                startActivity(intent);
                         }
                         return false;
                     }
@@ -233,17 +228,17 @@ public class EventFragment extends Fragment {
                             if (userReactions[finalI]) {
                                 userReactions[finalI] = false;
                                 changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
-                                event.removeReaction(reactionNames[finalI], "u101");
+                                event.removeReaction(reactionNames[finalI], profile.getUserID());
                                 if (finalI == 0) {
-                                    event.removeAttendee("u101");
+                                    event.removeAttendee(profile.getUserID());
                                 }
                             }
                             else {
                                 userReactions[finalI] = true;
                                 changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
-                                event.addReaction(reactionNames[finalI], "u101");
+                                event.addReaction(reactionNames[finalI], profile.getUserID());
                                 if (finalI == 0) {
-                                    event.addAttendee("u101");
+                                    event.addAttendee(profile.getUserID(), profile.getFirstName());
                                 }
                             }
                             showReactionNumbers();
@@ -318,14 +313,35 @@ public class EventFragment extends Fragment {
         return  false;
     }
 
+    private void editEvent() {
+        CreateEditEventFragment createEditEventFragment = new CreateEditEventFragment();
+        Bundle args = new Bundle();
+        args.putString("mode", "edit");
+        args.putSerializable("event", event);
+        createEditEventFragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
+    }
+
+    private void showAttendeesDialog() {
+        String[] array = event.getAttendeesNames().values().toArray(new String[0]);
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_event_attendees);
+        ListView listView = dialog.findViewById(R.id.event_menu_dialog_attendees_list);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                array);
+        listView.setAdapter(arrayAdapter);
+        dialog.show();
+    }
+
     private void updateEventReaction(boolean attendees) {
         Gson gson = new Gson();
         String updatedEvent;
         if (attendees) {
-            updatedEvent = gson.toJson(new Event(event.getReactions(), event.getAttendees()));
+            updatedEvent = gson.toJson(new Event(event.getReactions(), event.getAttendees(), event.getAttendeesNames()));
         }
         else {
-            updatedEvent = gson.toJson(new Event(event.getReactions()));
+            updatedEvent = gson.toJson(new Event(event.getReactions(), null, null));
         }
         String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
         Connection.getInstance().requestSendDataWithoutResponse(new Request("UP", json));
