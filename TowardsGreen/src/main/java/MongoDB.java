@@ -24,6 +24,9 @@ public class MongoDB {
 		else if (this.type.equals("Profile")) {
 			this.collectionName = "profiles";
 		}
+		else if (this.type.equals("Post")) {
+			this.collectionName = "posts";
+		}
 	}
 	
 	/**

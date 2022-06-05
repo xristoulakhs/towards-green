@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -38,6 +39,7 @@ import java.util.List;
 
 
 public class EventPageFragment extends Fragment {
+    private Profile profile;
     private Connection connection;
 
     private boolean refreshing = false;
@@ -70,6 +72,7 @@ public class EventPageFragment extends Fragment {
 
         //events = new ArrayList<>();
         connection = Connection.getInstance();
+        profile = connection.getProfile();
 
 
         eventsLayout = view.findViewById(R.id.eventsLayout);
@@ -77,6 +80,10 @@ public class EventPageFragment extends Fragment {
         eventSwipeRefreshLayout = view.findViewById(R.id.event_page_refreshLayout);
 
         floatingCreateEventBtn = view.findViewById(R.id.event_create_floating_btn);
+
+        if (profile.getRole() == Profile.ROLE.USER) {
+            floatingCreateEventBtn.setVisibility(View.GONE);
+        }
 
         floatingCreateEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override

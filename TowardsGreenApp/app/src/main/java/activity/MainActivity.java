@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.posts_page:
                         Toast.makeText(MainActivity.this, "Post page", Toast.LENGTH_SHORT).show();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new PostFragmentPage()).commit();
 
                         break;
                     case R.id.events_page:

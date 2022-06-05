@@ -41,6 +41,7 @@ import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
@@ -546,6 +547,9 @@ public class CreateEditEventFragment extends Fragment {
     }
 
     private void setEventFields() {
+        Profile profile = Connection.getInstance().getProfile();
+        event.setCreatorID(profile.getUserID());
+        event.setCreator(profile.getFirstName());
         event.setTitle(eventTitle);
         event.setDescription(eventDescription);
         if (eventImageResource != null) {
@@ -631,19 +635,32 @@ public class CreateEditEventFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-            if (result) {
-                showAlertDialog(R.layout.success_dialog);
-            }
-            else {
-                showAlertDialog(R.layout.failure_dialog);
-            }
+            showAlertDialog(result);
         }
     }
 
-    private void showAlertDialog(int layout) {
+    private void showAlertDialog(boolean result) {
+        String successMessage = "Μόλις δημιούργησες επιτυχώς μία νέα εκδήλωση!";
+        String failureMessage = "Η εκδήλωση δεν δημιουργήθηκε. Ξαναπροσπάθησε σε λίγα λεπτά!";
+        if (!createEditMode) {
+            successMessage = "Η εκδήλωση τροποποιήθηκε επιτυχώς!";
+            failureMessage = "Η εκδήλωση δεν τροποποιήθηκε λόγω σφάλματος. Ξαναπροσπάθησε σε λίγα λεπτά!";
+        }
         AlertDialog alertDialog;
         AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
-        View layoutView = getLayoutInflater().inflate(layout, null);
+        View layoutView = null;
+
+        if (result) {
+            layoutView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+            TextView successMsg = layoutView.findViewById(R.id.success_dialog_txt);
+            successMsg.setText(successMessage);
+        }
+        else {
+            layoutView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+            TextView failureMsg = layoutView.findViewById(R.id.failure_dialog_txt);
+            failureMsg.setText(failureMessage);
+        }
+
         builderDialog.setView(layoutView);
 
         alertDialog = builderDialog.create();

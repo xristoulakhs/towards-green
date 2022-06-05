@@ -20,8 +20,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aueb.towardsgreen.Connection;
+import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Post;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ public class PostFragmentPage extends Fragment {
     private ScrollView postScrollView;
     private SwipeRefreshLayout postSwipeRefreshLayout;
 
+    private FloatingActionButton floatingCreatePostBtn;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +46,7 @@ public class PostFragmentPage extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_post_page, container, false);
     }
 
     @Override
@@ -50,9 +54,18 @@ public class PostFragmentPage extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         connection = Connection.getInstance();
-        //postsLayout = view.findViewById(R.id.postLayout);
-        //postScrollView =  view.findViewById(R.id.post_page_scrollView);
-        //postSwipeRefreshLayout = view.findViewById(R.id.post_page_refreshLayout);
+        postsLayout = view.findViewById(R.id.postsLayout);
+        postScrollView =  view.findViewById(R.id.post_page_scrollView);
+        postSwipeRefreshLayout = view.findViewById(R.id.post_page_refreshLayout);
+
+        floatingCreatePostBtn = view.findViewById(R.id.post_create_floating_btn);
+
+        floatingCreatePostBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager().beginTransaction().replace(R.id.container_content, new CreatePostFragment()).commit();
+            }
+        });
 
         postSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,7 +109,7 @@ public class PostFragmentPage extends Fragment {
         PostFragment postFragment;
         for(Post post: posts){
             Bundle bundle = new Bundle();
-            //bundle.putSerializable("post", post);
+            bundle.putSerializable("post", post);
             postFragment = new PostFragment();
             postFragment.setArguments(bundle);
             if (flag && refreshing) {
@@ -142,7 +155,7 @@ public class PostFragmentPage extends Fragment {
 
         @Override
         protected ArrayList<Post> doInBackground(String... strings) {
-            return convertJsonToPosts(connection.requestGetData(new Request("GET", String.valueOf(numberOfPostsFetched))));
+            return convertJsonToPosts(connection.requestGetData(new Request("GETMOREPOSTS", String.valueOf(numberOfPostsFetched))));
         }
 
         @Override
@@ -158,7 +171,7 @@ public class PostFragmentPage extends Fragment {
 
         @Override
         protected ArrayList<Post> doInBackground(String... strings) {
-            return convertJsonToPosts(connection.requestGetData(new Request("GET2", String.valueOf(numberOfPostsFetched))));
+            return convertJsonToPosts(connection.requestGetData(new Request("GETPOSTS", String.valueOf(numberOfPostsFetched))));
         }
 
         @Override

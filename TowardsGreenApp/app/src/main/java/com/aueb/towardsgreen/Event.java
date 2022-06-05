@@ -61,6 +61,7 @@ public class Event implements Serializable {
 	private String eventID;
 	// Creator gets user's ID (userID).
 	private String creator;
+	private String creatorID;
 	/*
 	Due to problems during the parsing process (LocalTime and LocalDate
 	objects couldn't be resolved and returned an empty object), we will
@@ -94,13 +95,14 @@ public class Event implements Serializable {
 	private HashMap<String, String> attendeesNames;
 	private String badge;
 
-	public Event(String eventID, String creator, int[] publishedDate, int[] meetingDate,
+	public Event(String eventID, String creator, String creatorID, int[] publishedDate, int[] meetingDate,
 				 int[] publishedTime, int[] meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
 				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees,
 				 HashMap<String, String> attendeesNames, String badge) {
 		this.eventID = eventID;
 		this.creator = creator;
+		this.creatorID = creatorID;
 		this.publishedDate = publishedDate;
 		this.meetingDate = meetingDate;
 		this.publishedTime = publishedTime;
@@ -147,6 +149,14 @@ public class Event implements Serializable {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public String getCreatorID() {
+		return creatorID;
+	}
+
+	public void setCreatorID(String creatorID) {
+		this.creatorID = creatorID;
 	}
 
 	public int[] getPublishedDate() {
