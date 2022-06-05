@@ -147,7 +147,7 @@ public class EventPageFragment extends Fragment {
 
         @Override
         protected ArrayList<Event> doInBackground(String... strings) {
-            return convertJsonToEvents(connection.requestGetData(new Request("GET", String.valueOf(numberOfEventsFetched))));
+            return convertJsonToEvents(connection.requestGetData(new Request("GETMOREEV", String.valueOf(numberOfEventsFetched))));
         }
 
         @Override
@@ -157,6 +157,7 @@ public class EventPageFragment extends Fragment {
             numberOfEventsFetched += requestedEvents.size();
             showEvents(requestedEvents);
             progressDialog.hide();
+            progressDialog.dismiss();
         }
     }
 
@@ -164,7 +165,7 @@ public class EventPageFragment extends Fragment {
 
         @Override
         protected ArrayList<Event> doInBackground(String... strings) {
-            return convertJsonToEvents(connection.requestGetData(new Request("GET2", String.valueOf(numberOfEventsFetched))));
+            return convertJsonToEvents(connection.requestGetData(new Request("GETEV", String.valueOf(numberOfEventsFetched))));
         }
 
         @Override

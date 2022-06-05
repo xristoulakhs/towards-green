@@ -79,8 +79,8 @@ public class ScanQRCodeEventActivity extends AppCompatActivity {
 
                         if (event.getAttendees().containsKey(userID)) {
                             String userNameProfile = event.getAttendeesNames().get(userID);
-                            showSuccessLayout(userID);
-                            event.setAttendeePresent(userNameProfile);
+                            showSuccessLayout(userNameProfile);
+                            event.setAttendeePresent(userID);
                         }
                         else {
                             showFailureLayout();
@@ -155,7 +155,7 @@ public class ScanQRCodeEventActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String updatedEvent = gson.toJson(new Event(event.getAttendees()));
         String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
-        Request request = new Request("UPEVATT", json);
+        Request request = new Request("UPEVWR", json);
         Connection.getInstance().requestSendDataWithoutResponse(request);
     }
 }

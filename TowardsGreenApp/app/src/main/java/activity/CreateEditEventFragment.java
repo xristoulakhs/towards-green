@@ -41,13 +41,13 @@ import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
+import com.aueb.towardsgreen.domain.Badge;
 import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +62,9 @@ public class CreateEditEventFragment extends Fragment {
     private final int TAKE_PICTURE = 2;
 
     private Event event;
+    private Badge createdBadge = null;
+    private Badge choosenBadge = null;
+    private ArrayList<Badge> badges;
 
     private Calendar calendar;
     private int calendarDateYear, calendarDateMonth, calendarDateDay,
@@ -153,6 +156,9 @@ public class CreateEditEventFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         calendar = Calendar.getInstance();
+
+        FetchBadgesAsyncTask fetchBadgesAsyncTask = new FetchBadgesAsyncTask();
+        fetchBadgesAsyncTask.execute();
 
         calendarDateYear = calendar.get(Calendar.YEAR);
         calendarDateMonth = calendar.get(Calendar.MONTH) + 1;
@@ -249,14 +255,14 @@ public class CreateEditEventFragment extends Fragment {
         createBadgeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showCreateBadgeDialog();
             }
         });
 
         chooseBadgeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showAvailableBadgesDialog(getBadgeNames());
             }
         });
 
@@ -326,7 +332,7 @@ public class CreateEditEventFragment extends Fragment {
             badge.setVisibility(View.GONE);
         }
         else {
-            badge.setText(event.getBadge());
+            badge.setText(event.getBadge().getTitle());
         }
 
         setRequirementFragments();
@@ -475,6 +481,62 @@ public class CreateEditEventFragment extends Fragment {
         timePickerDialog.show();
     }
 
+    private void showCreateBadgeDialog() {
+        AlertDialog alertDialog;
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
+        View layoutView = getLayoutInflater().inflate(R.layout.create_badge_dialog, null);
+
+        builderDialog.setView(layoutView);
+
+        EditText badgeName = layoutView.findViewById(R.id.create_badge_name_edtxt);
+        EditText badgePoints = layoutView.findViewById(R.id.create_badge_points_edtxt);
+        Button createBadgeBtn = layoutView.findViewById(R.id.create_badge_create_btn);
+
+        alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
+        createBadgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                calendar = Calendar.getInstance();
+
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                String publishedBadgeDate = day + "/" + month + "/" + year;
+                String badgeNameText = badgeName.getText().toString();
+                int badgePointsText = Integer.parseInt(badgePoints.getText().toString());
+                createdBadge = new Badge(badgeNameText, publishedBadgeDate, badgePointsText);
+                badge.setText(badgeNameText);
+
+                CreateBadgeAsyncTask createBadgeEventTask = new CreateBadgeAsyncTask();
+                createBadgeEventTask.execute();
+            }
+        });
+    }
+
+    private void showAvailableBadgesDialog(ArrayList<String> badgeNames) {
+        String[] choices = badgeNames.toArray(new String[0]);
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int choice) {
+                if (choice != DialogInterface.BUTTON_NEGATIVE) {
+                    choosenBadge = badges.get(choice);
+                    badge.setText(choosenBadge.getTitle());
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Επίλεξε ένα βραβείο:").setItems(choices, dialogClickListener)
+                .setNegativeButton("Ακύρωση", dialogClickListener).show();
+    }
+
     private boolean checkEventFieldsValidity() {
         eventTitle = title.getText().toString();
         eventDescription = description.getText().toString();
@@ -560,6 +622,13 @@ public class CreateEditEventFragment extends Fragment {
         event.setMeetingLocation(eventMeetingLocation);
         // TODO: add badge implementation
         event.setRequirements(getRequirementsFromFragments());
+
+        if (createdBadge != null) {
+            event.setBadge(createdBadge);
+        }
+        else if (choosenBadge != null) {
+            event.setBadge(choosenBadge);
+        }
     }
 
     private void setPublicationDateAndTime() {
@@ -588,6 +657,8 @@ public class CreateEditEventFragment extends Fragment {
         }
         return requirements;
     }
+
+    // TODO: Create AsyncTask class that extends AsyncTask to save coding lines
 
     /**
      * This AsyncTask is destined to ensure that Event has created successfully.
@@ -625,7 +696,13 @@ public class CreateEditEventFragment extends Fragment {
             }
             else {
                 json = gson.toJson(new String[]{event.getEventID(), json});
-                request = new Request("UPEV", json);
+
+                if (event.getStatus() == Event.Status.CLOSED) {
+                    request = new Request("UPCLEV", json);
+                }
+                else {
+                    request = new Request("UPEV", json);
+                }
             }
 
             return Connection.getInstance().requestSendData(request);
@@ -635,17 +712,86 @@ public class CreateEditEventFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-            showAlertDialog(result);
+            String successMessage = "Μόλις δημιούργησες επιτυχώς μία νέα εκδήλωση!";
+            String failureMessage = "Η εκδήλωση δεν δημιουργήθηκε. Ξαναπροσπάθησε σε λίγα λεπτά!";
+            if (!createEditMode) {
+                successMessage = "Η εκδήλωση τροποποιήθηκε επιτυχώς!";
+                failureMessage = "Η εκδήλωση δεν τροποποιήθηκε λόγω σφάλματος. Ξαναπροσπάθησε σε λίγα λεπτά!";
+            }
+            showAlertDialog(result, successMessage, failureMessage, true);
         }
     }
 
-    private void showAlertDialog(boolean result) {
-        String successMessage = "Μόλις δημιούργησες επιτυχώς μία νέα εκδήλωση!";
-        String failureMessage = "Η εκδήλωση δεν δημιουργήθηκε. Ξαναπροσπάθησε σε λίγα λεπτά!";
-        if (!createEditMode) {
-            successMessage = "Η εκδήλωση τροποποιήθηκε επιτυχώς!";
-            failureMessage = "Η εκδήλωση δεν τροποποιήθηκε λόγω σφάλματος. Ξαναπροσπάθησε σε λίγα λεπτά!";
+    private class CreateBadgeAsyncTask extends AsyncTask<String, String, Boolean> {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setMessage("Παρακαλώ περιμένετε...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            Gson gson = new Gson();
+            String json = gson.toJson(createdBadge);
+            Request request = new Request("INBDG", json);
+
+            return Connection.getInstance().requestSendData(request);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            String successMessage = "Μόλις δημιούργησες επιτυχώς ένα νέο βραβείο!";
+            String failureMessage = "Το βραβείο δεν δημιουργήθηκε. Ξαναπροσπάθησε σε λίγα λεπτά!";
+            showAlertDialog(result, successMessage, failureMessage, false);
+        }
+    }
+
+    private class FetchBadgesAsyncTask extends AsyncTask<String, String, ArrayList<String>> {
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected ArrayList<String> doInBackground(String... strings) {
+            Request request = new Request("GETALLBDG", "");
+            ArrayList<String> jsonBadges = Connection.getInstance().requestGetData(request);
+
+            return jsonBadges;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> jsonBadges) {
+            super.onPostExecute(jsonBadges);
+            badges = convertJsonToBadges(jsonBadges);
+            Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private ArrayList<Badge> convertJsonToBadges(ArrayList<String> jsons) {
+        ArrayList<Badge> badges = new ArrayList<>();
+        Gson gson = new Gson();
+        for (String json : jsons) {
+            badges.add(gson.fromJson(json, Badge.class));
+        }
+        return badges;
+    }
+
+    private ArrayList<String> getBadgeNames() {
+        ArrayList<String> badgeNames = new ArrayList<>();
+        for (Badge badge : badges) {
+            badgeNames.add(badge.getTitle());
+        }
+        return badgeNames;
+    }
+
+    private void showAlertDialog(boolean result, String successMessage, String failureMessage, boolean redirect) {
         AlertDialog alertDialog;
         AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
         View layoutView = null;
@@ -672,7 +818,9 @@ public class CreateEditEventFragment extends Fragment {
             @Override
             public void run() {
                 alertDialog.dismiss();
-                getParentFragmentManager().beginTransaction().replace(R.id.container_content, new EventPageFragment()).commit();
+                if (redirect) {
+                    getParentFragmentManager().beginTransaction().replace(R.id.container_content, new EventPageFragment()).commit();
+                }
             }
         }, 5000);
     }

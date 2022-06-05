@@ -7,6 +7,8 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.aueb.towardsgreen.domain.Badge;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -93,13 +95,13 @@ public class Event implements Serializable {
 	// <userID, presence>
 	private HashMap<String, Boolean> attendees;
 	private HashMap<String, String> attendeesNames;
-	private String badge;
+	private Badge badge;
 
 	public Event(String eventID, String creator, String creatorID, int[] publishedDate, int[] meetingDate,
 				 int[] publishedTime, int[] meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
 				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees,
-				 HashMap<String, String> attendeesNames, String badge) {
+				 HashMap<String, String> attendeesNames, Badge badge) {
 		this.eventID = eventID;
 		this.creator = creator;
 		this.creatorID = creatorID;
@@ -328,11 +330,11 @@ public class Event implements Serializable {
 		this.attendeesNames = attendeesNames;
 	}
 
-	public String getBadge() {
+	public Badge getBadge() {
 		return this.badge;
 	}
 
-	public void setBadge(String badge) {
+	public void setBadge(Badge badge) {
 		this.badge = badge;
 	}
 
