@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 public class ProfileFragment extends Fragment {
     private Profile profile;
 
-    private ImageView profileImg;
+    private TextView name;
     private ImageView qrImg;
 
     private TextView userId;
@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         profile = Connection.getInstance().getProfile();
 
-        profileImg = view.findViewById(R.id.profile_image);
+        name = view.findViewById(R.id.profile_name);
         qrImg = view.findViewById(R.id.profile_qrCodeImage);
         userId = view.findViewById(R.id.profile_userId);
         role = view.findViewById(R.id.profile_userRole);
@@ -64,6 +64,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setFields() {
+        name.setText(profile.getFullName());
         qrImg.setImageBitmap(profile.getImageBitmap());
         userId.setText(profile.getUserID());
         role.setText(profile.getRole().toString());

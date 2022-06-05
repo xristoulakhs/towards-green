@@ -38,7 +38,9 @@ public class ActionsForServer extends Thread {
 				Request request = (Request) objectIS.readObject();
 				System.out.println(">Server: got a new Request with type " + request.getRequestType());
 				
-				// Post request types
+				// Post request types //
+				
+				// GETMOREPOSTS: Get more posts
 				if (request.getRequestType().equals("GETMOREPOSTS")) {
 					ArrayList<String> posts = postDao.getFirstN(2, Integer.parseInt(request.getContent()));
 					String post = gson.toJson(posts);
@@ -47,6 +49,7 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
+				// GETPOSTS: Get posts
 				if (request.getRequestType().equals("GETPOSTS")) {
 					ArrayList<String> posts = postDao.getFirstN(Integer.parseInt(request.getContent()));
 					String post = gson.toJson(posts);
@@ -56,6 +59,7 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
+				// INPOST: Insert post
 				if (request.getRequestType().equals("INPOST")) {
 					String json = request.getContent();
 					boolean result = postDao.insert(json);
@@ -64,13 +68,16 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// UPPOSTWR: Update post without response
 				if (request.getRequestType().equals("UPPOSTWR")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);
 					System.out.println(">Server: updating event record" + json[0] + "...");
 					boolean result = postDao.update( json[0], json[1]);
 				}
 				
-				// Event request types
+				// Event request types //
+				
+				// GETMOREEV: Get more events
 				if (request.getRequestType().equals("GETMOREEV")) {
 					ArrayList<String> events = eventDao.getFirstN(2, Integer.parseInt(request.getContent()));
 					String event = gson.toJson(events);
@@ -79,6 +86,7 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
+				// GETEV: Get events
 				if (request.getRequestType().equals("GETEV")) {
 					ArrayList<String> events = eventDao.getFirstN(Integer.parseInt(request.getContent()));
 					String event = gson.toJson(events);
@@ -87,6 +95,7 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
+				// UPEV: Update event
 				if (request.getRequestType().equals("UPEV")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);
 					System.out.println(">Server: updating event record" + json[0] + "...");
@@ -96,12 +105,16 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// UPEV: Update event without response
 				if (request.getRequestType().equals("UPEVWR")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);
 					System.out.println(">Server: updating event record" + json[0] + "...");
-					boolean result = eventDao.update( json[0], json[1]);
+					eventDao.update( json[0], json[1]);
 				}
 				
+				// UPCLEV: Update closed event
+				// When event has closed, we want to reward all the attendees with a badge, if there
+				// is one.
 				if (request.getRequestType().equals("UPCLEV")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);
 					boolean result = eventDao.update( json[0], json[1]);
@@ -110,18 +123,21 @@ public class ActionsForServer extends Thread {
 					HashMap<String, Boolean> eventAttendees = event.getAttendees();
 					
 					Badge badge = event.getBadge();
-					int badgePoints = badge.getPointsEarned();
 					
-					for (Map.Entry<String, Boolean> attendee : eventAttendees.entrySet()) {
-						if (attendee.getValue()) {
-							String attendeeProfileID = attendee.getKey();
-							String jsonProfile = profileDao.getFirst(attendeeProfileID);
-							
-							Profile profile = gson.fromJson(jsonProfile, Profile.class);
-							profile.getBadges().add(badge);
-							profile.addPoints(badgePoints);
-							
-							profileDao.update(attendeeProfileID, gson.toJson(profile));
+					if (badge != null) {
+						int badgePoints = badge.getPointsEarned();
+						
+						for (Map.Entry<String, Boolean> attendee : eventAttendees.entrySet()) {
+							if (attendee.getValue()) {
+								String attendeeProfileID = attendee.getKey();
+								String jsonProfile = profileDao.getFirst(attendeeProfileID);
+								
+								Profile profile = gson.fromJson(jsonProfile, Profile.class);
+								profile.getBadges().add(badge);
+								profile.addPoints(badgePoints);
+								
+								profileDao.update(attendeeProfileID, gson.toJson(profile));
+							}
 						}
 					}
 					
@@ -131,6 +147,7 @@ public class ActionsForServer extends Thread {
 					
 				}
 				
+				// INEV: Insert event
 				if (request.getRequestType().equals("INEV")) {
 					String json = request.getContent();
 					boolean result = eventDao.insert(json);
@@ -139,6 +156,7 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// DELEV: Delete event
 				if (request.getRequestType().equals("DELEV")) {
 					String json = request.getContent();
 					boolean result = eventDao.delete(json);
@@ -148,6 +166,7 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// USERCON: User connection
 				// User authentication
 				if (request.getRequestType().equals("USERCON")) {
 					String json = request.getContent();
@@ -155,9 +174,7 @@ public class ActionsForServer extends Thread {
 					String email = user.getEmail();
 					String password = user.getPassword();
 					String profileJson = profileDao.getFirstWithEmail(email);
-					// Authentication happens here. How? Email and password checked with database
-					// If they match send true, otherwise false.
-					// Attention: We will use the email to Authenticate!
+					
 					boolean result = false;
 					if (profileJson != null) {
 						Profile profile = gson.fromJson(profileJson, Profile.class);
@@ -173,7 +190,9 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
-				// Profile request types
+				// Profile request types //
+				
+				// GETPR: Get profile
 				if (request.getRequestType().equals("GETPR")) {
 					String email = request.getContent();
 					String json = profileDao.getFirstWithEmail(email);
@@ -184,6 +203,7 @@ public class ActionsForServer extends Thread {
 					
 				}
 				
+				// INPR: Insert profile
 				if (request.getRequestType().equals("INPR")) {
 					String json = request.getContent();
 					boolean result = profileDao.insert(json);
@@ -194,13 +214,25 @@ public class ActionsForServer extends Thread {
 				}
 				
 				if (request.getRequestType().equals("GETSORTPROF")) {
-					String json = request.getContent();
 					ArrayList<String> jsons = profileDao.getAllSortedByPoints();
 					objectOS.writeObject(gson.toJson(jsons));
 					objectOS.flush();
 				}
 				
-				// Badge request types
+				// REWARDPR: Reward profile
+				if (request.getRequestType().equals("REWARDPR")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					
+					String jsonProfile = profileDao.getFirst(json[0]);
+					Profile profile = gson.fromJson(jsonProfile, Profile.class);
+					profile.addPoints(Integer.parseInt(json[1]));
+					System.out.println(json[1]);
+					profileDao.update(json[0], gson.toJson(profile));
+				}
+				
+				// Badge request types //
+				
+				// INBDG: Insert badge
 				if (request.getRequestType().equals("INBDG")) {
 					String json = request.getContent();
 					boolean result = badgeDao.insert(json);
@@ -209,6 +241,7 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// GETALLBDG: Get all badges
 				if (request.getRequestType().equals("GETALLBDG")) {
 					ArrayList<String> jsons = badgeDao.getAll();
 					objectOS.writeObject(gson.toJson(jsons));
@@ -226,22 +259,5 @@ public class ActionsForServer extends Thread {
 				break;
 			}
 		}	
-	}
-	
-	private ArrayList<Profile> convertJsonToProfiles(ArrayList<String> jsons) {
-		ArrayList<Profile> profiles = new ArrayList<Profile>();
-		for (String json : jsons) {
-			profiles.add(gson.fromJson(json, Profile.class));
-		}
-		return profiles;
-	}
-	
-	private void updateProfiles(HashMap<String, Boolean> eventAttendees, Badge badge) {
-		int badgePoints = badge.getPointsEarned();
-		for (Map.Entry<String, Boolean> attendee : eventAttendees.entrySet()) {
-			if (attendee.getValue()) {
-				
-			}
-		}
 	}
 }

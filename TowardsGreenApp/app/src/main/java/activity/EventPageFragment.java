@@ -44,6 +44,7 @@ public class EventPageFragment extends Fragment {
 
     private boolean refreshing = false;
     private int numberOfEventsFetched = 0;
+    private boolean noMoreEvents = false;
 
     private LinearLayout eventsLayout;
     private ScrollView eventScrollView;
@@ -116,10 +117,9 @@ public class EventPageFragment extends Fragment {
                 View sView = eventScrollView.getChildAt(eventScrollView.getChildCount() - 1);
                 int scrollBottom = sView.getBottom() - (eventScrollView.getHeight() + eventScrollView.getScrollY());
 
-                if (scrollBottom == 0) {
+                if (scrollBottom == 0 && !noMoreEvents) {
                     EventAsyncTask myTask = new EventAsyncTask("Φόρτωση περισσοτέρων εκδηλώσεων. Παρακαλώ περιμένετε...");
                     myTask.execute();
-                    Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -155,6 +155,9 @@ public class EventPageFragment extends Fragment {
             super.onPostExecute(requestedEvents);
             //events.addAll(requestedEvents);
             numberOfEventsFetched += requestedEvents.size();
+            if (requestedEvents.size() < 2) {
+                noMoreEvents = true;
+            }
             showEvents(requestedEvents);
             progressDialog.hide();
             progressDialog.dismiss();
@@ -173,7 +176,6 @@ public class EventPageFragment extends Fragment {
             super.onPostExecute(requestedEvents);
             showEvents(requestedEvents);
             refreshing = false;
-            Toast.makeText(getActivity(), String.valueOf(requestedEvents.size()), Toast.LENGTH_SHORT).show();
             eventSwipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -188,7 +190,6 @@ public class EventPageFragment extends Fragment {
             eventFragment = new EventFragment();
             eventFragment.setArguments(args);
             if (flag && refreshing) {
-                //Toast.makeText(getActivity(), "hi", Toast.LENGTH_SHORT).show();
                 transaction.replace(eventsLayout.getId(), eventFragment);
                 transaction.addToBackStack(null);
                 flag = false;
