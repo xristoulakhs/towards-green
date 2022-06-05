@@ -193,6 +193,13 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				if (request.getRequestType().equals("GETSORTPROF")) {
+					String json = request.getContent();
+					ArrayList<String> jsons = profileDao.getAllSortedByPoints();
+					objectOS.writeObject(gson.toJson(jsons));
+					objectOS.flush();
+				}
+				
 				// Badge request types
 				if (request.getRequestType().equals("INBDG")) {
 					String json = request.getContent();

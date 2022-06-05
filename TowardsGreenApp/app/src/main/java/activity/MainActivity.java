@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new ProfileFragment()).commit();
                         break;
                     case R.id.leaderboard_page:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new LeaderboardPageFragment()).commit();
                         break;
                     case R.id.sign_out:
                         try {
