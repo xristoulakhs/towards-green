@@ -22,17 +22,21 @@ public class Post implements Serializable {
     private String description;
     private String location;
     private HashMap<String, String> usersAndReactions;
+    private HashMap<String, String> agree;
+    private HashMap<String, String> disagree;
 
     public Post(){
         this.postID = UUID.randomUUID().toString();
         initializeReactions();
         usersAndReactions = new HashMap<>();
+        agree = new HashMap<>();
+        disagree = new HashMap<>();
     }
 
     public Post(String creator, String creatorID, String publishedDate, String publishedTime,
                 String title, String location, byte[] image, String desc,
                 HashMap<String, ArrayList<String>> reactions,
-                HashMap<String, String> usersAndReactions) {
+                HashMap<String, String> usersAndReactions, HashMap<String, String> agree, HashMap<String,String> disagree) {
         this.creator = creator;
         this.creatorID = creatorID;
         this.publishedDate = publishedDate;
@@ -43,12 +47,16 @@ public class Post implements Serializable {
         this.description=desc;
         this.reactions =reactions;
         this.usersAndReactions = usersAndReactions;
+        this.agree = agree;
+        this.disagree = disagree;
     }
 
     public Post(HashMap<String,ArrayList<String>> reactions,
-                    HashMap<String, String> usersAndReactions){
+                    HashMap<String, String> usersAndReactions, HashMap<String, String> agree, HashMap<String, String> disagree){
         this.reactions = reactions;
         this.usersAndReactions = usersAndReactions;
+        this.agree = agree;
+        this.disagree = disagree;
     }
 
     public String getPostID() {
@@ -146,6 +154,22 @@ public class Post implements Serializable {
         this.usersAndReactions = usersAndReactions;
     }
 
+    public HashMap<String, String> getAgree() {
+        return agree;
+    }
+
+    public void setAgree(HashMap<String, String> agree) {
+        this.agree = agree;
+    }
+
+    public HashMap<String, String> getDisagree() {
+        return disagree;
+    }
+
+    public void setDisagree(HashMap<String, String> disagree) {
+        this.disagree = disagree;
+    }
+
     public int getAgreeNumberOfReactions() {
         return this.getReactions().get("Agree").size();
     }
@@ -176,5 +200,13 @@ public class Post implements Serializable {
 
     public void removeReaction(String reaction, String userID) {
         this.getReactions().get(reaction).remove(userID);
+    }
+
+    public HashMap<String,String> getProperReactionMap(String reaction){
+        if(reaction.equals("Agree")){
+            return this.getAgree();
+        }else{
+            return this.getDisagree();
+        }
     }
 }

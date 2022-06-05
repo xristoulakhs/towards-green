@@ -2,7 +2,6 @@ package activity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.aueb.towardsgreen.Connection;
-import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Post;
@@ -75,7 +73,6 @@ public class PostFragment extends Fragment {
         post_description = view.findViewById(R.id.post_description);
         post_title = view.findViewById(R.id.post_title_txt);
         postImg = view.findViewById(R.id.post_image);
-        //userImg = view.findViewById(R.id.post_username_background);
         agree = view.findViewById(R.id.post_reaction_agree);
         disagree = view.findViewById(R.id.post_reaction_disagree);
 
@@ -119,13 +116,16 @@ public class PostFragment extends Fragment {
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
                             post.removeReaction(reactionNames[finalI], profile.getUserID());
                             post.getUsersAndReactions().remove(profile.getUserID());
+                            String reaction = post.getUsersAndReactions().get(profile.getUserID());
+                            post.getProperReactionMap(reaction).remove(profile.getUserID());
                         }
                         else {
                             userReactions[finalI] = true;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
                             post.addReaction(reactionNames[finalI], profile.getUserID());
                             post.getUsersAndReactions().put(profile.getUserID(),reactionNames[finalI]);
-
+                            String reaction = post.getUsersAndReactions().get(profile.getUserID());
+                            post.getProperReactionMap(reaction).put(profile.getUserID(),profile.getFullName());
                         }
                         showReactionNumbers();
                         updatePostReaction();
@@ -211,7 +211,7 @@ public class PostFragment extends Fragment {
         Gson gson = new Gson();
         String updatedPost;
 
-        updatedPost = gson.toJson(new Post(post.getReactions(),post.getUsersAndReactions()));
+        updatedPost = gson.toJson(new Post(post.getReactions(),post.getUsersAndReactions(),post.getAgree(),post.getDisagree()));
 
         String json = gson.toJson(new String[]{post.getPostID(),updatedPost});
         Connection.getInstance().requestSendDataWithoutResponse(new Request("UPPOSTWR", json));
