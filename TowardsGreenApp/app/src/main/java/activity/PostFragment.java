@@ -104,6 +104,10 @@ public class PostFragment extends Fragment {
         reactions = new TextView[]{view.findViewById(R.id.post_reaction_agree),
                 view.findViewById(R.id.post_reaction_disagree)};
 
+        showReactionNumbers();
+
+        setInitialReactions();
+
         for (int i = 0; i < 2; i++) {
             int finalI = i;
             reactions[i].setOnClickListener(new View.OnClickListener() {
@@ -114,25 +118,17 @@ public class PostFragment extends Fragment {
                             userReactions[finalI] = false;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
                             post.removeReaction(reactionNames[finalI], profile.getUserID());
-                            if (finalI == 0) {
-                                post.getUsersAndReactions().remove(profile.getUserID());
-                            }
+                            post.getUsersAndReactions().remove(profile.getUserID());
                         }
                         else {
                             userReactions[finalI] = true;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], false);
                             post.addReaction(reactionNames[finalI], profile.getUserID());
-                            if (finalI == 0) {
-                                post.getUsersAndReactions().put(profile.getUserID(),reactionNames[finalI]);
-                            }
+                            post.getUsersAndReactions().put(profile.getUserID(),reactionNames[finalI]);
+
                         }
                         showReactionNumbers();
-                        if (finalI != 0) {
-                            updatePostReaction(false);
-                        }
-                        else {
-                            updatePostReaction(true);
-                        }
+                        updatePostReaction();
 
                     }
                 }
@@ -160,7 +156,7 @@ public class PostFragment extends Fragment {
     }
 
     private boolean hasClickedOtherReaction(int reaction) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             if (userReactions[i] && (i != reaction)) {
                 return true;
             }
@@ -197,22 +193,27 @@ public class PostFragment extends Fragment {
         colorAnimatorText.start();
     }
 
+    private void setInitialReactions() {
+        for (int i = 0; i < 2; i++) {
+            if(userReactions[i]) {
+                changeReactionColor(reactionsLayout[i], reactionsNumber[i], false);
+            }
+        }
+    }
+
     private void showReactionNumbers() {
         reactionsNumber[0].setText(String.valueOf(post.getAgreeNumberOfReactions()));
         reactionsNumber[1].setText(String.valueOf(post.getDisagreeNumberOfReactions()));
     }
 
 
-    private void updatePostReaction(boolean attendees) {
+    private void updatePostReaction() {
         Gson gson = new Gson();
         String updatedPost;
-        if (attendees) {
-            updatedPost = gson.toJson(new Post(post.getReactions(),post.getUsersAndReactions()));
-        }
-        else {
-            updatedPost = gson.toJson(new Post(post.getReactions(), null));
-        }
+
+        updatedPost = gson.toJson(new Post(post.getReactions(),post.getUsersAndReactions()));
+
         String json = gson.toJson(new String[]{post.getPostID(),updatedPost});
-        Connection.getInstance().requestSendDataWithoutResponse(new Request("UP", json));
+        Connection.getInstance().requestSendDataWithoutResponse(new Request("UPPOSTWR", json));
     }
 }

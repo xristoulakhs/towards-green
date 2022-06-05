@@ -64,6 +64,12 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				if (request.getRequestType().equals("UPPOSTWR")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					System.out.println(">Server: updating event record" + json[0] + "...");
+					boolean result = postDao.update( json[0], json[1]);
+				}
+				
 				// Event request types
 				if (request.getRequestType().equals("GETMOREEV")) {
 					ArrayList<String> events = eventDao.getFirstN(2, Integer.parseInt(request.getContent()));
