@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,21 +17,22 @@ public class Post implements Serializable {
     private String publishedDate;
     private String publishedTime;
     private String title;
-    private int[] votes;
+    private HashMap<String, ArrayList<String>> reactions;
     private byte[] image;
-    private HashMap<Profile, String> comments;
     private String description;
     private String location;
+    private HashMap<String, String> usersAndReactions;
 
     public Post(){
         this.postID = UUID.randomUUID().toString();
-        this.votes= new int[2];
-        this.comments= new HashMap<>();
+        reactions = new HashMap<>();
+        usersAndReactions = new HashMap<>();
     }
 
     public Post(String creator, String creatorID, String publishedDate, String publishedTime,
-                String title,String location, int[] votes, byte[] image, String desc,
-                HashMap<Profile, String> comments) {
+                String title, String location, byte[] image, String desc,
+                HashMap<String, ArrayList<String>> reactions,
+                HashMap<String, String> usersAndReactions) {
         this.creator = creator;
         this.creatorID = creatorID;
         this.publishedDate = publishedDate;
@@ -38,9 +40,15 @@ public class Post implements Serializable {
         this.title = title;
         this.image = image;
         this.location=location;
-        this.votes = votes;
         this.description=desc;
-        this.comments = comments;
+        this.reactions =reactions;
+        this.usersAndReactions = usersAndReactions;
+    }
+
+    public Post(HashMap<String,ArrayList<String>> reactions,
+                    HashMap<String, String> usersAndReactions){
+        this.reactions = reactions;
+        this.usersAndReactions = usersAndReactions;
     }
 
     public String getPostID() {
@@ -110,28 +118,12 @@ public class Post implements Serializable {
         return BitmapFactory.decodeByteArray(this.image, 0, this.image.length);
     }
 
-    public int[] getVotes() {
-        return votes;
-    }
-
-    public void setVotes(int[] votes) {
-        this.votes = votes;
-    }
-
-    public HashMap<Profile, String> getComments() {
-        return comments;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setComments(HashMap<Profile, String> comments) {
-        this.comments = comments;
     }
 
     public String getCreatorID() {
@@ -142,15 +134,47 @@ public class Post implements Serializable {
         this.creatorID = creatorID;
     }
 
-    public void addComment(Profile profile, String comment){
-        HashMap<Profile, String> commentsMap = getComments();
-        commentsMap.put(profile,comment);
-        setComments(commentsMap);
+    public HashMap<String, ArrayList<String>> getReactions() {
+        return reactions;
     }
 
-    public void vote(int vote){
-        int[] voteArray=getVotes();
-        voteArray[vote]+=1;
-        setVotes(voteArray);
+    public HashMap<String, String> getUsersAndReactions() {
+        return usersAndReactions;
+    }
+
+    public void setUsersAndReactions(HashMap<String, String> usersAndReactions) {
+        this.usersAndReactions = usersAndReactions;
+    }
+
+    public int getAgreeNumberOfReactions() {
+        return this.getReactions().get("Agree").size();
+    }
+    public int getDisagreeNumberOfReactions() {
+        return this.getReactions().get("Disagree").size();
+    }
+
+    public void setReactions(HashMap<String, ArrayList<String>> reactions) {
+        this.reactions = reactions;
+    }
+
+        public void initializeReactions() {
+        this.reactions = new HashMap<String, ArrayList<String>>();
+        this.reactions.put("Agree", new ArrayList<>());
+        this.reactions.put("Disagree", new ArrayList<>());
+    }
+
+    public boolean hasReacted(String reaction, String userID) {
+        if (this.getReactions().get(reaction).contains(userID)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void addReaction(String reaction, String userID) {
+        this.getReactions().get(reaction).add(userID);
+    }
+
+    public void removeReaction(String reaction, String userID) {
+        this.getReactions().get(reaction).remove(userID);
     }
 }

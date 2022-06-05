@@ -122,7 +122,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/event_reactionsLayout"
+            android:id="@+id/post_reactionsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_reactions"
@@ -136,7 +136,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="MissingConstraints">
 
                     <LinearLayout
                         android:id="@+id/linearLayout"
@@ -149,6 +150,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
+                            android:id="@+id/post_agree_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -201,7 +203,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
-
+                            android:id="@+id/post_disagree_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="5dp"

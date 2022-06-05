@@ -10,18 +10,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.aueb.towardsgreen.Connection;
-import com.aueb.towardsgreen.Event;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +22,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.aueb.towardsgreen.Connection;
+import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class EventFragment extends Fragment {
