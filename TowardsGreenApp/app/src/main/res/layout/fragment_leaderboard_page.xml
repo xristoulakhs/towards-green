@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="activity.LeaderboardPageFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/LeaderboardTitle"
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:background="#A6FFA2"
+            android:gravity="center"
+            android:lineSpacingExtra="10sp"
+            android:text="Πίνακας Κατάταξης"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/LeaderboardTitle">
+
+            <TextView
+                android:id="@+id/leadDataID1"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="#B6B6B6"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Θέση"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                tools:layout_editor_absoluteX="4dp"
+                tools:layout_editor_absoluteY="111dp" />
+
+            <TextView
+                android:id="@+id/leadDataID3"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="#B6B6B6"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Πόντοι"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                tools:layout_editor_absoluteX="140dp"
+                tools:layout_editor_absoluteY="111dp" />
+
+            <TextView
+                android:id="@+id/leadDataID2"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="#B6B6B6"
+                android:gravity="center"
+                android:lineSpacingExtra="10sp"
+                android:text="Όνομα"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                tools:layout_editor_absoluteX="98dp"
+                tools:layout_editor_absoluteY="252dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lblayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
