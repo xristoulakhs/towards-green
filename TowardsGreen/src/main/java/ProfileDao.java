@@ -28,6 +28,11 @@ public class ProfileDao implements Dao{
         BasicDBObject query = new BasicDBObject("userID", id);
         return this.mongoDB.getAll(query);
     }
+    
+    public ArrayList<String> getAllSortedByPoints() {
+        BasicDBObject query = new BasicDBObject("points", -1);
+        return this.mongoDB.getAllSortedByField(query);
+    }
 
     @Override
     public ArrayList<String> getFirstN(int limit) {

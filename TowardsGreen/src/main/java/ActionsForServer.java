@@ -4,6 +4,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.aueb.towardsgreen.*;
 import com.google.gson.Gson;
@@ -28,6 +30,7 @@ public class ActionsForServer extends Thread {
 		PostDao postDao = PostDao.getInstance();
 		EventDao eventDao = EventDao.getInstance();
 		ProfileDao profileDao = ProfileDao.getInstance();
+		BadgeDao badgeDao = BadgeDao.getInstance();
 		
 		while (true) {
 			try {
@@ -35,6 +38,7 @@ public class ActionsForServer extends Thread {
 				Request request = (Request) objectIS.readObject();
 				System.out.println(">Server: got a new Request with type " + request.getRequestType());
 				
+				// Post request types
 				if (request.getRequestType().equals("GETMOREPOSTS")) {
 					ArrayList<String> posts = postDao.getFirstN(2, Integer.parseInt(request.getContent()));
 					String post = gson.toJson(posts);
@@ -60,7 +64,14 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
-				if (request.getRequestType().equals("GET")) {
+				if (request.getRequestType().equals("UPPOSTWR")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					System.out.println(">Server: updating event record" + json[0] + "...");
+					boolean result = postDao.update( json[0], json[1]);
+				}
+				
+				// Event request types
+				if (request.getRequestType().equals("GETMOREEV")) {
 					ArrayList<String> events = eventDao.getFirstN(2, Integer.parseInt(request.getContent()));
 					String event = gson.toJson(events);
 					objectOS.writeObject(event);
@@ -68,7 +79,7 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
-				if (request.getRequestType().equals("GET2")) {
+				if (request.getRequestType().equals("GETEV")) {
 					ArrayList<String> events = eventDao.getFirstN(Integer.parseInt(request.getContent()));
 					String event = gson.toJson(events);
 					objectOS.writeObject(event);
@@ -76,19 +87,48 @@ public class ActionsForServer extends Thread {
 					System.out.println(">Server: sending Request reply");
 				}
 				
-				if (request.getRequestType().equals("UP")) {
-					String[] json = gson.fromJson(request.getContent(), String[].class);
-					System.out.println(">Server: updating event record" + json[0] + "...");
-					boolean result = eventDao.update(json[0], json[1]);
-					System.out.println(">Server: update was " + result);
-				}
-				
 				if (request.getRequestType().equals("UPEV")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);
+					System.out.println(">Server: updating event record" + json[0] + "...");
 					boolean result = eventDao.update( json[0], json[1]);
 					Request responseRequest = new Request("", gson.toJson(result));
 					objectOS.writeObject(responseRequest);
 					objectOS.flush();
+				}
+				
+				if (request.getRequestType().equals("UPEVWR")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					System.out.println(">Server: updating event record" + json[0] + "...");
+					boolean result = eventDao.update( json[0], json[1]);
+				}
+				
+				if (request.getRequestType().equals("UPCLEV")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					boolean result = eventDao.update( json[0], json[1]);
+					
+					Event event = gson.fromJson(json[1], Event.class);
+					HashMap<String, Boolean> eventAttendees = event.getAttendees();
+					
+					Badge badge = event.getBadge();
+					int badgePoints = badge.getPointsEarned();
+					
+					for (Map.Entry<String, Boolean> attendee : eventAttendees.entrySet()) {
+						if (attendee.getValue()) {
+							String attendeeProfileID = attendee.getKey();
+							String jsonProfile = profileDao.getFirst(attendeeProfileID);
+							
+							Profile profile = gson.fromJson(jsonProfile, Profile.class);
+							profile.getBadges().add(badge);
+							profile.addPoints(badgePoints);
+							
+							profileDao.update(attendeeProfileID, gson.toJson(profile));
+						}
+					}
+					
+					Request responseRequest = new Request("", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+					
 				}
 				
 				if (request.getRequestType().equals("INEV")) {
@@ -108,6 +148,7 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// User authentication
 				if (request.getRequestType().equals("USERCON")) {
 					String json = request.getContent();
 					User user = gson.fromJson(json, User.class);
@@ -132,6 +173,7 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// Profile request types
 				if (request.getRequestType().equals("GETPR")) {
 					String email = request.getContent();
 					String json = profileDao.getFirstWithEmail(email);
@@ -151,6 +193,22 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// Badge request types
+				if (request.getRequestType().equals("INBDG")) {
+					String json = request.getContent();
+					boolean result = badgeDao.insert(json);
+					Request responseRequest = new Request("", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
+				if (request.getRequestType().equals("GETALLBDG")) {
+					ArrayList<String> jsons = badgeDao.getAll();
+					objectOS.writeObject(gson.toJson(jsons));
+					objectOS.flush();
+					
+				}
+				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -161,5 +219,22 @@ public class ActionsForServer extends Thread {
 				break;
 			}
 		}	
+	}
+	
+	private ArrayList<Profile> convertJsonToProfiles(ArrayList<String> jsons) {
+		ArrayList<Profile> profiles = new ArrayList<Profile>();
+		for (String json : jsons) {
+			profiles.add(gson.fromJson(json, Profile.class));
+		}
+		return profiles;
+	}
+	
+	private void updateProfiles(HashMap<String, Boolean> eventAttendees, Badge badge) {
+		int badgePoints = badge.getPointsEarned();
+		for (Map.Entry<String, Boolean> attendee : eventAttendees.entrySet()) {
+			if (attendee.getValue()) {
+				
+			}
+		}
 	}
 }

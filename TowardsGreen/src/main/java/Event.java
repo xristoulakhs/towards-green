@@ -1,14 +1,7 @@
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
+import java.util.UUID;
 
 public class Event implements Serializable {
 
@@ -16,7 +9,7 @@ public class Event implements Serializable {
 		OPEN {
 			@Override
 			public String toString() {
-				return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+				return "Áíïé÷ôü ðñïò óõììåôï÷Þ";
 			}
 
 			@Override
@@ -27,7 +20,7 @@ public class Event implements Serializable {
 		IN_PROGRESS {
 			@Override
 			public String toString() {
-				return "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+				return "Óå åîÝëéîç";
 			}
 
 			@Override
@@ -38,7 +31,7 @@ public class Event implements Serializable {
 		CLOSED {
 			@Override
 			public String toString() {
-				return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+				return "Ïëïêëçñþèçêå";
 			}
 
 			@Override
@@ -53,28 +46,48 @@ public class Event implements Serializable {
 	private String eventID;
 	// Creator gets user's ID (userID).
 	private String creator;
-	private String publishedDate, meetingDate;
-	private String publishedTime, meetingTime;
+	private String creatorID;
+	/*
+	Due to problems during the parsing process (LocalTime and LocalDate
+	objects couldn't be resolved and returned an empty object), we will
+	use this simple int array technique.
+	Date is represented as follows: [YEAR, MONTH, DAY]
+	Time is represented as follows: [HOUR, MINUTE]
+	 */
+	private int[] publishedDate, meetingDate;
+	private int[] publishedTime, meetingTime;
+
+	private final int YEAR = 0;
+	private final int MONTH = 1;
+	private final int DAY = 2;
+
+	private final int HOUR = 0;
+	private final int MINUTE = 1;
+
+
 	private Status status;
 	private String title;
 	private String description;
 	// Image is optional. Image type needs to be changed in Android Studio, so that we can depict it in the device.
 	private byte[] image;
 	private String meetingLocation;
-	// <Reactions, numberOfReactions>
+	// <Reactions, Users that reacted>
 	private HashMap<String, ArrayList<String>> reactions;
 	// <Requirement, fulfilled or not>
 	private HashMap<String, Boolean> requirements;
 	// <userID, presence>
 	private HashMap<String, Boolean> attendees;
-	private String badge;
+	private HashMap<String, String> attendeesNames;
+	private Badge badge;
 
-	public Event(String eventID, String creator, String publishedDate, String meetingDate,
-				 String publishedTime, String meetingTime, String title, String description,
+	public Event(String eventID, String creator, String creatorID, int[] publishedDate, int[] meetingDate,
+				 int[] publishedTime, int[] meetingTime, String title, String description,
 				 byte[] image, String meetingLocation, HashMap<String, ArrayList<String>> reactions,
-				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees, String badge) {
+				 HashMap<String, Boolean> requirements, HashMap<String, Boolean> attendees,
+				 HashMap<String, String> attendeesNames, Badge badge) {
 		this.eventID = eventID;
 		this.creator = creator;
+		this.creatorID = creatorID;
 		this.publishedDate = publishedDate;
 		this.meetingDate = meetingDate;
 		this.publishedTime = publishedTime;
@@ -87,109 +100,126 @@ public class Event implements Serializable {
 		this.reactions = reactions;
 		this.requirements = requirements;
 		this.attendees = attendees;
+		this.attendeesNames = attendeesNames;
 		this.badge = badge;
 	}
 
-
-	public Event(String creator, String meetingDate, String meetingTime, String title, String description,
-				 byte[] image, String meetingLocation, String badge) {
-		this.eventID = "e1";
-		this.creator = creator;
-		this.publishedDate = LocalDate.now().toString();
-		this.meetingDate = meetingDate;
-		this.publishedTime = LocalTime.now().toString();
-		this.meetingTime = meetingTime;
+	public Event() {
+		this.eventID = UUID.randomUUID().toString();
 		this.status = Status.OPEN;
-		this.title = title;
-		this.description = description;
-		this.image = image;
-		this.meetingLocation = meetingLocation;
 		this.initializeReactions();
-		this.requirements = new HashMap<String, Boolean>();
-		this.attendees = new HashMap<String, Boolean>();
-		this.badge = badge;
+		this.requirements = new HashMap<>();
+		this.attendees = new HashMap<>();
+		this.attendeesNames = new HashMap<>();
 	}
 
-	public Event(String eventID, String creator) throws IOException {
-		this.eventID = eventID;
-		this.creator = creator;
-		this.publishedDate = LocalDate.now().toString();
-		this.meetingDate = LocalDate.now().toString();
-		this.publishedTime = LocalTime.now().toString();
-		this.meetingTime = LocalTime.now().toString();
-		this.status = Status.OPEN;
-		this.title = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
-		this.description = "ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½; ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.";
-		this.getClass().getResource("image/Forests.png");
-		BufferedImage bImage = ImageIO.read(new File("C:\\Users\\apipi\\Documents\\UNI\\towards-green\\TowardsGreen\\src\\main\\java\\image\\sample.png"));
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ImageIO.write(bImage, "png", bos );
-	    byte [] data = bos.toByteArray();
-		this.image = data;
-		this.meetingLocation = "ï¿½ï¿½ï¿½ï¿½";
-		this.initializeReactions();
-		this.reactions.get("Maybe").add("u101");
-		this.requirements = new HashMap<String, Boolean>();
-		this.requirements.put("Trees", true);
-		this.requirements.put("Trees 3", false);
-		this.attendees = new HashMap<String, Boolean>();
-		this.badge = null;
+	public Event(HashMap<String, Boolean> attendees) {
+		this.attendees = attendees;
+	}
+
+	public Event(HashMap<String, ArrayList<String>> reactions, HashMap<String,Boolean> attendees,
+				 HashMap<String, String> attendeesNames) {
+		this.reactions = reactions;
+		this.attendees = attendees;
+		this.attendeesNames = attendeesNames;
 	}
 
 	public String getEventID() {
-		return eventID;
+		return this.eventID;
 	}
 
 	public String getCreator() {
-		return creator;
+		return this.creator;
 	}
 
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
 
-	public String getPublishedDate() {
-		return publishedDate;
+	public String getCreatorID() {
+		return creatorID;
 	}
 
-	public void setPublishedDate(LocalDate publishedDate) {
-		this.publishedDate = publishedDate.toString();
+	public void setCreatorID(String creatorID) {
+		this.creatorID = creatorID;
 	}
 
-	public String getMeetingDate() {
-		return meetingDate;
+	public int[] getPublishedDate() {
+		return this.publishedDate;
 	}
 
-	public void setMeetingDate(LocalDate meetingDate) {
-		this.meetingDate = meetingDate.toString();
+	public String getPublishedDateString() {
+		return this.publishedDate[DAY] + "/" + this.publishedDate[MONTH] +
+				"/" + this.publishedDate[YEAR];
 	}
 
-	public String getPublishedTime() {
-		return publishedTime;
+	public void setPublishedDate(int year, int month, int day) {
+		this.publishedDate = new int[]{year, month, day};
 	}
 
-	public void setPublishedTime(LocalTime publishedTime) {
-		this.publishedTime = publishedTime.toString();
+	public void setPublishedDate(int[] publishedDate) {
+		this.publishedDate = publishedDate;
 	}
 
-	public String getMeetingTime() {
-		return meetingTime;
+	public int[] getMeetingDate() {
+		return this.meetingDate;
 	}
 
-	public void setMeetingTime(LocalTime meetingTime) {
-		this.meetingTime = meetingTime.toString();
+	public String getMeetingDateString() {
+		return this.meetingDate[DAY] + "/" + this.meetingDate[MONTH] +
+				"/" + this.meetingDate[YEAR];
+	}
+
+	public void setMeetingDate(int year, int month, int day) {
+		this.meetingDate = new int[]{year, month, day};
+	}
+
+	public void setMeetingDate(int[] meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+	public int[] getPublishedTime() {
+		return this.publishedTime;
+	}
+
+	public String getPublishedTimeString() {
+		return this.publishedTime[HOUR] + ":" + this.publishedTime[MINUTE];
+	}
+
+	public void setPublishedTime(int hour, int minute) {
+		this.publishedTime = new int[]{hour, minute};
+	}
+
+	public void setPublishedTime(int[] publishedTime) {
+		this.publishedTime = publishedTime;
+	}
+
+	public int[] getMeetingTime() {
+		return this.meetingTime;
+	}
+
+	public String getMeetingTimeString() {
+		return this.meetingTime[HOUR] + ":" + this.meetingTime[MINUTE];
+	}
+
+	public void setMeetingTime(int hour, int minute) {
+		this.meetingTime = new int[]{hour, minute};
+	}
+
+	public void setMeetingTime(int[] meetingTime) {
+		this.meetingTime = meetingTime;
 	}
 
 	public Status getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public String getStatusString() {
-		return status.toString();
+		return this.status.toString();
 	}
 
 	public String getStatusColor() {
-		return status.getColor();
+		return this.status.getColor();
 	}
 
 	public void setStatus(Status status) {
@@ -197,7 +227,7 @@ public class Event implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -205,7 +235,7 @@ public class Event implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -213,7 +243,7 @@ public class Event implements Serializable {
 	}
 
 	public byte[] getImage() {
-		return image;
+		return this.image;
 	}
 
 	public void setImage(byte[] image) {
@@ -221,7 +251,7 @@ public class Event implements Serializable {
 	}
 
 	public String getMeetingLocation() {
-		return meetingLocation;
+		return this.meetingLocation;
 	}
 
 	public void setMeetingLocation(String meetingLocation) {
@@ -229,7 +259,19 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, ArrayList<String>> getReactions() {
-		return reactions;
+		return this.reactions;
+	}
+
+	public int getTakePartNumberOfReactions() {
+		return this.getReactions().get("TakePart").size();
+	}
+
+	public int getMaybeNumberOfReactions() {
+		return this.getReactions().get("Maybe").size();
+	}
+
+	public int getNotInterestedNumberOfReactions() {
+		return this.getReactions().get("NotInterested").size();
 	}
 
 	public void setReactions(HashMap<String, ArrayList<String>> reactions) {
@@ -237,7 +279,7 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getRequirements() {
-		return requirements;
+		return this.requirements;
 	}
 
 	public void setRequirements(HashMap<String, Boolean> requirements) {
@@ -245,25 +287,88 @@ public class Event implements Serializable {
 	}
 
 	public HashMap<String, Boolean> getAttendees() {
-		return attendees;
+		return this.attendees;
 	}
 
 	public void setAttendees(HashMap<String, Boolean> attendees) {
 		this.attendees = attendees;
 	}
 
-	public String getBadge() {
-		return badge;
+	public HashMap<String, String> getAttendeesNames() {
+		return this.attendeesNames;
 	}
 
-	public void setBadge(String badge) {
+	public void setAttendeesNames(HashMap<String, String> attendeesNames) {
+		this.attendeesNames = attendeesNames;
+	}
+
+	public Badge getBadge() {
+		return this.badge;
+	}
+
+	public void setBadge(Badge badge) {
 		this.badge = badge;
 	}
 
 	public void initializeReactions() {
 		this.reactions = new HashMap<String, ArrayList<String>>();
-		this.reactions.put("TakePart", new ArrayList<String>());
-		this.reactions.put("Maybe", new ArrayList<String>());
-		this.reactions.put("NotInterested", new ArrayList<String>());
+		this.reactions.put("TakePart", new ArrayList<>());
+		this.reactions.put("Maybe", new ArrayList<>());
+		this.reactions.put("NotInterested", new ArrayList<>());
+	}
+
+	public boolean hasReacted(String reaction, String userID) {
+		if (this.getReactions().get(reaction).contains(userID)) {
+			return true;
+		}
+		return false;
+	}
+
+	public void addReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).add(userID);
+	}
+
+	public void removeReaction(String reaction, String userID) {
+		this.getReactions().get(reaction).remove(userID);
+	}
+
+	public boolean addRequirement(String requirement, boolean req) {
+		return this.requirements.put(requirement, req);
+	}
+
+	public boolean removeRequirement(String requirement) {
+		return this.requirements.remove(requirement);
+	}
+
+	public void setRequirementFulfilled(String requirement) {
+		this.requirements.put(requirement, true);
+	}
+
+	public void addAttendee(String userID, String userName) {
+		this.attendees.put(userID, false);
+		this.attendeesNames.put(userID, userName);
+	}
+
+	public void removeAttendee(String userID) {
+		this.attendees.remove(userID);
+		this.attendeesNames.remove(userID);
+	}
+
+	public void setAttendeePresent(String userID) {
+		this.attendees.replace(userID, true);
+	}
+
+	public boolean isAttendeePresent(String userID) {
+		return this.attendees.get(userID);
+	}
+
+	public ArrayList<String> getAttendeesList() {
+		ArrayList<String> users = new ArrayList<String>();
+		for (String user:this.attendees.keySet()) {
+			if (this.attendees.get(user)) {
+				users.add(user);
+			}
+		}
+		return users;
 	}
 }

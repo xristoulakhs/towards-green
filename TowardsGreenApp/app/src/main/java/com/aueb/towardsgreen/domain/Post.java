@@ -25,7 +25,7 @@ public class Post implements Serializable {
 
     public Post(){
         this.postID = UUID.randomUUID().toString();
-        reactions = new HashMap<>();
+        initializeReactions();
         usersAndReactions = new HashMap<>();
     }
 

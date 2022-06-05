@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,7 @@ import java.util.Map;
 
 public class EventFragment extends Fragment {
     Profile profile = Connection.getInstance().getProfile();
+    private boolean isSupervisor = false;
 
     // Requirement layout (LinearLayout) initialization
     private LinearLayout requirementContainerLayout;
@@ -167,7 +169,7 @@ public class EventFragment extends Fragment {
             badgeLayout.setVisibility(View.GONE);
         }
         else {
-            badge.setText(event.getBadge());
+            badge.setText(event.getBadge().getTitle());
         }
         showReactionNumbers();
 
@@ -283,6 +285,7 @@ public class EventFragment extends Fragment {
     // delete or edit it.
     private void setUserMenu() {
         if (profile.getRole() == Profile.ROLE.SUPERVISOR) {
+            isSupervisor = true;
             scanItem.setVisible(true);
             if (event.getCreatorID().equals(profile.getUserID())) {
                 deleteItem.setVisible(true);
@@ -412,15 +415,43 @@ public class EventFragment extends Fragment {
     }
 
     private void showAttendeesDialog() {
-        String[] array = event.getAttendeesNames().values().toArray(new String[0]);
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_event_attendees);
+
+        if (isSupervisor) {
+            dialog.findViewById(R.id.event_menu_dialog_label).setVisibility(View.VISIBLE);
+            String[] arrayWithPresence = getAttendeesPresenceString();
+            ListView listViewWithPresence = dialog.findViewById(R.id.event_menu_dialog_attendees_presence_list);
+            listViewWithPresence.setVisibility(View.VISIBLE);
+            ArrayAdapter<String> arrayAdapterWithPresence = new ArrayAdapter<String>(getContext(),
+                    androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                    arrayWithPresence);
+            listViewWithPresence.setAdapter(arrayAdapterWithPresence);
+        }
+
+        String[] array = event.getAttendeesNames().values().toArray(new String[0]);
         ListView listView = dialog.findViewById(R.id.event_menu_dialog_attendees_list);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                 array);
         listView.setAdapter(arrayAdapter);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    private String[] getAttendeesPresenceString() {
+        int i = 0;
+        String[] array = new String[event.getAttendees().size()];
+        for (String userID : event.getAttendees().keySet()) {
+            String presence = "OXI";
+
+            if (event.getAttendees().get(userID)) {
+                presence = "NAI";
+            }
+            array[i] = presence;
+            i++;
+        }
+        return array;
     }
 
     private void updateEventReaction(boolean attendees) {
@@ -433,7 +464,7 @@ public class EventFragment extends Fragment {
             updatedEvent = gson.toJson(new Event(event.getReactions(), null, null));
         }
         String json = gson.toJson(new String[]{event.getEventID(), updatedEvent});
-        Connection.getInstance().requestSendDataWithoutResponse(new Request("UP", json));
+        Connection.getInstance().requestSendDataWithoutResponse(new Request("UPEVWR", json));
     }
 
     private class DeleteEventAsyncTask extends AsyncTask<String, String, Boolean> {

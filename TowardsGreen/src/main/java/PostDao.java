@@ -55,10 +55,6 @@ public class PostDao implements Dao{
     public boolean insert(String post) {
         return this.mongoDB.insert(post);
     }
-    //TODO: fix
-//    public boolean insert(Profile profile) {
-//        return this.mongoDB.insert(profile);
-//    }
 
     @Override
     public boolean update(String id, String updatedPost) {
