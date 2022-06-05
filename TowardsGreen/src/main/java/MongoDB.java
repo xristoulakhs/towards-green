@@ -27,6 +27,9 @@ public class MongoDB {
 		else if (this.type.equals("Post")) {
 			this.collectionName = "posts";
 		}
+		else if (this.type.equals("Badge")) {
+			this.collectionName = "badges";
+		}
 	}
 	
 	/**
@@ -71,6 +74,29 @@ public class MongoDB {
 			this.collection = this.database.getCollection(this.collectionName);
 			
 			FindIterable<Document> iterable = this.collection.find();
+			ArrayList<Document> documents = new ArrayList<>();
+			iterable.into(documents);
+			
+			for (Document doc:documents) {
+				doc.remove("_id");
+				records.add(doc.toJson());
+			}
+		}
+		return records;
+	}
+	
+	/**
+	 * This method gets all the records of the chosen collection sorted by a field, given a specific query.
+	 * @param query containing the field we want to sort
+	 * @return sorted records String ArrayList (each String is actually JSON format of the record)
+	 */
+	public ArrayList<String> getAllSortedByField(BasicDBObject sortingQuery) {
+		ArrayList<String> records = new ArrayList<>();
+		try (MongoClient mongoClient = MongoClients.create(this.uri)) {
+			this.database = mongoClient.getDatabase("tg-db");
+			this.collection = this.database.getCollection(this.collectionName);
+			
+			FindIterable<Document> iterable = this.collection.find().sort(sortingQuery);
 			ArrayList<Document> documents = new ArrayList<>();
 			iterable.into(documents);
 			

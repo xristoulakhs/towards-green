@@ -1,6 +1,3 @@
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -16,7 +13,7 @@ public class Profile {
     private byte[] image;
     //private Bitmap imgBitmap;
 
-    enum ROLE{
+    public enum ROLE{
         USER {
             @Override
             public String toString() {
@@ -90,6 +87,10 @@ public class Profile {
     public void setPoints(int points) {
         this.points = points;
     }
+    
+    public void addPoints(int points) {
+    	this.points += points;
+    }
 
     public ROLE getRole() {
         return role;
@@ -115,16 +116,16 @@ public class Profile {
         this.email = email;
     }
 
-//    public Bitmap getImgBitmap() {
-//        return imgBitmap;
-//    }
-
     public byte[] getImage() {
         return this.image;
     }
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getFullName(){
+        return this.getFirstName()+" "+this.getLastName();
     }
 }
 
