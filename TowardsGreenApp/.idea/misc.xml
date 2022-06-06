@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/anton/Desktop/anaptuksi_main/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_edit_event.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/anton/Desktop/anaptuksi_main/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_create_post.xml" value="0.21331521739130435" />
+        <entry key="..\:/Users/anton/Desktop/anaptuksi_main/towards-green/TowardsGreenApp/app/src/main/res/layout/fragment_post.xml" value="0.21331521739130435" />
+        <entry key="..\:/Users/anton/Desktop/anaptuksi_main/towards-green/TowardsGreenApp/app/src/main/res/layout/success_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/anton/Desktop/anaptuksi_main/towards-green/TowardsGreenApp/app/src/main/res/menu/post_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/event_shape_curve.xml" value="0.2595" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/full_shape_curve.xml" value="0.2595" />
         <entry key="..\:/Users/apipi/Documents/UNI/towards-green/TowardsGreenApp/app/src/main/res/drawable/full_shape_curve_inner.xml" value="0.2595" />
