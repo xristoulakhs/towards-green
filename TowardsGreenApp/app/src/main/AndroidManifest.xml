@@ -21,7 +21,7 @@
             android:name="activity.ScanQRCodeEventActivity"
             android:exported="false" />
         <activity
-            android:name="activity.createProfile.CreateProfileActivity"
+            android:name="activity.CreateProfileActivity"
             android:exported="false"></activity>
         <activity
             android:name="activity.SignInActivity"

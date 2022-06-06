@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.R;
@@ -26,8 +25,6 @@ import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
-
-import activity.createProfile.CreateProfileActivity;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText email;
@@ -192,7 +189,6 @@ public class SignInActivity extends AppCompatActivity {
                 AuthenticationAsyncTask authenticationAsyncTask = new AuthenticationAsyncTask(rememberedUser);
                 authenticationAsyncTask.execute();
             }
-            //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
             pd.hide();
             pd.dismiss();
         }
@@ -223,10 +219,7 @@ public class SignInActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
-
             if (result) {
-                Toast.makeText(SignInActivity.this, "True", Toast.LENGTH_SHORT).show();
                 if (rememberMe.isChecked()) {
                     try {
                         UserDao.getInstance(SignInActivity.this).saveUser(user);

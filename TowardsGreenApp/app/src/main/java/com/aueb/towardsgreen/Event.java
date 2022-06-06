@@ -53,7 +53,7 @@ public class Event implements Serializable {
 
 			@Override
 			public String getColor() {
-				return "#32A852";
+				return "#12DA92";
 			}
 		};
 

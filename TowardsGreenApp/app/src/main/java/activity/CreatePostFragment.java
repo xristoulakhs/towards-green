@@ -50,6 +50,7 @@ public class CreatePostFragment extends Fragment {
     private final int TAKE_PICTURE = 2;
 
     private Post newPost;
+    private boolean createEditMode = true;
     private Connection connection;
     EditText postTitle;
     EditText postDescription;
@@ -72,12 +73,9 @@ public class CreatePostFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String mode = getArguments().getString("mode");
-            if (mode.equals("edit")) {
-                newPost = (Post) getArguments().getSerializable("post");
-            }
+            createEditMode = false;
+            newPost = (Post) getArguments().getSerializable("post");
         }
-
     }
 
     @Nullable
@@ -100,13 +98,18 @@ public class CreatePostFragment extends Fragment {
         connection = Connection.getInstance();
         createEditBar = view.findViewById(R.id.createPost);
 
-        newPost = new Post();
-
         adapter = ArrayAdapter.createFromResource(this.getActivity(),
                 R.array.nomoi, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         location.setAdapter(adapter);
+
+        if (createEditMode) {
+            newPost = new Post();
+        }
+        else {
+            enableEditMode();
+        }
 
         location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -280,7 +283,13 @@ public class CreatePostFragment extends Fragment {
             Gson gson = new Gson();
             String json = gson.toJson(newPost);
             Request request = null;
-            request = new Request("INPOST", json);
+            if (createEditMode) {
+                request = new Request("INPOST", json);
+            }
+            else {
+                json = gson.toJson(new String[]{newPost.getPostID(), json});
+                request = new Request("UPPOST", json);
+            }
             return Connection.getInstance().requestSendData(request);
         }
 

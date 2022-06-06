@@ -3,18 +3,23 @@ package activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -33,6 +38,7 @@ public class PostFragment extends Fragment {
 
     private Post post;
     private Profile profile = Connection.getInstance().getProfile();
+    private boolean isSupervisor = false;
 
     private ImageView postMenu;
 
@@ -47,6 +53,10 @@ public class PostFragment extends Fragment {
 
     private ImageView userImg;
     private ImageView postImg;
+
+    private MenuItem editItem;
+    private MenuItem deleteItem;
+    private MenuItem createFromPostItem;
 
     private boolean[] userReactions;
     private String[] reactionNames = {"Agree", "Disagree"};
@@ -70,6 +80,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         postMenu = view.findViewById(R.id.ic_posts_menu);
 
@@ -121,8 +132,8 @@ public class PostFragment extends Fragment {
                             userReactions[finalI] = false;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
                             post.removeReaction(reactionNames[finalI], profile.getUserID());
-                            post.getUsersAndReactions().remove(profile.getUserID());
                             String reaction = post.getUsersAndReactions().get(profile.getUserID());
+                            post.getUsersAndReactions().remove(profile.getUserID());
                             post.getProperReactionMap(reaction).remove(profile.getUserID());
                         }
                         else {
@@ -154,14 +165,46 @@ public class PostFragment extends Fragment {
                                 break;
                             case R.id.post_menu_delete:
                                 deletePost();
+                                break;
+                            case R.id.post_menu_create_event:
+                                createEventFromPost();
+                                break;
+                            case R.id.post_menu_show_reactions:
+                                showAttendeesDialog();
+                                break;
                         }
                         return false;
                     }
                 });
                 popupMenu.inflate(R.menu.post_menu);
                 popupMenu.show();
+                Menu menu = popupMenu.getMenu();
+                editItem = menu.findItem(R.id.post_menu_edit);
+                deleteItem = menu.findItem(R.id.post_menu_delete);
+                createFromPostItem = menu.findItem(R.id.post_menu_create_event);
+                setUserMenu();
             }
         });
+    }
+
+    private void setUserMenu() {
+        if (profile.getRole() == Profile.ROLE.SUPERVISOR) {
+            isSupervisor = true;
+            createFromPostItem.setVisible(true);
+        }
+        if (post.getCreatorID().equals(profile.getUserID())) {
+            deleteItem.setVisible(true);
+            editItem.setVisible(true);
+        }
+    }
+
+    private void createEventFromPost() {
+        CreateEditEventFragment createEditEventFragment = new CreateEditEventFragment();
+        Bundle args = new Bundle();
+        args.putString("mode", "createFromPost");
+        args.putSerializable("post", post);
+        createEditEventFragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
     }
 
     private boolean hasClickedOtherReaction(int reaction) {
@@ -229,7 +272,6 @@ public class PostFragment extends Fragment {
     private void editPost() {
         CreatePostFragment createPostFragment = new CreatePostFragment();
         Bundle args = new Bundle();
-        args.putString("mode", "edit");
         args.putSerializable("post",post);
         createPostFragment.setArguments(args);
         getParentFragmentManager().beginTransaction().replace(R.id.container_content, createPostFragment).commit();
@@ -250,6 +292,35 @@ public class PostFragment extends Fragment {
                 }
             }
         };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Eίσαι σίγουρος ότι θες να διαγράψεις την δημοσίευση;")
+                .setPositiveButton(R.string.yes_label, dialogClickListener)
+                .setNegativeButton(R.string.no_label, dialogClickListener).show();
+    }
+
+    private void showAttendeesDialog() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_post_reactions);
+
+
+        String[] arrayAgree = post.getAgree().values().toArray(new String[0]);
+        String[] arrayDisagree = post.getDisagree().values().toArray(new String[0]);
+
+        ListView listViewAgree = dialog.findViewById(R.id.post_menu_dialog_agree_reaction_list);
+        ArrayAdapter<String> arrayAdapterAgree = new ArrayAdapter<String>(getContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                arrayAgree);
+        listViewAgree.setAdapter(arrayAdapterAgree);
+
+        ListView listViewDisagree = dialog.findViewById(R.id.post_menu_dialog_disagree_reaction_list);
+        ArrayAdapter<String> arrayAdapterDisagree = new ArrayAdapter<String>(getContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                arrayDisagree);
+        listViewDisagree.setAdapter(arrayAdapterDisagree);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     private void showAlertDialog(boolean result) {
@@ -302,7 +373,7 @@ public class PostFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            return Connection.getInstance().requestSendData(new Request("DELEV", post.getPostID()));
+            return Connection.getInstance().requestSendData(new Request("DELPOST", post.getPostID()));
         }
 
         @Override

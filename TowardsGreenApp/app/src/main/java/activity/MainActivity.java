@@ -12,12 +12,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.UserDao;
+import com.aueb.towardsgreen.domain.Profile;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
 
+    private TextView username;
+    private TextView email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,25 +46,31 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(threadPolicy);
         setContentView(R.layout.activity_main);
 
+        Profile profile = Connection.getInstance().getProfile();
 
-        //ConnectionAsyncTask myTask = new ConnectionAsyncTask();
-        //myTask.execute();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
         navigationView.bringToFront();
+
+        username = headerView.findViewById(R.id.nav_menu_username);
+        email = headerView.findViewById(R.id.nav_menu_email);
+
+        username.setText(profile.getFullName());
+        email.setText(profile.getEmail());
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new PostFragmentPage()).commit();
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.posts_page:
-                        Toast.makeText(MainActivity.this, "Post page", Toast.LENGTH_SHORT).show();
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new PostFragmentPage()).commit();
 
                         break;
                     case R.id.events_page:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new EventPageFragment()).commit();
-//                        Intent intent = new Intent(getApplicationContext(), EventActivity.class);
-//                        startActivity(intent);
                         break;
                     case R.id.profile_page:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new ProfileFragment()).commit();
@@ -101,31 +113,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private class ConnectionAsyncTask extends AsyncTask<String, String, Integer> {
-
-        ProgressDialog pd = new ProgressDialog(MainActivity.this);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd.setMessage("Please wait...");
-            pd.setIndeterminate(false);
-            pd.setCancelable(false);
-            pd.show();
-        }
-
-        @Override
-        protected Integer doInBackground(String... strings) {
-            Connection.getInstance().connect();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer i) {
-            //Toast.makeText(getActivity(), event.getMeetingDate().toString(), Toast.LENGTH_SHORT).show();
-            pd.hide();
-        }
     }
 }

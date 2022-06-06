@@ -42,6 +42,7 @@ import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Badge;
+import com.aueb.towardsgreen.domain.Post;
 import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
@@ -62,6 +63,7 @@ public class CreateEditEventFragment extends Fragment {
     private final int TAKE_PICTURE = 2;
 
     private Event event;
+    private Post post;
     private Badge createdBadge = null;
     private Badge choosenBadge = null;
     private ArrayList<Badge> badges;
@@ -84,6 +86,9 @@ public class CreateEditEventFragment extends Fragment {
 
     private EditText title;
     private EditText description;
+
+    private LinearLayout rewardLayout;
+    private EditText rewardPoints;
 
     private Bitmap eventImageResource;
     private ImageView image;
@@ -140,6 +145,7 @@ public class CreateEditEventFragment extends Fragment {
             }
             else if (mode.equals("createFromPost")) {
                 createFromPostMode = true;
+                post = (Post) getArguments().getSerializable("post");
             }
         }
     }
@@ -176,6 +182,9 @@ public class CreateEditEventFragment extends Fragment {
         title = view.findViewById(R.id.event_create_edit_title_edtxt);
         description = view.findViewById(R.id.event_create_edit_description_edtxt);
 
+        rewardLayout = view.findViewById(R.id.event_create_edit_rewardLayout);
+        rewardPoints = view.findViewById(R.id.event_create_points_reward_edtxt);
+
         image = view.findViewById(R.id.event_create_edit_image);
         chooseImageBtn = view.findViewById(R.id.event_create_edit_choose_image_btn);
         deleteImageBtn = view.findViewById(R.id.event_create_edit_delete_image_btn);
@@ -206,7 +215,12 @@ public class CreateEditEventFragment extends Fragment {
 
         // TODO: Add Edit mode implementation
         // TODO: Add create an event from post (need post implementation first)
-        if (createEditMode) {
+        if (createFromPostMode) {
+            event = new Event();
+            enableCreateFromPostMode();
+        }
+        else if (createEditMode) {
+            event = new Event();
             enableCreateMode();
         }
         else {
@@ -295,8 +309,6 @@ public class CreateEditEventFragment extends Fragment {
     }
 
     private void enableCreateMode() {
-        event = new Event();
-
         statusLayout.setVisibility(View.GONE);
 
         dateYear.setText(String.valueOf(calendarDateYear));
@@ -340,7 +352,12 @@ public class CreateEditEventFragment extends Fragment {
 
     // TODO: to be implemented , waiting for Post
     private void enableCreateFromPostMode() {
+        enableCreateMode();
 
+        rewardLayout.setVisibility(View.VISIBLE);
+
+        title.setText(post.getTitle());
+        description.setText(post.getDescription());
     }
 
     private void showChangeStatusDialog() {
@@ -693,6 +710,12 @@ public class CreateEditEventFragment extends Fragment {
             Request request = null;
             if (createEditMode) {
                 request = new Request("INEV", json);
+
+                if (createFromPostMode && !rewardPoints.getText().toString().equals("")) {
+                    String jsonReward = gson.toJson(new String[]{post.getCreatorID(), rewardPoints.getText().toString()});
+                    Request requestForReward = new Request("REWARDPR", jsonReward);
+                    Connection.getInstance().requestSendDataWithoutResponse(requestForReward);
+                }
             }
             else {
                 json = gson.toJson(new String[]{event.getEventID(), json});
