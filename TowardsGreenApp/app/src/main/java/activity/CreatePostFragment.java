@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,8 +30,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.aueb.towardsgreen.Connection;
+import com.aueb.towardsgreen.Event;
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
 import com.aueb.towardsgreen.domain.Post;
@@ -39,6 +43,7 @@ import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Map;
 
 public class CreatePostFragment extends Fragment {
     private final int PICK_GALLERY = 1;
@@ -48,6 +53,8 @@ public class CreatePostFragment extends Fragment {
     private Connection connection;
     EditText postTitle;
     EditText postDescription;
+
+    TextView createEditBar;
 
     Spinner location;
     private String postLocation;
@@ -59,9 +66,17 @@ public class CreatePostFragment extends Fragment {
     private Bitmap postImageResource;
     private ImageView image;
 
+    ArrayAdapter<CharSequence> adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            String mode = getArguments().getString("mode");
+            if (mode.equals("edit")) {
+                newPost = (Post) getArguments().getSerializable("post");
+            }
+        }
 
     }
 
@@ -83,10 +98,11 @@ public class CreatePostFragment extends Fragment {
         btnCancel = view.findViewById(R.id.post_btn_cancel);
         btnAddMedia = view.findViewById(R.id.post_media_btn);
         connection = Connection.getInstance();
+        createEditBar = view.findViewById(R.id.createPost);
 
         newPost = new Post();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
+        adapter = ArrayAdapter.createFromResource(this.getActivity(),
                 R.array.nomoi, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -229,6 +245,20 @@ public class CreatePostFragment extends Fragment {
 
         newPost.setPublishedDate(publishedDate);
         newPost.setPublishedTime(publishedTime);
+    }
+
+    private void enableEditMode() {
+        createEditBar.setText("Επεξεργασία δημοσίευσης");
+        btnSubmit.setText("Αποθήκευση αλλαγών");
+
+        postTitle.setText(newPost.getTitle());
+        postDescription.setText(newPost.getDescription());
+        if (newPost.getImage() != null) {
+            image.setImageBitmap(newPost.getImageBitmap());
+        }
+
+        location.setSelection(adapter.getPosition(newPost.getLocation()));
+
     }
 
     private class CreatePostTask extends AsyncTask<String, String, Boolean> {

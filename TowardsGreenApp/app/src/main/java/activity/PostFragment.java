@@ -2,8 +2,13 @@ package activity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +30,7 @@ import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 public class PostFragment extends Fragment {
+
     private Post post;
     private Profile profile = Connection.getInstance().getProfile();
 
@@ -144,7 +150,10 @@ public class PostFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.post_menu_edit:
+                                editPost();
                                 break;
+                            case R.id.post_menu_delete:
+                                deletePost();
                         }
                         return false;
                     }
@@ -215,5 +224,93 @@ public class PostFragment extends Fragment {
 
         String json = gson.toJson(new String[]{post.getPostID(),updatedPost});
         Connection.getInstance().requestSendDataWithoutResponse(new Request("UPPOSTWR", json));
+    }
+
+    private void editPost() {
+        CreatePostFragment createPostFragment = new CreatePostFragment();
+        Bundle args = new Bundle();
+        args.putString("mode", "edit");
+        args.putSerializable("post",post);
+        createPostFragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(R.id.container_content, createPostFragment).commit();
+    }
+
+    private void deletePost() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                       PostFragment.DeletePostAsyncTask deletePostAsyncTask = new PostFragment.DeletePostAsyncTask();
+                        deletePostAsyncTask.execute();
+                        break;
+                    case  DialogInterface.BUTTON_NEGATIVE:
+
+                        break;
+                }
+            }
+        };
+    }
+
+    private void showAlertDialog(boolean result) {
+        String successMessage = "Η δημοσίευση διαγράφθηκε επιτυχώς!";
+        String failureMessage = "Κάποιο σφάλμα προέκυψε.";
+
+        AlertDialog alertDialog;
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(getActivity());
+        View layoutView = null;
+
+        if (result) {
+            layoutView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+            TextView successMsg = layoutView.findViewById(R.id.success_dialog_txt);
+            successMsg.setText(successMessage);
+        } else {
+            layoutView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+            TextView failureMsg = layoutView.findViewById(R.id.failure_dialog_txt);
+            failureMsg.setText(failureMessage);
+        }
+
+        builderDialog.setView(layoutView);
+
+        alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+                if (result) {
+                    getParentFragmentManager().beginTransaction().remove(PostFragment.this).commit();
+                }
+            }
+        }, 3000);
+    }
+
+    private class DeletePostAsyncTask extends AsyncTask<String, String, Boolean> {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setMessage("Παρακαλώ περιμένετε...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return Connection.getInstance().requestSendData(new Request("DELEV", post.getPostID()));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+            showAlertDialog(result);
+        }
     }
 }
