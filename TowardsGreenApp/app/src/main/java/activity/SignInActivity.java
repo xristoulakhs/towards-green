@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.R;
@@ -26,8 +25,6 @@ import com.aueb.towardsgreen.domain.Profile;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
-
-import activity.createProfile.CreateProfileActivity;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText email;

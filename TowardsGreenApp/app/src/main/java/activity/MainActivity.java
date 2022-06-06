@@ -66,14 +66,11 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.posts_page:
-                        Toast.makeText(MainActivity.this, "Post page", Toast.LENGTH_SHORT).show();
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new PostFragmentPage()).commit();
 
                         break;
                     case R.id.events_page:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new EventPageFragment()).commit();
-//                        Intent intent = new Intent(getApplicationContext(), EventActivity.class);
-//                        startActivity(intent);
                         break;
                     case R.id.profile_page:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_content, new ProfileFragment()).commit();

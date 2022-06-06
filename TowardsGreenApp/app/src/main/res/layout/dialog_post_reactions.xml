@@ -15,15 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/upper_shape_curve"
-            android:text="Λίστα συμμετεχόντων"
+            android:text="Αντιδράσεις"
             android:padding="5dp"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/event_menu_dialog_label"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="#D6D6D6" >
@@ -31,7 +29,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Συμμετέχοντες"
+                android:text="Συμφωνώ"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
@@ -39,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Παρευρέθηκαν"
+                android:text="Δεν συμφωνώ"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
@@ -51,14 +49,13 @@
             android:layout_height="wrap_content">
 
             <ListView
-                android:id="@+id/event_menu_dialog_attendees_list"
+                android:id="@+id/post_menu_dialog_agree_reaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <ListView
-                android:visibility="gone"
-                android:id="@+id/event_menu_dialog_attendees_presence_list"
+                android:id="@+id/post_menu_dialog_disagree_reaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

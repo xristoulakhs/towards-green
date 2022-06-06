@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.aueb.towardsgreen.Connection;
 import com.aueb.towardsgreen.Event;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.aueb.towardsgreen.R;
 import com.aueb.towardsgreen.Request;
@@ -30,13 +29,7 @@ import com.aueb.towardsgreen.domain.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class EventPageFragment extends Fragment {
     private Profile profile;
@@ -55,9 +48,6 @@ public class EventPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(getActivity(), "Event fragment", Toast.LENGTH_SHORT).show();
-
-
     }
 
     @Override
@@ -135,6 +125,7 @@ public class EventPageFragment extends Fragment {
         public EventAsyncTask(String message) {
             this.message = message;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -193,8 +184,7 @@ public class EventPageFragment extends Fragment {
                 transaction.replace(eventsLayout.getId(), eventFragment);
                 transaction.addToBackStack(null);
                 flag = false;
-            }
-            else{
+            } else {
                 transaction.add(eventsLayout.getId(), eventFragment);
             }
         }

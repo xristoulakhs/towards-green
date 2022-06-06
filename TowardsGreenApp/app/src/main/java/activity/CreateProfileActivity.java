@@ -1,17 +1,20 @@
-package activity.createProfile;
+package activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aueb.towardsgreen.Connection;
@@ -22,19 +25,17 @@ import com.google.gson.Gson;
 
 import activity.SignInActivity;
 
-public class CreateProfileActivity extends AppCompatActivity implements CreateProfileView{
+public class CreateProfileActivity extends AppCompatActivity {
 
     private Profile createdProfile;
     EditText firstName,lastName,email,passwordInput,passwordConf;
     Button btnSubmit, btnCancel;
 
-    //private CreateProfilePresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
-        //presenter = new CreateProfilePresenter(this);
 
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
@@ -68,10 +69,9 @@ public class CreateProfileActivity extends AppCompatActivity implements CreatePr
                 createdProfile.setEmail(email.getText().toString());
                 createdProfile.setPassword(passwordInput.getText().toString());
                 createdProfile.generateQR();
-                sendNewProfile(createdProfile);
-
-                //TODO: save to dao and continue to main screen
-
+                
+                CreateProfileAsyncTask createProfileAsyncTask = new CreateProfileAsyncTask();
+                createProfileAsyncTask.execute();
                 }
             }
         });
@@ -84,9 +84,65 @@ public class CreateProfileActivity extends AppCompatActivity implements CreatePr
         });
     }
 
-    private boolean sendNewProfile(Profile profile) {
-        Request request = new Request("INPR", new Gson().toJson(profile));
-        Log.i("tag", new Gson().toJson(profile));
-        return Connection.getInstance().requestSendData(request);
+    private class CreateProfileAsyncTask extends AsyncTask<String, String, Boolean> {
+        ProgressDialog progressDialog = new ProgressDialog(CreateProfileActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setMessage("Παρακαλώ περιμένετε...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            Request request = new Request("INPR", new Gson().toJson(createdProfile));
+            return Connection.getInstance().requestSendData(request);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            String successMessage = "Ο λογαριασμός δημιουργήθηκε με επιτυχία";
+            String failureMessage = "Ο λογαριασμός δεν δημιουργήθηκε!";
+            showAlertDialog(result, successMessage, failureMessage);
+        }
+    }
+
+    private void showAlertDialog(boolean result, String successMessage, String failureMessage) {
+        AlertDialog alertDialog;
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(CreateProfileActivity.this);
+        View layoutView = null;
+
+        if (result) {
+            layoutView = getLayoutInflater().inflate(R.layout.success_dialog, null);
+            TextView successMsg = layoutView.findViewById(R.id.success_dialog_txt);
+            successMsg.setText(successMessage);
+        }
+        else {
+            layoutView = getLayoutInflater().inflate(R.layout.failure_dialog, null);
+            TextView failureMsg = layoutView.findViewById(R.id.failure_dialog_txt);
+            failureMsg.setText(failureMessage);
+        }
+
+        builderDialog.setView(layoutView);
+
+        alertDialog = builderDialog.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+                finish();
+            }
+        }, 3000);
     }
 }

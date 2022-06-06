@@ -13,14 +13,18 @@
         android:orientation="vertical">
 
         <!-- Username,Title and Status bar -->
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!-- Username container -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="130dp"
+                android:id="@+id/constraintLayout3"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:background="@drawable/shape_profile_container">
+                android:background="@drawable/shape_profile_container"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/event_username_background"
@@ -58,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="username"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         app:layout_constraintStart_toEndOf="@+id/event_username_background" />
 
                     <TextView
@@ -81,17 +85,25 @@
             <!-- Title container -->
             <TextView
                 android:id="@+id/event_title_txt"
-                android:layout_width="150dp"
-                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="#A5F0B6"
-                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Title"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:id="@+id/linearLayout9"
                 android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ic_events_menu"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/event_status"
@@ -100,7 +112,7 @@
                     android:background="#c7c4c4"
                     android:text="Κατάσταση"
                     android:textAlignment="center"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -108,8 +120,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#6ADBFF"
-                    android:text="Ανοιχτό προς συμμετοχή"
                     android:gravity="center"
+                    android:text="Ανοιχτό προς συμμετοχή"
                     android:textAlignment="center"
                     android:textSize="12sp"
                     tools:ignore="InvalidId" />
@@ -117,12 +129,15 @@
 
             <ImageView
                 android:id="@+id/ic_events_menu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:background="@drawable/shape_dots_container"
-                android:src="@drawable/ic_dots" />
-        </LinearLayout>
+                android:padding="5dp"
+                android:src="@drawable/ic_dots"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/event_description_txt"
@@ -437,6 +452,7 @@
                             android:layout_marginLeft="5dp"
                             android:background="?attr/selectableItemBackground"
                             android:paddingTop="5dp"
+                            android:textSize="13dp"
                             android:paddingBottom="5dp"
                             android:text="Συμμετέχω" />
                     </LinearLayout>
@@ -490,6 +506,7 @@
                             android:layout_marginLeft="5dp"
                             android:background="?attr/selectableItemBackground"
                             android:paddingTop="5dp"
+                            android:textSize="13dp"
                             android:paddingBottom="5dp"
                             android:text="Ίσως" />
                     </LinearLayout>
@@ -540,6 +557,7 @@
                             android:layout_marginLeft="5dp"
                             android:background="?attr/selectableItemBackground"
                             android:paddingTop="5dp"
+                            android:textSize="13dp"
                             android:paddingBottom="5dp"
                             android:text="Δεν ενδιαφέρομαι" />
                     </LinearLayout>

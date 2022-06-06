@@ -68,6 +68,25 @@ public class ActionsForServer extends Thread {
 					objectOS.flush();
 				}
 				
+				// UPEV: Update event
+				if (request.getRequestType().equals("UPPOST")) {
+					String[] json = gson.fromJson(request.getContent(), String[].class);
+					boolean result = postDao.update( json[0], json[1]);
+					Request responseRequest = new Request("", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
+				// DELPOST: Delete post
+				if (request.getRequestType().equals("DELPOST")) {
+					String json = request.getContent();
+					boolean result = postDao.delete(json);
+					System.out.println(result);
+					Request responseRequest = new Request("", gson.toJson(result));
+					objectOS.writeObject(responseRequest);
+					objectOS.flush();
+				}
+				
 				// UPPOSTWR: Update post without response
 				if (request.getRequestType().equals("UPPOSTWR")) {
 					String[] json = gson.fromJson(request.getContent(), String[].class);

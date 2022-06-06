@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class PostFragmentPage extends Fragment {
 
+    private boolean noMorePosts = false;
     private Connection connection;
     private boolean refreshing = false;
     private int numberOfPostsFetched = 0;
@@ -82,10 +83,9 @@ public class PostFragmentPage extends Fragment {
                 View postView = postScrollView.getChildAt(postScrollView.getChildCount()-1);
                 int scrollBottom = postView.getBottom() - (postScrollView.getHeight()+ postScrollView.getScrollY());
 
-                if(scrollBottom == 0){
+                if(scrollBottom == 0 && !noMorePosts){
                     PostAsync asyncTask = new PostAsync("Φόρτωση περισσοτέρων δημοσιεύσεων. Παρακαλώ περιμένετε...");
                     asyncTask.execute();
-                    Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -162,6 +162,9 @@ public class PostFragmentPage extends Fragment {
         protected void onPostExecute(ArrayList<Post> requestedPosts) {
             super.onPostExecute(requestedPosts);
             numberOfPostsFetched += requestedPosts.size();
+            if (requestedPosts.size() < 2) {
+                noMorePosts = true;
+            }
             showPosts(requestedPosts);
             progressDialog.hide();
         }
