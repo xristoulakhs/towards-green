@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class PostFragment extends Fragment {
 
     private Post post;
     private Profile profile = Connection.getInstance().getProfile();
+    private boolean isSupervisor = false;
 
     private ImageView postMenu;
 
@@ -47,6 +49,10 @@ public class PostFragment extends Fragment {
 
     private ImageView userImg;
     private ImageView postImg;
+
+    private MenuItem editItem;
+    private MenuItem deleteItem;
+    private MenuItem createFromPostItem;
 
     private boolean[] userReactions;
     private String[] reactionNames = {"Agree", "Disagree"};
@@ -70,6 +76,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         postMenu = view.findViewById(R.id.ic_posts_menu);
 
@@ -121,8 +128,8 @@ public class PostFragment extends Fragment {
                             userReactions[finalI] = false;
                             changeReactionColor(reactionsLayout[finalI], reactionsNumber[finalI], true);
                             post.removeReaction(reactionNames[finalI], profile.getUserID());
-                            post.getUsersAndReactions().remove(profile.getUserID());
                             String reaction = post.getUsersAndReactions().get(profile.getUserID());
+                            post.getUsersAndReactions().remove(profile.getUserID());
                             post.getProperReactionMap(reaction).remove(profile.getUserID());
                         }
                         else {
@@ -154,14 +161,47 @@ public class PostFragment extends Fragment {
                                 break;
                             case R.id.post_menu_delete:
                                 deletePost();
+                                break;
+                            case R.id.post_menu_create_event:
+                                createEventFromPost();
+                                break;
                         }
                         return false;
                     }
                 });
                 popupMenu.inflate(R.menu.post_menu);
                 popupMenu.show();
+                Menu menu = popupMenu.getMenu();
+                editItem = menu.findItem(R.id.post_menu_edit);
+                deleteItem = menu.findItem(R.id.post_menu_delete);
+                createFromPostItem = menu.findItem(R.id.post_menu_create_event);
+                setUserMenu();
             }
         });
+    }
+
+    private void setUserMenu() {
+        if (profile.getRole() == Profile.ROLE.SUPERVISOR) {
+            isSupervisor = true;
+            createFromPostItem.setVisible(true);
+            if (post.getCreatorID().equals(profile.getUserID())) {
+                deleteItem.setVisible(true);
+                editItem.setVisible(true);
+            }
+        }
+    }
+
+    private void createEventFromPost() {
+        CreateEditEventFragment createEditEventFragment = new CreateEditEventFragment();
+        Bundle args = new Bundle();
+        args.putString("mode", "createFromPost");
+        args.putSerializable("post", post);
+        createEditEventFragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(R.id.container_content, createEditEventFragment).commit();
+    }
+
+    private void deletePost() {
+
     }
 
     private boolean hasClickedOtherReaction(int reaction) {

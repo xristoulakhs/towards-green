@@ -104,8 +104,39 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
+                    android:hint="Τίτλος εκδήλωσης"
+                    android:inputType="textPersonName" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/event_create_edit_rewardLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_curve"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:text="Πόντοι ανταμοιβής δημιουργού"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/event_create_points_reward_edtxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:ems="10"
+                    android:hint="Πόντοι"
+                    android:inputType="number" />
 
             </LinearLayout>
 
@@ -517,7 +548,7 @@
                         android:id="@+id/event_create_edit_create_badge_btn"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="10dp"
                         android:text="Δημιουργία"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -528,7 +559,7 @@
                         android:id="@+id/event_create_edit_choose_badge_btn"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:text="Επιλογή"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
